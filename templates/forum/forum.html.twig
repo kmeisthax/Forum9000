@@ -1,0 +1,16 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    {% for thread in threads %}
+        <article>
+            <a href="/thread/{{thread.id}}">{{thread.orderedPosts[0].title}}</a>
+        </article>
+    {% else %}
+        No threads!
+    {% endfor %}
+
+    <h2>New Thread</h2>
+    {{ form_start(thread_form) }}
+    {{ form_widget(thread_form) }}
+    {{ form_end(thread_form) }}
+{% endblock %}

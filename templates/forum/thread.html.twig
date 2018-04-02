@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    {% for post in posts %}
+        <article id="p{{post.order}}">
+            <h2>{{post.title}}</h2>
+            {{post.message}}
+        </article>
+    {% else %}
+        No posts!
+    {% endfor %}
+
+    <h2>Reply</h2>
+    {{ form_start(reply_form) }}
+    {{ form_widget(reply_form) }}
+    {{ form_end(reply_form) }}
+{% endblock %}
