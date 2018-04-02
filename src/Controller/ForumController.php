@@ -18,9 +18,10 @@ class ForumController extends Controller {
     public function forum(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
-
+        
         $post = new Post();
-
+        $user = $this->getUser();
+        
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
@@ -31,6 +32,8 @@ class ForumController extends Controller {
             $post->setThread($thread);
             $post->setOrder(0);
             $thread->getPosts()->add($post);
+            
+            $post->setPostedBy($user);
 
             $em->persist($post);
             $em->persist($thread);

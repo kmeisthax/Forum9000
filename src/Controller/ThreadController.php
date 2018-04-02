@@ -19,6 +19,7 @@ class ThreadController extends Controller {
         $thread = $em->find("App\Entity\Thread", $id);
 
         $reply = new Post();
+        $user = $this->getUser();
 
         $form = $this->createForm(PostType::class, $reply);
         $form->handleRequest($request);
@@ -29,6 +30,8 @@ class ThreadController extends Controller {
             $reply->setThread($thread);
             $reply->setOrder($thread->getNewestPosts()[0]->getOrder() + 1);
             $thread->getPosts()->add($reply);
+            
+            $post->setPostedBy($user);
 
             $em->persist($reply);
             $em->flush();
