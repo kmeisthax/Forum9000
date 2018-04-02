@@ -37,6 +37,11 @@ class Post
      */
     private $order;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     */
+    private $posted_by;
+
     public function getId() {
         return $this->id;
     }
@@ -77,6 +82,16 @@ class Post
 
     public function setOrder(int $order): self {
         $this->order = $order;
+
+        return $this;
+    }
+
+    public function getPostedBy(): ?User {
+        return $this->posted_by;
+    }
+
+    public function setPostedBy(User $user): self {
+        $this->posted_by = $user;
 
         return $this;
     }

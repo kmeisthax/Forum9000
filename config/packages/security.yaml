@@ -1,7 +1,13 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
     providers:
-        in_memory: { memory: ~ }
+        Forum9000ID:
+            entity:
+                class: App\Entity\User
+                property: handle
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
