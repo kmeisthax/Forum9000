@@ -82,7 +82,7 @@ class User implements UserInterface, \Serializable
     public function getUsername(): string {
         //Forum9000 users are authenticated by e-mail address.
         //They name themselves with changeable handles.
-        return $this->getEmail;
+        return $this->getEmail();
     }
 
     public function eraseCredentials() {
@@ -91,11 +91,11 @@ class User implements UserInterface, \Serializable
 
     //Serializable
     public function serialize() {
-        return serialize(
+        return serialize(array(
             $this->id,
             $this->email,
             $this->password
-        );
+        ));
     }
 
     public function unserialize($serialized) {

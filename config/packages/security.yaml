@@ -7,7 +7,7 @@ security:
         Forum9000ID:
             entity:
                 class: App\Entity\User
-                property: handle
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
