@@ -1,0 +1,18 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>Forum Manifest</h1>
+
+    {% for forum in forums %}
+        <article>
+            <a href="/forum/{{forum.id}}">{{forum.title}}</a>
+        </article>
+    {% else %}
+        No forums!
+    {% endfor %}
+
+    <h2>New Forum</h2>
+    {{ form_start(forum_form) }}
+    {{ form_widget(forum_form) }}
+    {{ form_end(forum_form) }}
+{% endblock %}
