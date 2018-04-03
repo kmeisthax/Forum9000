@@ -1,6 +1,11 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
+    {% if forum %}
+        <h1>{{forum.title}}</h1>
+        {{forum.description}}
+    {% endif %}
+    
     {% for thread in threads %}
         <article>
             <a href="/thread/{{thread.id}}">{{thread.orderedPosts[0].title}}</a>
