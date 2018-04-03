@@ -41,7 +41,12 @@ class Post
      * @ORM\ManyToOne(targetEntity="User")
      */
     private $posted_by;
-
+    
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $ctime;
+    
     public function getId() {
         return $this->id;
     }
@@ -92,6 +97,16 @@ class Post
 
     public function setPostedBy(User $user): self {
         $this->posted_by = $user;
+
+        return $this;
+    }
+
+    public function getCtime(): ?\DateTime {
+        return $this->ctime;
+    }
+
+    public function setCtime(\DateTime $time): self {
+        $this->ctime = $time;
 
         return $this;
     }

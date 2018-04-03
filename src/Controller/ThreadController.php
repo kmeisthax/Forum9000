@@ -31,7 +31,8 @@ class ThreadController extends Controller {
             $reply->setOrder($thread->getNewestPosts()[0]->getOrder() + 1);
             $thread->getPosts()->add($reply);
             
-            $post->setPostedBy($user);
+            $reply->setPostedBy($user);
+            $reply->setCtime(new \DateTime());
 
             $em->persist($reply);
             $em->flush();

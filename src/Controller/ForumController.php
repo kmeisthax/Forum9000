@@ -34,6 +34,7 @@ class ForumController extends Controller {
             $thread->getPosts()->add($post);
             
             $post->setPostedBy($user);
+            $post->setCtime(new \DateTime());
 
             $em->persist($post);
             $em->persist($thread);
