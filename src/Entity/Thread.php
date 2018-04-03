@@ -22,6 +22,12 @@ class Thread
      * @ORM\OneToMany(targetEntity="Post", mappedBy="thread")
      */
     private $posts;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Forum", inversedBy="threads")
+     * @ORM\JoinColumn(name="forum_id", referencedColumnName="id")
+     */
+    private $forum;
 
     public function __construct() {
         $this->posts = new ArrayCollection();
@@ -51,5 +57,15 @@ class Thread
             ->setMaxResults($limit);
 
         return $this->getPosts()->matching($newestPostCriteria);
+    }
+    
+    public function getForum() : ?Forum {
+        return $this->forum;
+    }
+    
+    public function setForum(Forum $forum) : self {
+        $this->forum = $forum;
+        
+        return $this;
     }
 }
