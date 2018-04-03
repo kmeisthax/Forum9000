@@ -6,6 +6,7 @@ use App\Entity\Thread;
 use App\Entity\Forum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use StephenHill\Base58;
 
 /**
  * @method Thread|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,6 +21,24 @@ class ThreadRepository extends ServiceEntityRepository
         parent::__construct($registry, Thread::class);
     }
     
+    public function findByCompactId(string $id) {
+        $raw_uuid = (new Base58())->decode($id);
+        $uuid = "";
+
+        foreach (str_split($raw_uuid) as $char) {
+            $hexit = strtoupper(dechex(ord($char)));
+            while (strlen($hexit) < 2) $hexit = "0" . $hexit;
+            $uuid .= strrev($hexit);
+
+            if (strlen($uuid) == 8) $uuid .= "-";
+            else if (strlen($uuid) == 13) $uuid .= "-";
+            else if (strlen($uuid) == 18) $uuid .= "-";
+            else if (strlen($uuid) == 23) $uuid .= "-";
+        }
+
+        return $this->find($uuid);
+    }
+
     public function getLatestThreads($start = 0, $limit = 1) {
         return $this->createQueryBuilder('t')
             ->join('t.posts', 'p')

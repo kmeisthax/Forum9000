@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use StephenHill\Base58;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ThreadRepository")
@@ -35,6 +36,11 @@ class Thread
 
     public function getId() {
         return $this->id;
+    }
+
+    public function getCompactId() {
+        $packed_id = pack("h*", str_replace('-', '', $this->getId()));
+        return (new Base58())->encode($packed_id);
     }
 
     public function getPosts() {

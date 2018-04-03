@@ -8,7 +8,7 @@
     
     {% for thread in threads %}
         <article>
-            <a href="/thread/{{thread.id}}">{{thread.orderedPosts[0].title}}</a>
+            <a href="/thread/{{thread.compactId}}">{{thread.orderedPosts[0].title}}</a>
         </article>
     {% else %}
         No threads!

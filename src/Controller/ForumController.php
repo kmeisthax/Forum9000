@@ -63,7 +63,9 @@ class ForumController extends Controller {
      */
     public function thread(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
-        $thread = $em->find("App\Entity\Thread", $id);
+        $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
+
+        $thread = $threadRepo->findByCompactId($id);
 
         $reply = new Post();
         $user = $this->getUser();
