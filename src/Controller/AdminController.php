@@ -10,6 +10,15 @@ use Doctrine\Common\Collections\Criteria;
 use App\Entity\Forum;
 use App\Form\ForumType;
 
+/* Backdoor access for ROLE_ADMIN users.
+ *
+ * NOTE: It is extremely important not to grant ROLE_ADMIN carelessly. The
+ * difference between ROLE_USER and ROLE_ADMIN is that the latter is allowed to
+ * make use of /admin views to modify the site regardless of what the
+ * permissions and grants say. Essentially, ADMIN is intended for managing the
+ * platform as a whole, while forum specific management should be handled
+ * through Grants.
+ */
 class AdminController extends Controller {
     /**
      * @Route("/admin/forums")
