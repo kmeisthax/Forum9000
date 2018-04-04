@@ -33,13 +33,23 @@ class Forum
     private $threads;
 
     /**
+     * The list of default permissions for the board.
+     *
      * @ORM\OneToMany(targetEntity="Permission", mappedBy="forum")
      */
     private $permissions;
 
+    /**
+     * The list of specific grants for particular users.
+     *
+     * @ORM\OneToMany(targetEntity="Grant", mappedBy="forum")
+     */
+    private $grants;
+
     public function __construct() {
         $this->threads = new ArrayCollection();
         $this->permissions = new ArrayCollection();
+        $this->grants = new ArrayCollection();
     }
 
     public function getId()
@@ -77,5 +87,9 @@ class Forum
 
     public function getPermissions() {
         return $this->permissions;
+    }
+
+    public function getGrants() {
+        return $this->grants;
     }
 }

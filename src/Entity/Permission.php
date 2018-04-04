@@ -8,8 +8,8 @@ use App\Entity\User;
 use App\Entity\Forum;
 
 /**
- * A Permission represents access for a user to perform a certain action within
- * a forum.
+ * A Permission represents a specific action performed on a particular forum.
+ * Grants are specified for authenticated and anonymous users.
  *
  * @ORM\Entity(repositoryClass="App\Repository\PermissionRepository")
  */
@@ -29,22 +29,27 @@ class Permission
 
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="permissions")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
-    private $user;
-
-    /**
-     * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="Forum", inversedBy="permissions")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="id")
      */
     private $forum;
 
-    public function getId()
-    {
-        return $this->id;
-    }
+    /**
+     * TRUE if permission is granted to logged-in users.
+     * Only checked for authenticated users without a specific grant.
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $isGrantedAuth;
+
+    /**
+     * TRUE if permission is granted to anonymous users.
+     * Only checked for anonymous users without a specific grant.
+     * You should be extremely careful with anonymous grants.
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $isGrantedAnon;
 
     public function getAttribute(): ?string
     {
@@ -58,18 +63,6 @@ class Permission
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getForum(): ?Forum
     {
         return $this->forum;
@@ -78,6 +71,30 @@ class Permission
     public function setForum(Forum $forum): self
     {
         $this->forum = $forum;
+
+        return $this;
+    }
+
+    public function getIsGrantedAuth(): ?bool
+    {
+        return $this->isGrantedAuth;
+    }
+
+    public function setIsGrantedAuth(bool $isGrantedAuth): self
+    {
+        $this->isGrantedAuth = $isGrantedAuth;
+
+        return $this;
+    }
+
+    public function getIsGrantedAnon(): ?bool
+    {
+        return $this->isGrantedAnon;
+    }
+
+    public function setIsGrantedAnon(bool $isGrantedAnon): self
+    {
+        $this->isGrantedAnon = $isGrantedAnon;
 
         return $this;
     }

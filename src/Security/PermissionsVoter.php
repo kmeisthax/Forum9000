@@ -25,25 +25,29 @@ class PermissionsVoter extends Voter {
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token) {
         $user = $token->getUser();
         
-        //First, check if the user has an explicit permissions grant.
+        if ($user !== null) {
+            //First, check if the user has an explicit Grant record.
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->eq("user", $user))
+                ->where(Criteria::expr()->eq("attribute", $attribute));
+
+            foreach ($subject->getGrants->matching($criteria) as $grant) {
+                if ($grant->getIsGranted()) return true;
+                else if ($grant->getIsDenied()) return false;
+            }
+        }
+        
+        //Check if there's a default permission
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("user", $user))
             ->where(Criteria::expr()->eq("attribute", $attribute));
         
         foreach ($subject->getPermissions->matching($criteria) as $perm) {
-            return true;
+            if ($user !== null) return $perm->getIsGrantedAuth();
+            else return $perm->getIsGrantedAnon();
         }
         
-        //Finally, check if there's a blanket permission grant to all users.
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("user", null))
-            ->where(Criteria::expr()->eq("attribute", $attribute));
-        
-        foreach ($subject->getPermissions->matching($criteria) as $perm) {
-            return true;
-        }
-        
-        //If no permission grants us this action then we must vote to deny
+        //Neither a default permission nor a user grant exists, so access
+        //is denied.
         return false;
     }
 }

@@ -34,12 +34,12 @@ class User implements UserInterface, \Serializable
     private $email;
 
     /**
-     * @ORM\OneToMany(targetEntity="Permission", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Grant", mappedBy="user")
      */
-    private $permissions;
+    private $grants;
 
     public function __construct() {
-        $this->permissions = new ArrayCollection();
+        $this->grants = new ArrayCollection();
     }
 
     public function getId() {
@@ -76,8 +76,8 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function getPermissions() {
-        return $this->permissions;
+    public function getGrants() {
+        return $this->grants;
     }
 
     //UserInterface
