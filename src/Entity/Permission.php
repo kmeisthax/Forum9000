@@ -15,6 +15,11 @@ use App\Entity\Forum;
  */
 class Permission
 {
+    const VIEW = "view";     //View forum content.
+    const POST = "post";     //Create new threads.
+    const REPLY = "reply";   //Reply to an existing thread.
+    const GRANT = "grant";   //Give other users their permissions
+    const REVOKE = "revoke"; //Remove their permissions from others
 
     /**
      * @ORM\Id()
