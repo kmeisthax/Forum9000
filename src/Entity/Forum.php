@@ -31,6 +31,16 @@ class Forum
      */
     private $threads;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Permission", mappedBy="forum")
+     */
+    private $permissions;
+
+    public function __construct() {
+        $this->threads = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
+    }
+
     public function getId()
     {
         return $this->id;
@@ -62,5 +72,9 @@ class Forum
 
     public function getThreads() {
         return $this->threads;
+    }
+
+    public function getPermissions() {
+        return $this->permissions;
     }
 }

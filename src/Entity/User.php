@@ -32,6 +32,15 @@ class User implements UserInterface, \Serializable
      */
     private $email;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Permission", mappedBy="user")
+     */
+    private $permissions;
+
+    public function __construct() {
+        $this->permissions = new ArrayCollection();
+    }
+
     public function getId() {
         return $this->id;
     }
@@ -64,6 +73,10 @@ class User implements UserInterface, \Serializable
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getPermissions() {
+        return $this->permissions;
     }
 
     //UserInterface
