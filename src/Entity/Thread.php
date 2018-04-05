@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Criteria;
  */
 class Thread
 {
-    use App\CompactId\EntityTrait;
+    use \App\CompactId\EntityTrait;
     
     /**
      * @ORM\Id()

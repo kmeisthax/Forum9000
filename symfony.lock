@@ -128,6 +128,9 @@
             "ref": "e65a105bf4cd5b1b79012ba029954927f05922e8"
         }
     },
+    "stephenhill/base58": {
+        "version": "v1.1.4"
+    },
     "swiftmailer/swiftmailer": {
         "version": "v6.0.2"
     },

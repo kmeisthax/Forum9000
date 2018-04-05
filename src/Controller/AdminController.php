@@ -64,6 +64,6 @@ class AdminController extends Controller {
             array(
                 "forum" => $forum
             )
-        )
+        );
     }
 }

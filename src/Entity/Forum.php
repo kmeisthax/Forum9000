@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Forum
 {
-    use App\CompactId\EntityTrait;
+    use \App\CompactId\EntityTrait;
     
     /**
      * @ORM\Id()

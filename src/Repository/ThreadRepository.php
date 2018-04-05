@@ -16,7 +16,7 @@ use StephenHill\Base58;
  */
 class ThreadRepository extends ServiceEntityRepository
 {
-    use App\CompactId\RepositoryTrait;
+    use \App\CompactId\RepositoryTrait;
     
     public function __construct(RegistryInterface $registry)
     {

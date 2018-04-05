@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class ForumRepository extends ServiceEntityRepository
 {
-    use App\CompactId\RepositoryTrait;
+    use \App\CompactId\RepositoryTrait;
     
     public function __construct(RegistryInterface $registry)
     {
