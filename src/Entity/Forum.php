@@ -10,6 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Forum
 {
+    use App\CompactId\EntityTrait;
+    
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="UUID")

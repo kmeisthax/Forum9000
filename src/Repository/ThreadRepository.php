@@ -16,27 +16,11 @@ use StephenHill\Base58;
  */
 class ThreadRepository extends ServiceEntityRepository
 {
+    use App\CompactId\RepositoryTrait;
+    
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Thread::class);
-    }
-    
-    public function findByCompactId(string $id) {
-        $raw_uuid = (new Base58())->decode($id);
-        $uuid = "";
-
-        foreach (str_split($raw_uuid) as $char) {
-            $hexit = strtoupper(dechex(ord($char)));
-            while (strlen($hexit) < 2) $hexit = "0" . $hexit;
-            $uuid .= strrev($hexit);
-
-            if (strlen($uuid) == 8) $uuid .= "-";
-            else if (strlen($uuid) == 13) $uuid .= "-";
-            else if (strlen($uuid) == 18) $uuid .= "-";
-            else if (strlen($uuid) == 23) $uuid .= "-";
-        }
-
-        return $this->find($uuid);
     }
 
     public function getLatestThreads($start = 0, $limit = 1) {
