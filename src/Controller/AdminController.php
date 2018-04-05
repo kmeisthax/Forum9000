@@ -50,4 +50,20 @@ class AdminController extends Controller {
                                 )
                             );
     }
+    
+    /**
+     * @Route("/admin/forums/{id}")
+     */
+    public function forum_single(Request $request, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
+        $forum = $forumRepo->findByCompactId($id);
+        
+        return $this->render(
+            "admin/forum_single.html.twig",
+            array(
+                "forum" => $forum
+            )
+        )
+    }
 }
