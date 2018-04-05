@@ -15,7 +15,7 @@
     <h2>Privilege grants</h2>
     <p>Grants encompass actions that specific users are allowed to perform on the forum. This usually would be used to grant moderator privileges (e.g. deleting posts or issuing bans) to specific users.</p>
     {% for grant in forum.grants %}
-        <p>{{grant.user.handle}} {% if grant.isGranted %}can{% else if grant.isDenied %}cannot{% else %}maybe can{% endif %} {{grant.attribute}}</p>
+        <p>{{grant.user.handle}} {% if grant.isGranted %}can{% elseif grant.isDenied %}cannot{% else %}maybe can{% endif %} {{grant.attribute}}</p>
     {% else %}
         <p>No privilege grants exist for this forum.</p>
     {% endfor %}

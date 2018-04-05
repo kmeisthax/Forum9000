@@ -12,6 +12,7 @@ use App\Entity\User;
  * authenticated user to perform an action on a forum.
  *
  * @ORM\Entity(repositoryClass="App\Repository\GrantRepository")
+ * @ORM\Table(name="`grant`")
  */
 class Grant
 {
