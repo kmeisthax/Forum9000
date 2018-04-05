@@ -18,8 +18,10 @@ class ForumController extends Controller {
      */
     public function forum(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
-        $forum = $em->find("App\Entity\Forum", $id);
+        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
+        
+        $forum = $forumRepo->findByCompactId($id);
         
         $post = new Post();
         $user = $this->getUser();

@@ -5,7 +5,7 @@
 
     {% for forum in forums %}
         <article>
-            <a href="/forum/{{forum.id}}">{{forum.title}}</a>
+            <a href="/admin/forums/{{forum.compactId}}">{{forum.title}}</a>
         </article>
     {% else %}
         No forums!
