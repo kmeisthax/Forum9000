@@ -122,7 +122,7 @@ class User implements UserInterface, \Serializable
 
     //UserInterface
     public function getRoles(): array {
-        return array($this->site_role);
+        return array($this->getSiteRole());
     }
 
     public function getSalt(): ?string {
