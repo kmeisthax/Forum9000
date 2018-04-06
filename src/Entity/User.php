@@ -37,6 +37,30 @@ class User implements UserInterface, \Serializable
      * @ORM\OneToMany(targetEntity="Grant", mappedBy="user")
      */
     private $grants;
+    
+    /**
+     * Get the user's current site role.
+     * 
+     * We have our own access control mechanisms, so roles are only necessary
+     * to manage site-wide access that operate outside of the normal permissions
+     * and grants system.
+     * 
+     * Most users will be ROLE_USER, which means you have no special site-wide
+     * access.
+     * 
+     * Access to the administrative backend requires ROLE_STAFF. Staff can use
+     * the administrative backend to bypass normal access control. They can only
+     * excercise these rights from within the administrative backend.
+     * 
+     * Certain site-wide controls are only appropriate for technically minded
+     * users, and thus requires ROLE_DEVELOPER. Developers are additionally
+     * given access to things like custom database queries, theming options,
+     * and other things not appropriate for even normal staff usage. Assign this
+     * role with extreme caution.
+     * 
+     * @ORM\Column(type="string", length=255, options={"default":"ROLE_USER"})
+     */
+    private $site_role;
 
     public function __construct() {
         $this->grants = new ArrayCollection();
@@ -76,17 +100,23 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
+    public function getSiteRole(): ?string {
+        return $this->site_role;
+    }
+
+    public function setSiteRole(string $site_role): self {
+        $this->site_role = $site_role;
+
+        return $this;
+    }
+
     public function getGrants() {
         return $this->grants;
     }
 
     //UserInterface
     public function getRoles(): array {
-        //We don't use Symfony roles that much...
-        //ROLE_USER means you're logged in
-        //ROLE_ADMIN means you can do anything aside from site-bricking actions
-        //ROLE_DEVELOPER means you can brick the site and we won't care
-        return array("ROLE_USER");
+        return array($this->site_role);
     }
 
     public function getSalt(): ?string {
