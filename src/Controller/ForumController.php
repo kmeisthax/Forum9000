@@ -12,9 +12,14 @@ use App\Entity\Thread;
 use App\Entity\Post;
 use App\Form\PostType;
 
+/**
+ * All routes having to do with a forum.
+ *
+ * @Route(name="f9kforum_")
+ */
 class ForumController extends Controller {
     /**
-     * @Route("/forum/{id}")
+     * @Route("/forum/{id}", name="forum")
      */
     public function forum(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
@@ -22,6 +27,7 @@ class ForumController extends Controller {
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
         
         $forum = $forumRepo->findByCompactId($id);
+        $this->denyAccessUnlessGranted('view', $forum);
         
         $post = new Post();
         $user = $this->getUser();
@@ -30,6 +36,8 @@ class ForumController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted('post', $forum);
+
             $post = $form->getData();
 
             $thread = new Thread();
@@ -46,6 +54,8 @@ class ForumController extends Controller {
             $em->persist($post);
             $em->persist($thread);
             $em->flush();
+
+            return $this->redirectToRoute("f9kforum_thread", array("id" => $thread->getCompactId()));
         }
         
         $threads = $threadRepo->getLatestThreadsInForum($forum, 0, 10);
@@ -61,13 +71,14 @@ class ForumController extends Controller {
     }
     
     /**
-     * @Route("/thread/{id}")
+     * @Route("/thread/{id}", name="thread")
      */
     public function thread(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
 
         $thread = $threadRepo->findByCompactId($id);
+        $this->denyAccessUnlessGranted('view', $thread);
 
         $reply = new Post();
         $user = $this->getUser();
@@ -76,6 +87,8 @@ class ForumController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted('reply', $thread);
+
             $reply = $form->getData();
 
             $reply->setThread($thread);
@@ -87,6 +100,8 @@ class ForumController extends Controller {
 
             $em->persist($reply);
             $em->flush();
+
+            return $this->redirectToRoute("f9kforum_thread", array("id" => $thread->getCompactId()));
         }
 
         $posts = $thread->getOrderedPosts(0, 20);
