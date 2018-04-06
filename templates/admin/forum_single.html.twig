@@ -4,21 +4,36 @@
     <h1>Forum Admin - {{forum.title}}</h1>
     
     <h2>Default permissions</h2>
-    <p>Permissions encompass the default set of actions that anonymous &nbsp; authenticated users can automatically perform by default. You can use them to control, for example, if logged-out users are allowed to view or post on a particular forum.</p>
-    {% for permission in forum.permissions %}
-        {% if permission.isGrantedAnon %}<p>Anonymous users can {{permission.attribute}}</p>{% endif %}
-        {% if permission.isGrantedAuth %}<p>Authenticated users can {{permission.attribute}}</p>{% endif %}
-    {% else %}
-        <p>No default permissions exist for this forum.</p>
-    {% endfor %}
+    <p>Permissions encompass the default set of actions that anonymous &amp; authenticated users can automatically perform by default. You can use them to control, for example, if logged-out users are allowed to view or post on a particular forum.</p>
+
+    <h3>Existing permissions</h3>
+    <p>Anonymous users can {% for permission in forum.permissions %}{% if permission.isGrantedAnon %}{{permission.attribute}},{% endif %}{% endfor %}</p>
+    <p>Authenticated users can {% for permission in forum.permissions %}{% if permission.isGrantedAuth %}{{permission.attribute}},{% endif %}{% endfor %}</p>
+
+    {% if new_perm_form %}
+        <h3>Edit permissions</h3>
+        {{ form_start(new_perm_form) }}
+        {{ form_widget(new_perm_form) }}
+        {{ form_end(new_perm_form) }}
+    {% endif %}
 
     <h2>Privilege grants</h2>
     <p>Grants encompass actions that specific users are allowed to perform on the forum. This usually would be used to grant moderator privileges (e.g. deleting posts or issuing bans) to specific users.</p>
-    {% for grant in forum.grants %}
-        <p>{{grant.user.handle}} {% if grant.isGranted %}can{% elseif grant.isDenied %}cannot{% else %}maybe can{% endif %} {{grant.attribute}}</p>
+    {% set last_user = "" %}
+    {% for grant in grants_by_user %}
+        {% if grant.isGranted or grant.isDenied %}
+            {% if last_user != grant.user.id %}<p>{{grant.user.handle}} {% else %}, {% endif %}{% if grant.isGranted %}can{% elseif grant.isDenied %}cannot{% endif %} {{grant.attribute}}{% set last_user = grant.user.id %}
+        {% endif %}
     {% else %}
         <p>No privilege grants exist for this forum.</p>
     {% endfor %}
     
     <p>Privilege grants can also be used to revoke default permissions. This is an advanced use-case and should only be used in cases where a specific class of users are ordinarily not supposed to be able to exercise a default permission.</p>
+    
+    {% if new_grant_form %}
+        <h3>Edit grants</h3>
+        {{ form_start(new_grant_form) }}
+        {{ form_widget(new_grant_form) }}
+        {{ form_end(new_grant_form) }}
+    {% endif %}
 {% endblock %}

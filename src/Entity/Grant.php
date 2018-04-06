@@ -113,4 +113,23 @@ class Grant
 
         return $this;
     }
+    
+    public function getGrantStatus(): ?bool {
+        if ($this->isGranted) return true;
+        if ($this->isDenied) return false;
+        return null;
+    }
+    
+    public function setGrantStatus(?bool $grantStatus) {
+        print json_encode($grantStatus);
+        if ($grantStatus === null) {
+            $this->isGranted = false;
+            $this->isDenied = false;
+        } else {
+            $this->isGranted = $grantStatus;
+            $this->isDenied = !$grantStatus;
+        }
+        
+        return $this;
+    }
 }
