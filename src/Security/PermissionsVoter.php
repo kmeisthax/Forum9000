@@ -31,7 +31,7 @@ class PermissionsVoter extends Voter {
                 ->where(Criteria::expr()->eq("user", $user))
                 ->where(Criteria::expr()->eq("attribute", $attribute));
 
-            foreach ($subject->getGrants->matching($criteria) as $grant) {
+            foreach ($subject->getGrants()->matching($criteria) as $grant) {
                 if ($grant->getIsGranted()) return true;
                 else if ($grant->getIsDenied()) return false;
             }
@@ -41,7 +41,7 @@ class PermissionsVoter extends Voter {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("attribute", $attribute));
         
-        foreach ($subject->getPermissions->matching($criteria) as $perm) {
+        foreach ($subject->getPermissions()->matching($criteria) as $perm) {
             if ($user !== null) return $perm->getIsGrantedAuth();
             else return $perm->getIsGrantedAnon();
         }
