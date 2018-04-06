@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>User Accounts</h1>
+
+    {% for user in users %}
+        <article>
+            <a href="/admin/users/{{user.compactId}}">{{user.handle}}</a> (logs in with {{user.email}})
+        </article>
+    {% else %}
+        No users registered!
+    {% endfor %}
+{% endblock %}

@@ -14,6 +14,8 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class UserRepository extends ServiceEntityRepository
 {
+    use \App\CompactId\RepositoryTrait;
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, User::class);

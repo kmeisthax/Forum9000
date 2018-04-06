@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\Criteria;
 
+use App\Entity\User;
 use App\Entity\Forum;
 use App\Entity\Permission;
 use App\Entity\Grant;
@@ -27,6 +28,23 @@ use App\Form\GrantType;
  * @Route("/admin", name="f9kadmin_")
  */
 class AdminController extends Controller {
+    /**
+     * @Route("/users", name="user_overview")
+     */
+    public function user_overview(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+
+        $users = $userRepo->findAll();
+
+        return $this->render(
+            "admin/users.html.twig",
+            array(
+                "users" => $users
+            )
+        );
+    }
+
     /**
      * @Route("/forums", name="forum_overview")
      */

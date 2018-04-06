@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface, \Serializable
 {
+    use \App\CompactId\EntityTrait;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="UUID")
