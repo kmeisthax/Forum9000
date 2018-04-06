@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>{{user.handle}}'s account</h1>
+
+    {% if user_form %}
+        <h2>Edit user</h2>
+        {{ form_start(user_form) }}
+        {{ form_widget(user_form) }}
+        {{ form_end(user_form) }}
+    {% endif %}
+{% endblock %}

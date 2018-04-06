@@ -15,6 +15,7 @@ use App\Entity\Grant;
 use App\Form\ForumType;
 use App\Form\PermissionType;
 use App\Form\GrantType;
+use App\Form\UserType;
 
 /** Backdoor access for ROLE_ADMIN users.
  *
@@ -41,6 +42,35 @@ class AdminController extends Controller {
             "admin/users.html.twig",
             array(
                 "users" => $users
+            )
+        );
+    }
+
+    /**
+     * @Route("/users/{id}", name="user_single")
+     */
+    public function user_single(Request $request, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->findByCompactId($id);
+
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute("f9kadmin_user_single", array("id" => $user->getCompactId()));
+        }
+
+        return $this->render(
+            "admin/user_single.html.twig",
+            array(
+                "user" => $user,
+                "user_form" => $form->createView(),
             )
         );
     }
