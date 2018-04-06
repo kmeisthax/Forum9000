@@ -13,6 +13,10 @@ class User implements UserInterface, \Serializable
 {
     use \App\CompactId\EntityTrait;
 
+    const USER = "ROLE_USER";
+    const STAFF = "ROLE_STAFF";
+    const DEVELOPER = "ROLE_DEVELOPER";
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="UUID")

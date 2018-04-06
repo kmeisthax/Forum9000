@@ -34,6 +34,7 @@ class SecurityController extends Controller {
     public function register(Request $request, UserPasswordEncoderInterface $encoder) {
         $em = $this->getDoctrine()->getManager();
         $user = new User();
+        $user->setSiteRole(User::USER);
 
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
