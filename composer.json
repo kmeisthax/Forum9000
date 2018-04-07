@@ -44,12 +44,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "Forum9000\\": "core/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "Forum9000\\Tests\\": "core/Tests/"
         }
     },
     "replace": {

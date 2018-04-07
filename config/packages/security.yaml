@@ -1,12 +1,12 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     encoders:
-        App\Entity\User:
+        Forum9000\Entity\User:
             algorithm: bcrypt
     providers:
         Forum9000ID:
             entity:
-                class: App\Entity\User
+                class: Forum9000\Entity\User
                 property: email
     firewalls:
         dev:

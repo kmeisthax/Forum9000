@@ -9,7 +9,7 @@
 >
     <php>
         <ini name="error_reporting" value="-1" />
-        <env name="KERNEL_CLASS" value="App\Kernel" />
+        <env name="KERNEL_CLASS" value="Forum9000\Kernel" />
         <env name="APP_ENV" value="test" />
         <env name="APP_DEBUG" value="1" />
         <env name="APP_SECRET" value="s$cretf0rt3st" />
@@ -19,13 +19,13 @@
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory>tests/</directory>
+            <directory>core/tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./src/</directory>
+            <directory>./core/</directory>
         </whitelist>
     </filter>
 
