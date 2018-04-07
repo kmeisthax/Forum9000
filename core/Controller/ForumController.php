@@ -95,7 +95,7 @@ class ForumController extends Controller {
             $reply->setOrder($thread->getNewestPosts()[0]->getOrder() + 1);
             $thread->getPosts()->add($reply);
             
-            if ($user !== null) $post->setPostedBy($user);
+            if ($user !== null) $reply->setPostedBy($user);
             $reply->setCtime(new \DateTime());
 
             $em->persist($reply);

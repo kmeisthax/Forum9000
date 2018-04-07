@@ -17,6 +17,10 @@ services:
     Forum9000\:
         resource: '../core/*'
         exclude: '../core/{Entity,Migrations,Tests,Kernel.php}'
+    
+    Forum9000\Security\PermissionsVoter:
+        arguments:
+            - '@security.authentication.trust_resolver'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
