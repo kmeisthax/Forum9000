@@ -10,12 +10,15 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 use Forum9000\Entity\User;
 use Forum9000\Form\RegistrationType;
+use Forum9000\Theme\ThemeRegistry;
 
 class SecurityController extends Controller {
     /**
      * @Route("/login", name="login")
      */
-    public function login(Request $request, AuthenticationUtils $auth) {
+    public function login(Request $request, ThemeRegistry $themeReg, AuthenticationUtils $auth) {
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+
         // get the login error if there is one
         $error = $auth->getLastAuthenticationError();
 
@@ -31,7 +34,9 @@ class SecurityController extends Controller {
     /**
      * @Route("/register", name="register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $encoder) {
+    public function register(Request $request, ThemeRegistry $themeReg, UserPasswordEncoderInterface $encoder) {
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+
         $em = $this->getDoctrine()->getManager();
         $user = new User();
         $user->setSiteRole(User::USER);

@@ -5,7 +5,7 @@
         <h1>{{forum.title}}</h1>
         {{forum.description}}
     {% endif %}
-    
+
     {% for thread in threads %}
         <article>
             <a href="/thread/{{thread.compactId}}">{{thread.orderedPosts[0].title}}</a>

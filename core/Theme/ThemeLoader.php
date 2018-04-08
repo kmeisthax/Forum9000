@@ -22,8 +22,10 @@ class ThemeLoader extends FileLoader {
         $theme = new Theme();
         $theme->setName($theme_config["name"]);
         $theme->setMachineName($theme_config["machine_name"]);
+        $theme->setThemeBasePath(realpath(dirname($resource)));
         $theme->setPaths($theme_config["paths"]);
-        $theme->setParentMachineName($theme_config["parent"]);
+
+        if (array_key_exists("parent", $theme_config)) $theme->setParentMachineName($theme_config["parent"]);
         
         return $theme;
     }

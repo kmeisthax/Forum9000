@@ -1,0 +1,6 @@
+name: Admin Theme
+machine_name: admin
+parent: base
+description: Theme used to render admin pages.
+paths:
+    templates: templates

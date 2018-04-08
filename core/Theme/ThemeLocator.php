@@ -19,11 +19,13 @@ class ThemeLocator {
     }
 
     private function get_subdirs($path) {
+        if (!@file_exists($path)) return array();
+
         $dirres = opendir($path);
         $subdirs = array();
 
         while ($subdir = readdir($dirres)) {
-            $subdirs[] = $subdir;
+            if (!is_file($path . DIRECTORY_SEPARATOR . $subdir)) $subdirs[] = $path . DIRECTORY_SEPARATOR . $subdir;
         }
 
         closedir($dirres);
@@ -45,6 +47,6 @@ class ThemeLocator {
             }
         }
 
-        return $file;
+        return $files;
     }
 }

@@ -16,6 +16,7 @@ use Forum9000\Form\ForumType;
 use Forum9000\Form\PermissionType;
 use Forum9000\Form\GrantType;
 use Forum9000\Form\UserType;
+use Forum9000\Theme\ThemeRegistry;
 
 /** Backdoor access for ROLE_ADMIN users.
  *
@@ -32,9 +33,11 @@ class AdminController extends Controller {
     /**
      * @Route("/users", name="user_overview")
      */
-    public function user_overview(Request $request) {
+    public function user_overview(Request $request, ThemeRegistry $themeReg) {
         $em = $this->getDoctrine()->getManager();
         $userRepo = $this->getDoctrine()->getRepository(User::class);
+
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
 
         $users = $userRepo->findAll();
 
@@ -49,10 +52,12 @@ class AdminController extends Controller {
     /**
      * @Route("/users/{id}", name="user_single")
      */
-    public function user_single(Request $request, $id) {
+    public function user_single(Request $request, ThemeRegistry $themeReg, $id) {
         $em = $this->getDoctrine()->getManager();
         $userRepo = $this->getDoctrine()->getRepository(User::class);
         $user = $userRepo->findByCompactId($id);
+
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
 
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -78,9 +83,11 @@ class AdminController extends Controller {
     /**
      * @Route("/forums", name="forum_overview")
      */
-    public function forum_overview(Request $request) {
+    public function forum_overview(Request $request, ThemeRegistry $themeReg) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
+
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
 
         $forum = new Forum();
         $user = $this->getUser();
@@ -109,11 +116,13 @@ class AdminController extends Controller {
     /**
      * @Route("/forums/{id}", name="forum_single")
      */
-    public function forum_single(Request $request, $id) {
+    public function forum_single(Request $request, ThemeRegistry $themeReg, $id) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         $forum = $forumRepo->findByCompactId($id);
         
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+
         $new_perm = new Permission();
         $new_perm->setForum($forum);
         $new_perm_form = $this->createForm(PermissionType::class, $new_perm, array(

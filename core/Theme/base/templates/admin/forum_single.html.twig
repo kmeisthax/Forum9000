@@ -4,7 +4,7 @@
     <h1>Forum Admin - {{forum.title}}</h1>
 
     <a href="{{ path('f9kforum_forum', {'id': forum.compactId})}}">View forum on site</a>
-    
+
     <h2>Default permissions</h2>
     <p>Permissions encompass the default set of actions that anonymous &amp; authenticated users can automatically perform by default. You can use them to control, for example, if logged-out users are allowed to view or post on a particular forum.</p>
 
@@ -29,9 +29,9 @@
     {% else %}
         <p>No privilege grants exist for this forum.</p>
     {% endfor %}
-    
+
     <p>Privilege grants can also be used to revoke default permissions. This is an advanced use-case and should only be used in cases where a specific class of users are ordinarily not supposed to be able to exercise a default permission.</p>
-    
+
     {% if new_grant_form %}
         <h3>Edit grants</h3>
         {{ form_start(new_grant_form) }}

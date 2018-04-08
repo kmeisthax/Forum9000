@@ -11,6 +11,7 @@ use Forum9000\Entity\Forum;
 use Forum9000\Entity\Thread;
 use Forum9000\Entity\Post;
 use Forum9000\Form\PostType;
+use Forum9000\Theme\ThemeRegistry;
 
 /**
  * All routes having to do with a forum.
@@ -21,7 +22,7 @@ class ForumController extends Controller {
     /**
      * @Route("/forum/{id}", name="forum")
      */
-    public function forum(Request $request, $id) {
+    public function forum(Request $request, ThemeRegistry $themeReg, $id) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
@@ -29,6 +30,8 @@ class ForumController extends Controller {
         $forum = $forumRepo->findByCompactId($id);
         $this->denyAccessUnlessGranted('view', $forum);
         
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+
         $post = new Post();
         $user = $this->getUser();
         
@@ -73,12 +76,14 @@ class ForumController extends Controller {
     /**
      * @Route("/thread/{id}", name="thread")
      */
-    public function thread(Request $request, $id) {
+    public function thread(Request $request, ThemeRegistry $themeReg, $id) {
         $em = $this->getDoctrine()->getManager();
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
 
         $thread = $threadRepo->findByCompactId($id);
         $this->denyAccessUnlessGranted('view', $thread);
+
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
 
         $reply = new Post();
         $user = $this->getUser();

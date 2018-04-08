@@ -28,9 +28,15 @@ services:
         arguments:
             - '@security.authentication.trust_resolver'
 
+    Forum9000\Theme\ThemeLoader:
+        arguments:
+            $locator: '@file_locator'
+
     Forum9000\Theme\ThemeLocator:
         arguments:
-            - "../themes"
+            $paths:
+                - "../core/Theme"
+                - "../themes"
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

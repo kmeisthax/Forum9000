@@ -10,19 +10,30 @@ class Theme {
     /**
      * User-friendly name
      * 
-     * @var string;
+     * @var string
      */
     private $name;
     
     /**
      * Machine-friendly name. Must be unique.
      * 
-     * @var string;
+     * @var string
      */
     private $machine_name;
     
     /**
+     * Where the theme.yml was discovered at
+     *
+     * @var string
+     */
+    private $theme_base_path;
+
+    /**
      * List of paths this theme provides.
+     *
+     * Required theme keys are "template"
+     *
+     * @var array
      */
     private $paths;
     
@@ -53,17 +64,27 @@ class Theme {
         return $this;
     }
     
-    public function getPaths() : string {
+    public function getThemeBasePath() : string {
+        return $this->theme_base_path;
+    }
+
+    public function setThemeBasePath(string $theme_base_path) : self {
+        $this->theme_base_path = $theme_base_path;
+
+        return $this;
+    }
+
+    public function getPaths() : array {
         return $this->paths;
     }
     
-    public function setPaths(string $paths) : self {
+    public function setPaths(array $paths) : self {
         $this->paths = $paths;
         
         return $this;
     }
 
-    public function getParentMachineName() : string {
+    public function getParentMachineName() : ?string {
         return $this->parent_machine_name;
     }
 

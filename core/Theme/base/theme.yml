@@ -1,0 +1,5 @@
+name: Base Theme
+machine_name: base
+description: Theme of last resort.
+paths:
+    templates: templates
