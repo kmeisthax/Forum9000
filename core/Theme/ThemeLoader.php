@@ -23,6 +23,7 @@ class ThemeLoader extends FileLoader {
         $theme->setName($theme_config["name"]);
         $theme->setMachineName($theme_config["machine_name"]);
         $theme->setPaths($theme_config["paths"]);
+        $theme->setParentMachineName($theme_config["parent"]);
         
         return $theme;
     }

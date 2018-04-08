@@ -17,16 +17,20 @@ services:
     Forum9000\:
         resource: '../core/*'
         exclude: '../core/{Entity,Migrations,Tests,Kernel.php}'
-    
-    Forum9000\Security\PermissionsVoter:
-        arguments:
-            - '@security.authentication.trust_resolver'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     Forum9000\Controller\:
         resource: '../core/Controller'
         tags: ['controller.service_arguments']
+
+    Forum9000\Security\PermissionsVoter:
+        arguments:
+            - '@security.authentication.trust_resolver'
+
+    Forum9000\Theme\ThemeLocator:
+        arguments:
+            - "../themes"
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

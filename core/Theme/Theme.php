@@ -3,8 +3,8 @@
 namespace Forum9000\Theme;
 
 /**
- * A Theme is a collection of template overrides and resources that change how
- * the website appears.
+ * A Theme is a collection of template overrides and other resources
+ * responsible for defining the user interface of a Forum.
  */
 class Theme {
     /**
@@ -26,6 +26,13 @@ class Theme {
      */
     private $paths;
     
+    /**
+     * Parent theme's machine name (if any)
+     *
+     * @var string|null
+     */
+    private $parent_machine_name;
+
     public function getName() : string {
         return $this->name;
     }
@@ -53,6 +60,16 @@ class Theme {
     public function setPaths(string $paths) : self {
         $this->paths = $paths;
         
+        return $this;
+    }
+
+    public function getParentMachineName() : string {
+        return $this->parent_machine_name;
+    }
+
+    public function setParentMachineName(string $parent_machine_name) : self {
+        $this->parent_machine_name = $parent_machine_name;
+
         return $this;
     }
 }
