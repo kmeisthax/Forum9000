@@ -10,7 +10,7 @@ class LessStylesheetCompiler implements AssetCompilerInterface {
      */
     public function canCompileAsset(array $filenames) : boolean {
         return false;
-    };
+    }
     
     /**
      * @inheritdoc
@@ -31,5 +31,5 @@ class LessStylesheetCompiler implements AssetCompilerInterface {
         $out_files[$target_filename] = $parser->getCss();
         
         return $out_files;
-    };
+    }
 }
