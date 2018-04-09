@@ -36,10 +36,12 @@ interface AssetCompilerInterface {
      *   A FileLocator to load said files from. Must include the theme resource
      *   path that the $filenames are relative to. This will also be used to
      *   load any additional resources referenced by the files.
+     * @param array $options
+     *   The pipeline options used to invoke the compiler.
      * 
      * @return array
      *   Array of file contents indexed by filenames, representing the target
      *   form of the transformation.
      */
-    public function compileAssetToFile(array $files, FileLocator $themeFiles) : array;
+    public function compileAssetToFile(array $files, FileLocator $themeFiles, array $pipeline_options = array()) : array;
 }

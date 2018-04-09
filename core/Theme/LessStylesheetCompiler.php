@@ -15,7 +15,7 @@ class LessStylesheetCompiler implements AssetCompilerInterface {
     /**
      * @inheritdoc
      */
-    public function compileAssetToFile(array $files, FileLocator $themeFiles) : array {
+    public function compileAssetToFile(array $files, FileLocator $themeFiles, array $pipeline_options = array()) : array {
         $lessParser = new \Less_Parser();
         $lessParser->SetOption("import_callback", function ($file) {
             return file_get_contents($themeFiles->locate($file));
