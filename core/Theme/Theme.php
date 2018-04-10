@@ -27,6 +27,13 @@ class Theme {
      * @var string
      */
     private $theme_base_path;
+    
+    /**
+     * Path from the root of the site to the URL
+     *
+     * @var string
+     */
+    private $theme_url;
 
     /**
      * List of paths this theme provides.
@@ -70,6 +77,16 @@ class Theme {
 
     public function setThemeBasePath(string $theme_base_path) : self {
         $this->theme_base_path = $theme_base_path;
+
+        return $this;
+    }
+    
+    public function getThemeUrl() : string {
+        return $this->theme_url;
+    }
+
+    public function setThemeUrl(string $theme_url) : self {
+        $this->theme_url = $theme_url;
 
         return $this;
     }
