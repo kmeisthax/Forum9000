@@ -81,6 +81,7 @@ class ForumController extends Controller {
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
 
         $thread = $threadRepo->findByCompactId($id);
+        $forum = $thread->getForum();
         $this->denyAccessUnlessGranted('view', $thread);
 
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
@@ -114,6 +115,7 @@ class ForumController extends Controller {
         return $this->render(
                                 "forum/thread.html.twig",
                                 array(
+                                    "forum" => $forum,
                                     "thread" => $thread,
                                     "posts" => $posts,
                                     "reply_form" => $form->createView()
