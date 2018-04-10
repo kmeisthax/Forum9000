@@ -79,6 +79,7 @@
             "id": "01CA142YXNTRA6W2KBVKSVY5PQ",
             "allow-contrib": false
         },
-        "symfony.id": "01CA13XBQM68A3V2D65C4DZM5N"
+        "symfony.id": "01CA13XBQM68A3V2D65C4DZM5N",
+        "public-dir": "."
     }
 }

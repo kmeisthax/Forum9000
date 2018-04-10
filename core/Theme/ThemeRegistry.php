@@ -3,6 +3,10 @@
 namespace Forum9000\Theme;
 
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Asset\Packages;
+use Symfony\Component\Asset\PackageInterface;
+use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
+use Symfony\Component\Asset\Context\ContextInterface;
 
 /**
  * Storage for loaded theme configuration & such.
@@ -13,7 +17,7 @@ class ThemeRegistry {
     /**
      * That which finds our theme yamls
      *
-     * @var Symfony\Component\Config\FileLocator
+     * @var Forum9000\Theme\ThemeLocator
      */
     private $themeLocator;
 
@@ -23,6 +27,10 @@ class ThemeRegistry {
      * @var Forum9000\Theme\ThemeLoader
      */
     private $themeLoader;
+    
+    private $assetPackages;
+    private $assetCtxt;
+    private $assetVersioner;
 
     /**
      * All known themes, indexed by machine name.
@@ -31,9 +39,12 @@ class ThemeRegistry {
      */
     private $themes;
 
-    public function __construct(ThemeLocator $themeLocator, ThemeLoader $themeLoader) {
+    public function __construct(ThemeLocator $themeLocator, ThemeLoader $themeLoader, Packages $assetPackages, VersionStrategyInterface $assetVersioner, ContextInterface $assetCtxt) {
         $this->themeLocator = $themeLocator;
         $this->themeLoader = $themeLoader;
+        $this->assetPackages = $assetPackages;
+        $this->assetVersioner = $assetVersioner;
+        $this->assetCtxt = $assetCtxt;
     }
 
     private function ensure_theme_yamls() {
@@ -58,14 +69,44 @@ class ThemeRegistry {
      */
     public function calculate_theme_paths(Theme $theme, string $restype) {
         $this->ensure_theme_yamls();
-
-        $paths = array($theme->getThemeBasePath() . DIRECTORY_SEPARATOR . $theme->getPaths()[$restype]);
+        
+        $paths = array();
         $current_theme = $theme;
-
+        
+        if (array_key_exists($restype, $current_theme->getPaths())) {
+            $paths[] = $current_theme->getThemeBasePath() . DIRECTORY_SEPARATOR . $current_theme->getPaths()[$restype];
+        }
+        
         while ($current_theme->getParentMachineName() !== null) {
             $current_theme = $this->find_theme_by_machine_name($current_theme->getParentMachineName());
+            
+            if (array_key_exists($restype, $current_theme->getPaths())) {
+                $paths[] = $current_theme->getThemeBasePath() . DIRECTORY_SEPARATOR . $current_theme->getPaths()[$restype];
+            }
+        }
 
-            $paths[] = $current_theme->getThemeBasePath() . DIRECTORY_SEPARATOR . $current_theme->getPaths()[$restype];
+        return $paths;
+    }
+
+    /**
+     * Given a theme, compute all relative URLs available for one of it's resource types.
+     */
+    public function calculate_theme_urls(Theme $theme, string $restype) {
+        $this->ensure_theme_yamls();
+        
+        $paths = array();
+        $current_theme = $theme;
+        
+        if (array_key_exists($restype, $current_theme->getPaths())) {
+            $paths[] = $current_theme->getThemeUrl() . DIRECTORY_SEPARATOR . $current_theme->getPaths()[$restype];
+        }
+        
+        while ($current_theme->getParentMachineName() !== null) {
+            $current_theme = $this->find_theme_by_machine_name($current_theme->getParentMachineName());
+            
+            if (array_key_exists($restype, $current_theme->getPaths())) {
+                $paths[] = $current_theme->getThemeUrl() . DIRECTORY_SEPARATOR . $current_theme->getPaths()[$restype];
+            }
         }
 
         return $paths;
@@ -83,6 +124,14 @@ class ThemeRegistry {
      */
     public function construct_twig_loader(Theme $theme) {
         return new \Twig_Loader_Filesystem($this->calculate_theme_paths($theme, "templates"));
+    }
+    
+    /**
+     * Given a theme, construct a \Symfony\Component\Asset\PackageInterface for
+     * it.
+     */
+    public function construct_asset_package(Theme $theme) {
+        return new ThemePathPackage($this->calculate_theme_urls($theme, "assets"), $this->assetVersioner, $this->assetCtxt);
     }
 
     const ROUTECLASS_USER = "user";
@@ -110,6 +159,10 @@ class ThemeRegistry {
 
     /**
      * Apply a theme to an existing Twig environment
+     * 
+     * TODO: Can we have this done *before* the route executes? What happens if
+     * we recursively include other route fragments? Is there a routing event
+     * that can be subscribed to?
      */
     public function apply_theme(\Twig_Environment $twig, Theme $theme) {
         $theme_ldr = $twig->getLoader();
@@ -120,5 +173,8 @@ class ThemeRegistry {
         }
 
         $twig->setLoader($theme_ldr);
+        
+        $themeAssetPkg = $this->construct_asset_package($theme);
+        $this->assetPackages->setDefaultPackage($themeAssetPkg);
     }
 }

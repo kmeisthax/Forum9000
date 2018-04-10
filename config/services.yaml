@@ -35,8 +35,13 @@ services:
     Forum9000\Theme\ThemeLocator:
         arguments:
             $paths:
-                - "../core/Theme"
-                - "../themes"
+                - "core/Theme"
+                - "themes"
+    
+    Forum9000\Theme\ThemeRegistry:
+        arguments:
+            $assetVersioner: '@assets.empty_version_strategy'
+            $assetCtxt: '@assets.context'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
