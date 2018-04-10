@@ -4,3 +4,8 @@ parent: base
 description: Theme used to render admin pages.
 paths:
     templates: templates
+    assets: .
+pipelines:
+    stylesheets.main:
+        - source: "stylesheets/main.less"
+        - compiler: Forum9000\Theme\LessStylesheetCompiler

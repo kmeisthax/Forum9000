@@ -10,12 +10,12 @@ class LessStylesheetCompiler implements AssetCompilerInterface {
      */
     public function canCompileAsset(array $filenames) : boolean {
         return false;
-    };
+    }
     
     /**
      * @inheritdoc
      */
-    public function compileAssetToFile(array $files, FileLocator $themeFiles) : array {
+    public function compileAssetToFile(array $files, FileLocator $themeFiles, array $pipeline_options = array()) : array {
         $lessParser = new \Less_Parser();
         $lessParser->SetOption("import_callback", function ($file) {
             return file_get_contents($themeFiles->locate($file));
@@ -31,5 +31,5 @@ class LessStylesheetCompiler implements AssetCompilerInterface {
         $out_files[$target_filename] = $parser->getCss();
         
         return $out_files;
-    };
+    }
 }
