@@ -17,7 +17,7 @@ class SecurityController extends Controller {
      * @Route("/login", name="login")
      */
     public function login(Request $request, ThemeRegistry $themeReg, AuthenticationUtils $auth) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
 
         // get the login error if there is one
         $error = $auth->getLastAuthenticationError();
@@ -35,7 +35,7 @@ class SecurityController extends Controller {
      * @Route("/register", name="register")
      */
     public function register(Request $request, ThemeRegistry $themeReg, UserPasswordEncoderInterface $encoder) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
 
         $em = $this->getDoctrine()->getManager();
         $user = new User();

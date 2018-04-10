@@ -30,7 +30,7 @@ class ForumController extends Controller {
         $forum = $forumRepo->findByCompactId($id);
         $this->denyAccessUnlessGranted('view', $forum);
         
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
 
         $post = new Post();
         $user = $this->getUser();
@@ -83,7 +83,7 @@ class ForumController extends Controller {
         $thread = $threadRepo->findByCompactId($id);
         $this->denyAccessUnlessGranted('view', $thread);
 
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
 
         $reply = new Post();
         $user = $this->getUser();
