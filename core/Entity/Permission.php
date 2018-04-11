@@ -119,4 +119,28 @@ class Permission
 
         return $this;
     }
+
+    public function getIsDeniedAuth(): ?bool
+    {
+        return $this->isDeniedAuth;
+    }
+
+    public function setIsDeniedAuth(bool $isDeniedAuth): self
+    {
+        $this->isDeniedAuth = $isDeniedAuth;
+
+        return $this;
+    }
+
+    public function getIsDeniedAnon(): ?bool
+    {
+        return $this->isDeniedAnon;
+    }
+
+    public function setIsDeniedAnon(bool $isDeniedAnon): self
+    {
+        $this->isDeniedAnon = $isDeniedAnon;
+
+        return $this;
+    }
 }

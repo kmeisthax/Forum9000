@@ -162,6 +162,8 @@ class AdminController extends Controller {
         //Recreate a form object to capture the request data.
         $perm = new Permission();
         $perm->setForum($forum);
+        $perm->setIsDeniedAnon(false);
+        $perm->setIsDeniedAuth(false);
         
         $perm_form = $this->createForm(PermissionType::class, $perm);
         $perm_form->handleRequest($request);
