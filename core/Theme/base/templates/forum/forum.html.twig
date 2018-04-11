@@ -4,15 +4,26 @@
     {% if forum %}
         <h1>{{forum.title}}</h1>
         {{forum.description}}
+        <p>{{thread_count}} threads</p>
     {% endif %}
 
     {% for thread in threads %}
         <article>
-            <a href="/thread/{{thread.compactId}}">{{thread.orderedPosts[0].title}}</a>
+            <a href="{{url('f9kforum_thread', {'id':thread.compactId})}}">{{thread.orderedPosts[0].title}}</a>
         </article>
     {% else %}
         No threads!
     {% endfor %}
+
+    {% set page_limit = thread_count / 10 + 1 %}
+    {% if thread_count > 10 %}
+        <nav>
+            Page
+            {% for page_count in 1..page_limit|round(1, 'floor') %}
+                <a href="{{url('f9kforum_forum', {'id':forum.compactId, 'page':page_count})}}" title="Page {{page_count}}">{{page_count}}</a>
+            {% endfor %}
+        </nav>
+    {% endif %}
 
     <h2>New Thread</h2>
     {{ form_start(thread_form) }}

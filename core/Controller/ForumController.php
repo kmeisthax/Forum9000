@@ -20,9 +20,9 @@ use Forum9000\Theme\ThemeRegistry;
  */
 class ForumController extends Controller {
     /**
-     * @Route("/forum/{id}", name="forum")
+     * @Route("/forum/{id}/{page}", name="forum")
      */
-    public function forum(Request $request, ThemeRegistry $themeReg, $id) {
+    public function forum(Request $request, ThemeRegistry $themeReg, $id, $page=1) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
@@ -61,13 +61,15 @@ class ForumController extends Controller {
             return $this->redirectToRoute("f9kforum_thread", array("id" => $thread->getCompactId()));
         }
         
-        $threads = $threadRepo->getLatestThreadsInForum($forum, 0, 10);
+        $threads = $threadRepo->getLatestThreadsInForum($forum, ($page - 1) * 10, 10);
+        $thread_count = $threadRepo->getForumThreadCount($forum);
         
         return $this->render(
                                 "forum/forum.html.twig",
                                 array(
                                     "forum" => $forum,
                                     "threads" => $threads,
+                                    "thread_count" => $thread_count,
                                     "thread_form" => $form->createView()
                                 )
                             );

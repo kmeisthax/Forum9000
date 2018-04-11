@@ -28,6 +28,8 @@ class ThreadRepository extends ServiceEntityRepository
             ->join('t.posts', 'p')
             ->orderBy('p.ctime', 'DESC')
             ->groupBy('t')
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }
@@ -38,8 +40,18 @@ class ThreadRepository extends ServiceEntityRepository
             ->join('t.posts', 'p')
             ->orderBy('p.ctime', 'DESC')
             ->groupBy('t')
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+    public function getForumThreadCount(Forum $f) {
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(t)')
+            ->where('t.forum = :forum_id')->setParameter("forum_id", $f->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 //    /**
