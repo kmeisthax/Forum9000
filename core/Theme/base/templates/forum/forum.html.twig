@@ -1,4 +1,5 @@
 {% extends "base.html.twig" %}
+{% import "macros.html.twig" as macros %}
 
 {% block body %}
     {% if forum %}
@@ -20,18 +21,5 @@
         No threads!
     {% endfor %}
 
-    {% set page_limit = thread_count // 10 + 1 %}
-    {% set page_limit = page_limit | round(0, 'floor') %}
-    {% if thread_count > 10 %}
-        <nav>
-            Page
-            {% for page_count in 1..page_limit %}
-                {% if page != page_count %}
-                    <a href="{{url('f9kforum_forum', {'id':forum.compactId, 'page':page_count})}}" title="Page {{page_count}}">{{page_count}}</a>
-                {% else %}
-                    {{page_count}}
-                {% endif %}
-            {% endfor %}
-        </nav>
-    {% endif %}
+    {{macros.pagination(thread_count, 10, "f9kforum_forum", {"id": forum.compactId}, page)}}
 {% endblock %}
