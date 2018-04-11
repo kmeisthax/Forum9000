@@ -36,20 +36,41 @@ class Permission
 
     /**
      * TRUE if permission is granted to logged-in users.
+     * FALSE means check the denied variable.
      * Only checked for authenticated users without a specific grant.
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":false})
      */
     private $isGrantedAuth;
 
     /**
      * TRUE if permission is granted to anonymous users.
+     * FALSE means check the denied variable.
      * Only checked for anonymous users without a specific grant.
      * You should be extremely careful with anonymous grants.
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":false})
      */
     private $isGrantedAnon;
+
+    /**
+     * TRUE if permission is denied to logged-in users.
+     * FALSE means check the parent forum's permissions, if one exists.
+     * Only checked for authenticated users without a specific grant.
+     *
+     * @ORM\Column(type="boolean", options={"default":false})
+     */
+    private $isDeniedAuth;
+
+    /**
+     * TRUE if permission is denied to anonymous users.
+     * FALSE means check the parent forum's permissions, if one exists.
+     * Only checked for anonymous users without a specific grant.
+     * You should be extremely careful with anonymous grants.
+     *
+     * @ORM\Column(type="boolean", options={"default":false})
+     */
+    private $isDeniedAnon;
 
     public function getAttribute(): ?string
     {

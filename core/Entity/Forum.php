@@ -47,11 +47,27 @@ class Forum
      * @ORM\OneToMany(targetEntity="Grant", mappedBy="forum")
      */
     private $grants;
+    
+    /**
+     * The list of subforums for a particular forum.
+     * 
+     * @ORM\OneToMany(targetEntity="Forum", mappedBy="parent")
+     */
+    private $subforums;
+    
+    /**
+     * The parent forum for this forum.
+     * 
+     * @ORM\ManyToOne(targetEntity="Forum", inversedBy="subforums")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     */
+    private $parent;
 
     public function __construct() {
         $this->threads = new ArrayCollection();
         $this->permissions = new ArrayCollection();
         $this->grants = new ArrayCollection();
+        $this->subforums = new ArrayCollection();
     }
 
     public function getId()
@@ -93,5 +109,21 @@ class Forum
 
     public function getGrants() {
         return $this->grants;
+    }
+
+    public function getSubforums() {
+        return $this->subforums;
+    }
+
+    public function getParent(): ?Forum
+    {
+        return $this->parent;
+    }
+
+    public function setParent(Forum $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
     }
 }

@@ -30,6 +30,14 @@ class Thread
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="id")
      */
     private $forum;
+    
+    /**
+     * True if the thread is locked. A locked thread cannot be replied to,
+     * unless the user has a special permission for replying to locked threads.
+     * 
+     * @ORM\Column(type="boolean", options={"default":false})
+     */
+    private $isLocked;
 
     public function __construct() {
         $this->posts = new ArrayCollection();
@@ -67,6 +75,16 @@ class Thread
     
     public function setForum(Forum $forum) : self {
         $this->forum = $forum;
+        
+        return $this;
+    }
+    
+    public function getIsLocked() : ?boolean {
+        return $this->isLocked;
+    }
+    
+    public function setIsLocked(boolean $isLocked) : self {
+        $this->isLocked = $isLocked;
         
         return $this;
     }
