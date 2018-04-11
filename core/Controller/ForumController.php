@@ -68,6 +68,7 @@ class ForumController extends Controller {
                                 "forum/forum.html.twig",
                                 array(
                                     "forum" => $forum,
+                                    "page" => $page,
                                     "threads" => $threads,
                                     "thread_count" => $thread_count,
                                     "thread_form" => $form->createView()
