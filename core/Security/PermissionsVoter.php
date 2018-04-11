@@ -19,7 +19,7 @@ class PermissionsVoter extends Voter {
     }
     
     protected function supports($attribute, $subject) {
-        if (!in_array($attribute, array(Permission::VIEW, Permission::POST, Permission::REPLY, Permission::GRANT, Permission::REVOKE))) {
+        if (!in_array($attribute, array(Permission::VIEW, Permission::POST, Permission::REPLY, Permission::LOCK, Permission::GRANT, Permission::REVOKE))) {
             return false;
         }
         

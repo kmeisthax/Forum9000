@@ -27,6 +27,7 @@ class GrantType extends AbstractType {
                     Permission::VIEW => Permission::VIEW,
                     Permission::POST => Permission::POST,
                     Permission::REPLY => Permission::REPLY,
+                    Permission::LOCK => Permission::LOCK,
                     Permission::GRANT => Permission::GRANT,
                     Permission::REVOKE => Permission::REVOKE)
             ));
