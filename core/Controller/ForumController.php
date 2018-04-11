@@ -11,6 +11,7 @@ use Forum9000\Entity\Forum;
 use Forum9000\Entity\Thread;
 use Forum9000\Entity\Post;
 use Forum9000\Form\PostType;
+use Forum9000\Form\LockType;
 use Forum9000\Theme\ThemeRegistry;
 
 /**
@@ -148,6 +149,41 @@ class ForumController extends Controller {
                                     "post_count" => $post_count,
                                     "page" => $page,
                                     "reply_form" => $form->createView()
+                                )
+                            );
+    }
+    
+    /**
+     * @Route("/thread/{id}/lock", name="thread_lock")
+     */
+    public function thread_lock(Request $request, ThemeRegistry $themeReg, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
+
+        $thread = $threadRepo->findByCompactId($id);
+        $forum = $thread->getForum();
+        $this->denyAccessUnlessGranted('lock', $thread);
+
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
+
+        $form = $this->createForm(LockType::class, $thread);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $thread = $form->getData();
+            
+            $em->persist($thread);
+            $em->flush();
+
+            return $this->redirectToRoute("f9kforum_thread", array("id" => $thread->getCompactId()));
+        }
+
+        return $this->render(
+                                "forum/thread_lock.html.twig",
+                                array(
+                                    "forum" => $forum,
+                                    "thread" => $thread,
+                                    "lock_form" => $form->createView()
                                 )
                             );
     }

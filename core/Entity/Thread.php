@@ -79,11 +79,11 @@ class Thread
         return $this;
     }
     
-    public function getIsLocked() : ?boolean {
+    public function getIsLocked() : ?bool {
         return $this->isLocked;
     }
     
-    public function setIsLocked(boolean $isLocked) : self {
+    public function setIsLocked(bool $isLocked) : self {
         $this->isLocked = $isLocked;
         
         return $this;

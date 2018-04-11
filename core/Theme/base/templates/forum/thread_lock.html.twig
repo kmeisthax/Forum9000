@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+{% import "macros.html.twig" as macros %}
+
+{% block body %}
+    <a href="{{url('f9kforum_forum', {'id':forum.compactId})}}">Back to {{forum.title}}</a>
+
+    <h2>Lock</h2>
+    {{ form_start(lock_form) }}
+    {{ form_widget(lock_form) }}
+    {{ form_end(lock_form) }}
+{% endblock %}
