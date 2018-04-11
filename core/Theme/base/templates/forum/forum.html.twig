@@ -10,6 +10,11 @@
     {% for thread in threads %}
         <article>
             <a href="{{url('f9kforum_thread', {'id':thread.compactId})}}">{{thread.orderedPosts[0].title}}</a>
+            {% if thread.orderedPosts[0].postedBy %}
+                <span>Posted by {{thread.orderedPosts[0].postedBy.handle}} on {{thread.orderedPosts[0].ctime | date}} UTC</span>
+            {% else %}
+                <span>Posted anonymously on {{thread.orderedPosts[0].ctime | date}} UTC</span>
+            {% endif %}
         </article>
     {% else %}
         No threads!
