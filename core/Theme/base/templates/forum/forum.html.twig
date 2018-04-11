@@ -4,7 +4,7 @@
     {% if forum %}
         <h1>{{forum.title}}</h1>
         {{forum.description}}
-        <p>{{thread_count}} threads</p>
+        <p>{{thread_count}} threads - <a href="{{url('f9kforum_thread_new', {'id':forum.compactId})}}">post new thread</a></p>
     {% endif %}
 
     {% for thread in threads %}
@@ -34,9 +34,4 @@
             {% endfor %}
         </nav>
     {% endif %}
-
-    <h2>New Thread</h2>
-    {{ form_start(thread_form) }}
-    {{ form_widget(thread_form) }}
-    {{ form_end(thread_form) }}
 {% endblock %}

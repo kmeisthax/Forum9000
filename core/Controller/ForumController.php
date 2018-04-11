@@ -20,7 +20,7 @@ use Forum9000\Theme\ThemeRegistry;
  */
 class ForumController extends Controller {
     /**
-     * @Route("/forum/{id}/{page}", name="forum")
+     * @Route("/forum/{id}/{page}", name="forum", requirements={"page" = "\d+"})
      */
     public function forum(Request $request, ThemeRegistry $themeReg, $id, $page=1) {
         $em = $this->getDoctrine()->getManager();
@@ -35,12 +35,40 @@ class ForumController extends Controller {
         $post = new Post();
         $user = $this->getUser();
         
+        $threads = $threadRepo->getLatestThreadsInForum($forum, ($page - 1) * 10, 10);
+        $thread_count = $threadRepo->getForumThreadCount($forum);
+        
+        return $this->render(
+                                "forum/forum.html.twig",
+                                array(
+                                    "forum" => $forum,
+                                    "page" => $page,
+                                    "threads" => $threads,
+                                    "thread_count" => $thread_count
+                                )
+                            );
+    }
+    
+    /**
+     * @Route("/forum/{id}/thread", name="thread_new")
+     */
+    public function thread_new(Request $request, ThemeRegistry $themeReg, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
+        $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
+        
+        $forum = $forumRepo->findByCompactId($id);
+        $this->denyAccessUnlessGranted('post', $forum);
+        
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
+
+        $post = new Post();
+        $user = $this->getUser();
+        
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->denyAccessUnlessGranted('post', $forum);
-
             $post = $form->getData();
 
             $thread = new Thread();
@@ -61,16 +89,10 @@ class ForumController extends Controller {
             return $this->redirectToRoute("f9kforum_thread", array("id" => $thread->getCompactId()));
         }
         
-        $threads = $threadRepo->getLatestThreadsInForum($forum, ($page - 1) * 10, 10);
-        $thread_count = $threadRepo->getForumThreadCount($forum);
-        
         return $this->render(
-                                "forum/forum.html.twig",
+                                "forum/thread_new.html.twig",
                                 array(
                                     "forum" => $forum,
-                                    "page" => $page,
-                                    "threads" => $threads,
-                                    "thread_count" => $thread_count,
                                     "thread_form" => $form->createView()
                                 )
                             );

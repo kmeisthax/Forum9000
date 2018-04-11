@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    {% if forum %}
+        <h1>{{forum.title}}</h1>
+        {{forum.description}}
+    {% endif %}
+
+    <h2>New Thread</h2>
+    {{ form_start(thread_form) }}
+    {{ form_widget(thread_form) }}
+    {{ form_end(thread_form) }}
+{% endblock %}
