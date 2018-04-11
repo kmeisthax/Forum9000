@@ -1,4 +1,5 @@
 {% extends "base.html.twig" %}
+{% import "macros.html.twig" as macros %}
 
 {% block body %}
     <a href="{{url('f9kforum_forum', {'id':forum.compactId})}}">Back to {{forum.title}}</a>
@@ -15,6 +16,8 @@
     {% else %}
         No posts!
     {% endfor %}
+
+    {{macros.pagination(post_count, 20, "f9kforum_thread", {"id": thread.compactId}, page)}}
 
     <h2>Reply</h2>
     {{ form_start(reply_form) }}

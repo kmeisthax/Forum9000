@@ -99,11 +99,12 @@ class ForumController extends Controller {
     }
     
     /**
-     * @Route("/thread/{id}", name="thread")
+     * @Route("/thread/{id}/{page}", name="thread", requirements={"page" = "\d+"})
      */
-    public function thread(Request $request, ThemeRegistry $themeReg, $id) {
+    public function thread(Request $request, ThemeRegistry $themeReg, $id, $page = 1) {
         $em = $this->getDoctrine()->getManager();
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
+        $postRepo = $this->getDoctrine()->getRepository(Post::class);
 
         $thread = $threadRepo->findByCompactId($id);
         $forum = $thread->getForum();
@@ -135,7 +136,8 @@ class ForumController extends Controller {
             return $this->redirectToRoute("f9kforum_thread", array("id" => $thread->getCompactId()));
         }
 
-        $posts = $thread->getOrderedPosts(0, 20);
+        $posts = $thread->getOrderedPosts(($page - 1) * 20, 20);
+        $post_count = $postRepo->getThreadPostCount($thread);
 
         return $this->render(
                                 "forum/thread.html.twig",
@@ -143,6 +145,8 @@ class ForumController extends Controller {
                                     "forum" => $forum,
                                     "thread" => $thread,
                                     "posts" => $posts,
+                                    "post_count" => $post_count,
+                                    "page" => $page,
                                     "reply_form" => $form->createView()
                                 )
                             );
