@@ -33,6 +33,11 @@ class PermissionsVoter extends Voter {
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token) {
         $user = $token->getUser();
         
+        if ($subject instanceof Thread && $subject->getIsLocked() && $attribute === Permission::REPLY) {
+            //Can't reply to locked threads.
+            return false;
+        }
+        
         if ($subject instanceof Thread) {
             //Threads don't have permissions or grants, they inherit from the
             //forum they belong to
