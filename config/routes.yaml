@@ -1,3 +1,9 @@
 #index:
 #    path: /
 #    controller: Forum9000\Controller\DefaultController::index
+
+default:
+    path: /{path_alias}
+    controller: Forum9000\Controller\DefaultController::handle_alias
+    requirements:
+        path_alias: ".+"
