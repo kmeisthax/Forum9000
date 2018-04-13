@@ -39,7 +39,7 @@ class Forum
     /**
      * Order of forums within the parent forum.
      * 
-     * @ORM\Column(type="integer", options={"default":0})
+     * @ORM\Column(name="`order`", type="integer", options={"default":0})
      */
     private $order;
 

@@ -90,6 +90,7 @@ class AdminController extends Controller {
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
 
         $forum = new Forum();
+        $forum->setOrder(0);
         $user = $this->getUser();
 
         $form = $this->createForm(ForumType::class, $forum);
