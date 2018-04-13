@@ -1,0 +1,160 @@
+@charset "utf-8";
+
+.bbcedw {
+	border:1px solid #555;
+	background-color:#FFF;
+}
+.bbcedc {
+	padding:8px 0;
+	margin:0 8px;
+}
+.bbcedc textarea {
+	width: 90%;
+}
+.bbcedsect {
+	margin-top:5px;
+}
+.bbcedextra {
+	height:1px;
+	overflow:hidden;
+}
+.bbcedsectheader {
+	font-size:11px;
+	font-weight:bold;
+	color:#111;
+}
+.bbcedbuttons a {
+	display:block;
+	width:20px;
+	padding:2px 0;
+	overflow:hidden;
+	float:left;
+}
+.bbcedbuttons a:hover, .bbcedsizes a:hover, .bbcedfont a:hover {
+	background-color:#E8E8E8;
+}
+.bbcedbuttons a strong {
+	background-image: url(images/bbc_icons.gif);
+	background-repeat: repeat-y;
+	margin:0 2px;
+	height:16px;
+	padding-left:20px;
+	overflow:hidden;
+	display:block;
+}
+.bbcedsizes a, .bbcedfont a, .bbcedcolour a {
+	display:block;
+	text-align:center;
+	font-weight:bold;
+	color:#333;
+	float:left;
+	text-decoration:none;
+	line-height:16px;
+}
+.bbcedsizes a {
+	padding:2px 0;
+	width:26px;
+	font-size:12px;
+	border:1px solid #DDD;
+}
+.bbcedfont a {
+	border:1px solid #DDD;
+	width:180px;
+	max-width:100%;
+	height:20px;
+	overflow:hidden;
+}
+.bbcedfont a strong {
+	padding:2px 8px;
+	display:block;
+	text-align:left;
+	font-size:12px;
+}
+.bbcedsizes a, .bbcedfont a {
+	margin-right:1px;
+	margin-bottom:1px;
+}
+.bbcedcolour a {
+	width:10px;
+	height:10px;
+	border:1px solid #DDD;
+	overflow:hidden;
+}
+.bbcedcolour a:hover {
+	border:1px solid #F30;
+}
+.bbcedcolour a strong {
+	padding-left:20px;
+	display:block;
+}
+.bbcedclr {
+	font-size:1px;
+	clear:left;
+	line-height:1px;
+}
+.bbcedspoiler {
+	background-position:0 16px;
+}
+.bbcedquote {
+	background-position:0 32px;
+}
+.bbcedhide {
+	background-position:0 48px;
+}
+.bbcedcode {
+	background-position:0 64px;
+}
+.bbcedyoutube {
+	background-position:0 80px;
+}
+.bbcedimg {
+	background-position:0 96px;
+}
+.bbcedurl {
+	background-position:0 112px;
+}
+.bbcedright {
+	background-position:0 128px;
+}
+.bbcedcenter {
+	background-position:0 144px;
+}
+.bbcedindent {
+	background-position:0 160px;
+}
+.bbcedlist {
+	background-position:0 176px;
+}
+.bbcedlist1 {
+	background-position:0 192px;
+}
+.bbcedsup {
+	background-position:0 208px;
+}
+.bbcedsub {
+	background-position:0 224px;
+}
+.bbceds {
+	background-position:0 240px;
+}
+.bbcedu {
+	background-position:0 256px;
+}
+.bbcedi {
+	background-position:0 272px;
+}
+.bbcedb {
+	background-position:0 288px;
+}
+.bbcedemote {
+	background-position:0 304px;
+}
+.bbcedcolor {
+	background-position:0 320px;
+}
+.bbcedsize {
+	background-position:0 336px;
+}
+.bbcedfont {
+	background-position:0 352px;
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Editor Thing</title>
+<link href="bbced.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="bbcedw">
+	<div class="bbcedc">
+		<div class="bbcedbuttons">
+			<a href="javascript:;" onclick="mirai_insert_bbcode('url','messagebox')" title="Link"><strong class="bbcedurl">Link</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('img','messagebox')" title="Image"><strong class="bbcedimg">Image</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('quote','messagebox')" title="Quote"><strong class="bbcedquote">Quote</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('spoiler','messagebox')" title="Spoiler"><strong class="bbcedspoiler">Spoiler</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('hide','messagebox')" title="Hide"><strong class="bbcedhide">Hide</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('youtube','messagebox')" title="Youtube"><strong class="bbcedyoutube">Youtube</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('code','messagebox')" title="Code"><strong class="bbcedcode">Code</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('b','messagebox')" title="Bold"><strong class="bbcedb">Bold</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('i','messagebox')" title="Italic"><strong class="bbcedi">Italic</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('u','messagebox')" title="Underline"><strong class="bbcedu">Underline</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('s','messagebox')" title="Strikethrough"><strong class="bbceds">Strikethrough</strong></a>
+			<a href="javascript:;" onclick="mirai_show_extra(4,'messagebox')" title="Font"><strong class="bbcedfont">Font</strong></a>
+			<a href="javascript:;" onclick="mirai_show_extra(1,'messagebox')" title="Size"><strong class="bbcedsize">Size</strong></a>
+			<a href="javascript:;" onclick="mirai_show_extra(2,'messagebox')" title="Colour"><strong class="bbcedcolor">Colour</strong></a>
+			<a href="javascript:;" onclick="mirai_show_extra(3,'messagebox')" title="Emote"><strong class="bbcedemote">Emote</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('center','messagebox')" title="Center Align"><strong class="bbcedcenter">Center Align</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('right','messagebox')" title="Right Align"><strong class="bbcedright">Right Align</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('sup','messagebox')" title="Superscript"><strong class="bbcedsup">Superscript</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_bbcode('sub','messagebox')" title="Subscript"><strong class="bbcedsub">Subscript</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_list('messagebox',false)" title="Bulleted List"><strong class="bbcedlist">Bulleted List</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_list('messagebox',true)" title="Numbered List"><strong class="bbcedlist1">Numbered List</strong></a>
+			<a href="javascript:;" onclick="mirai_insert_indent('messagebox')" title="Indent"><strong class="bbcedindent">Indent</strong></a>
+			<div class="bbcedclr">&nbsp;</div>
+		</div>
+		<textarea name="message" id="messagebox"></textarea>
+		<script type="text/javascript" src="bbced.js"></script>
+		<script type="text/javascript">
+		var mirai_bbced_editorbox=document.getElementById('messagebox');
+		if(typeof mirai_bbced_editorbox.selectionStart != 'number' || typeof mirai_bbced_editorbox.selectionEnd != 'number') {
+			if('onbeforedeactivate' in mirai_bbced_editorbox) {
+				mirai_bbced_editorbox.onbeforedeactivate=function() { mirai_copy_selection('messagebox'); }
+			}
+		}
+		</script>
+		<div class="bbcedextra" id="bbcedsizessect_messagebox">
+			<div class="bbcedsect">
+				<div class="bbcedsectheader">Size:</div>
+				<div class="bbcedsizes">
+					<a href="javascript:;" onclick="mirai_insert_size(1,'messagebox')">9</a>
+					<a href="javascript:;" onclick="mirai_insert_size(2,'messagebox')">10</a>
+					<a href="javascript:;" onclick="mirai_insert_size(3,'messagebox')">12</a>
+					<a href="javascript:;" onclick="mirai_insert_size(4,'messagebox')">15</a>
+					<a href="javascript:;" onclick="mirai_insert_size(5,'messagebox')">18</a>
+					<a href="javascript:;" onclick="mirai_insert_size(6,'messagebox')">22</a>
+					<a href="javascript:;" onclick="mirai_insert_size(7,'messagebox')">26</a>
+					<div class="bbcedclr">&nbsp;</div>
+				</div>
+			</div>
+		</div>
+		<div class="bbcedextra" id="bbcedcoloursect_messagebox">
+			<div class="bbcedsect">
+				<div class="bbcedsectheader">Colour:</div>
+				<div class="bbcedcolour">
+					<a href="javascript:;" onclick="mirai_insert_colour('#000000','messagebox')" style="background-color:#000;"><strong>Black</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#800000','messagebox')" style="background-color:#800000;"><strong>Maroon</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#8B4513','messagebox')" style="background-color:#8B4513;"><strong>Saddle Brown</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#2F4F4F','messagebox')" style="background-color:#2F4F4F;"><strong>Dark Slate Gray</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#008080','messagebox')" style="background-color:#008080;"><strong>Teal</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#000080','messagebox')" style="background-color:#000080;"><strong>Navy</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#4B0082','messagebox')" style="background-color:#4B0082;"><strong>Indigo</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#696969','messagebox')" style="background-color:#696969;"><strong>Dark Gray</strong></a>
+					<div class="bbcedclr">&nbsp;</div>
+					<a href="javascript:;" onclick="mirai_insert_colour('#B22222','messagebox')" style="background-color:#B22222;"><strong>Fire Brick</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#A52A2A','messagebox')" style="background-color:#A52A2A;"><strong>Brown</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#DAA520','messagebox')" style="background-color:#DAA520;"><strong>Golden Rod</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#006400','messagebox')" style="background-color:#006400;"><strong>Dark Green</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#40E0D0','messagebox')" style="background-color:#40E0D0;"><strong>Turquoise</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#0000CD','messagebox')" style="background-color:#0000CD;"><strong>Medium Blue</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#800080','messagebox')" style="background-color:#800080;"><strong>Purple</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#808080','messagebox')" style="background-color:#808080;"><strong>Gray</strong></a>
+					<div class="bbcedclr">&nbsp;</div>
+					<a href="javascript:;" onclick="mirai_insert_colour('#FF0000','messagebox')" style="background-color:#F00;"><strong>Red</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#FF8C00','messagebox')" style="background-color:#FF8C00;"><strong>Dark Orange</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#FFD700','messagebox')" style="background-color:#FFD700;"><strong>Gold</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#008000','messagebox')" style="background-color:#008000;"><strong>Green</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#00FFFF','messagebox')" style="background-color:#0FF;"><strong>Cyan</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#0000FF','messagebox')" style="background-color:#00F;"><strong>Blue</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#EE82EE','messagebox')" style="background-color:#EE82EE;"><strong>Violet</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#A9A9A9','messagebox')" style="background-color:#A9A9A9;"><strong>Dim Gray</strong></a>
+					<div class="bbcedclr">&nbsp;</div>
+					<a href="javascript:;" onclick="mirai_insert_colour('#FFA07A','messagebox')" style="background-color:#FFA07A;"><strong>Light Salmon</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#FFA500','messagebox')" style="background-color:#FFA500;"><strong>Orange</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#FFFF00','messagebox')" style="background-color:#FF0;"><strong>Yellow</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#00FF00','messagebox')" style="background-color:#0F0;"><strong>Lime</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#AFEEEE','messagebox')" style="background-color:#AFEEEE;"><strong>Pale Turquoise</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#ADD8E6','messagebox')" style="background-color:#ADD8E6;"><strong>Light Blue</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#DDA0DD','messagebox')" style="background-color:#DDA0DD;"><strong>Plum</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#D3D3D3','messagebox')" style="background-color:#D3D3D3;"><strong>Light Gray</strong></a>
+					<div class="bbcedclr">&nbsp;</div>
+					<a href="javascript:;" onclick="mirai_insert_colour('#FFF0F5','messagebox')" style="background-color:#FFF0F5;"><strong>Lavender Blush</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#FAEBD7','messagebox')" style="background-color:#FAEBD7;"><strong>Antique White</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#FFFFE0','messagebox')" style="background-color:#FFFFE0;"><strong>Light Yellow</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#F0FFF0','messagebox')" style="background-color:#F0FFF0;"><strong>Honeydew</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#F0FFFF','messagebox')" style="background-color:#F0FFFF;"><strong>Azure</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#F0F8FF','messagebox')" style="background-color:#F0F8FF;"><strong>Alice Blue</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#E6E6FA','messagebox')" style="background-color:#E6E6FA;"><strong>Lavender</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_colour('#FFFFFF','messagebox')" style="background-color:#FFF;"><strong>White</strong></a>
+					<div class="bbcedclr">&nbsp;</div>
+				</div>
+			</div>
+		</div>
+		<div class="bbcedextra" id="bbcedemotesect_messagebox">
+			<div class="bbcedsect">
+				<div class="bbcedsectheader">Emotes:</div>
+				<div class="bbcedemote">
+					<a href="javascript:;" onclick="mirai_insert_emote(':D','messagebox')" title="Big Grin"><img alt=":D" src="images/emotes/grin2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':confused:','messagebox')" title="Confused"><img alt=":confused:" src="images/emotes/confused2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':cool:','messagebox')" title="Cool"><img alt=":cool:" src="images/emotes/cool2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':o','messagebox')" title="Eek!"><img alt=":o" src="images/emotes/eek2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':(','messagebox')" title="Frown"><img alt=":(" src="images/emotes/frown2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':mad:','messagebox')" title="Mad"><img alt=":mad:" src="images/emotes/mad2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':mrgreen:','messagebox')" title="Mr Green"><img alt=":mrgreen:" src="images/emotes/biggrin3.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':oops:','messagebox')" title="Oops!"><img alt=":oops:" src="images/emotes/redface2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':rolleyes:','messagebox')" title="Roll Eyes"><img alt=":rolleyes:" src="images/emotes/rolleyes2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':)','messagebox')" title="Smile"><img alt=":)" src="images/emotes/smile2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':p','messagebox')" title="Stick Out Tongue"><img alt=":p" src="images/emotes/tongue2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(';)','messagebox')" title="Wink"><img alt=";)" src="images/emotes/wink2.gif" border="0"></a>
+					<a href="javascript:;" onclick="mirai_insert_emote(':awesomeface:','messagebox')" title="Awesome Face"><img alt=":awesomeface:" src="images/emotes/awesome3.gif" border="0"></a>
+				</div>
+			</div>
+		</div>
+		<div class="bbcedextra" id="bbcedfontsect_messagebox">
+			<div class="bbcedsect">
+				<div class="bbcedsectheader">Font:</div>
+				<div class="bbcedfont">
+					<a href="javascript:;" onclick="mirai_insert_font('Arial','messagebox')" style="font-family:Arial, Helvetica, sans-serif;"><strong>Arial</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_font('Book Antiqua','messagebox')" style="font-family:\'Book Antiqua\',Palatino,\'Palatino Linotype\',\'Palatino LT STD\',Georgia,serif"><strong>Book Antiqua</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_font('Comic Sans MS','messagebox')" style="font-family:\'Comic Sans MS\', cursive;"><strong>Comic Sans MS</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_font('Courier New','messagebox')" style="font-family:\'Courier New\', Courier, monospace;"><strong>Courier New</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_font('Georgia','messagebox')" style="font-family:Georgia, serif;"><strong>Georgia</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_font('Lucida Sans Unicode','messagebox')" style="font-family:font-family: \'Lucida Sans Unicode\', \'Lucida Grande\', sans-serif;"><strong>Lucida Sans Unicode</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_font('Tahoma','messagebox')" style="font-family:Tahoma, Geneva, sans-serif;"><strong>Tahoma</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_font('Times New Roman','messagebox')" style="font-family:\'Times New Roman\', Times, serif;"><strong>Times New Roman</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_font('Trebuchet MS','messagebox')" style="font-family:\'Trebuchet MS\', Helvetica, sans-serif;"><strong>Trebuchet MS</strong></a>
+					<a href="javascript:;" onclick="mirai_insert_font('Verdana','messagebox')" style="font-family:Verdana, Geneva, sans-serif;"><strong>Verdana</strong></a>
+					<div class="bbcedclr">&nbsp;</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+					
+</body>
+</html>
