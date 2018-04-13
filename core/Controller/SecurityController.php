@@ -38,8 +38,14 @@ class SecurityController extends Controller {
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
 
         $em = $this->getDoctrine()->getManager();
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
         $user = new User();
         $user->setSiteRole(User::USER);
+
+        //First user registration gets developer role
+        //TODO: This fails if === is in use. Can we fix the count methods to
+        //return integers?
+        if ($userRepo->getUserCount() == 0) $user->setSiteRole(User::DEVELOPER);
 
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
@@ -50,6 +56,8 @@ class SecurityController extends Controller {
 
             $em->persist($user);
             $em->flush();
+
+            return $this->redirectToRoute('login');
         }
 
         return $this->render('security/register.html.twig', array(
