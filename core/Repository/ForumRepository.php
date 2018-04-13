@@ -20,6 +20,14 @@ class ForumRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Forum::class);
     }
+    
+    public function findBySlug(string $slug) {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getSingleResult();
+    }
 
 //    /**
 //     * @return Forum[] Returns an array of Forum objects

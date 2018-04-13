@@ -29,6 +29,10 @@ class ForumController extends Controller {
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
         
         $forum = $forumRepo->findByCompactId($id);
+        if ($forum === null) {
+            $forum = $forumRepo->findBySlug($id);
+        }
+        
         $this->denyAccessUnlessGranted('view', $forum);
         
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
@@ -59,6 +63,10 @@ class ForumController extends Controller {
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
         
         $forum = $forumRepo->findByCompactId($id);
+        if ($forum === null) {
+            $forum = $forumRepo->findBySlug($id);
+        }
+        
         $this->denyAccessUnlessGranted('post', $forum);
         
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
