@@ -13,6 +13,7 @@ use Forum9000\Entity\Forum;
 use Forum9000\Entity\Permission;
 use Forum9000\Entity\Grant;
 use Forum9000\Form\ForumType;
+use Forum9000\Form\ForumOrderingType;
 use Forum9000\Form\PermissionType;
 use Forum9000\Form\GrantType;
 use Forum9000\Form\UserType;
@@ -92,17 +93,18 @@ class AdminController extends Controller {
         $forum = new Forum();
         $forum->setOrder(0);
 
-        $form = $this->createForm(ForumType::class, $forum, array(
+        $new_forum_form = $this->createForm(ForumType::class, $forum, array(
             'action' => $this->generateUrl('f9kadmin_forum_create')
         ));
 
         $forums = $forumRepo->findAll();
+        $order_form = $this->createForm(ForumOrderingType::class, array('forums' => $forums));
 
         return $this->render(
                                 "admin/forums.html.twig",
                                 array(
-                                    "forums" => $forums,
-                                    "forum_form" => $form->createView()
+                                    "order_form" => $order_form->createView(),
+                                    "new_forum_form" => $new_forum_form->createView()
                                 )
                             );
     }

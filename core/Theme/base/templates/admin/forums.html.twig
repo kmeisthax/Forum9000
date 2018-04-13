@@ -3,16 +3,12 @@
 {% block body %}
     <h1>Forum Manifest</h1>
 
-    {% for forum in forums %}
-        <article>
-            <a href="{{url('f9kadmin_forum_single', {'id':forum.compactId})}}">{{forum.title}}</a>
-        </article>
-    {% else %}
-        No forums!
-    {% endfor %}
+    {{ form_start(order_form) }}
+    {{ form_widget(order_form) }}
+    {{ form_end(order_form) }}
 
     <h2>New Forum</h2>
-    {{ form_start(forum_form) }}
-    {{ form_widget(forum_form) }}
-    {{ form_end(forum_form) }}
+    {{ form_start(new_forum_form) }}
+    {{ form_widget(new_forum_form) }}
+    {{ form_end(new_forum_form) }}
 {% endblock %}
