@@ -28,6 +28,20 @@ class Forum
      * @ORM\Column(type="text")
      */
     private $description;
+    
+    /**
+     * A user-friendly short title suitable for inclusion in a URL.
+     * 
+     * @ORM\Column(type="string", unique=true, length=255)
+     */
+    private $slug;
+    
+    /**
+     * Order of forums within the parent forum.
+     * 
+     * @ORM\Column(type="integer", options={"default":0})
+     */
+    private $order;
 
     /**
      * @ORM\OneToMany(targetEntity="Thread", mappedBy="forum")
@@ -95,6 +109,30 @@ class Forum
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getOrder(): ?int
+    {
+        return $this->order;
+    }
+
+    public function setOrder(int $order): self
+    {
+        $this->order = $order;
 
         return $this;
     }

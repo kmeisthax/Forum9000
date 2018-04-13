@@ -38,6 +38,13 @@ class Thread
      * @ORM\Column(type="boolean", options={"default":false})
      */
     private $isLocked;
+    
+    /**
+     * Order of forum threads within the parent forum.
+     * 
+     * @ORM\Column(type="integer", options={"default":0})
+     */
+    private $order;
 
     public function __construct() {
         $this->posts = new ArrayCollection();
@@ -85,6 +92,16 @@ class Thread
     
     public function setIsLocked(bool $isLocked) : self {
         $this->isLocked = $isLocked;
+        
+        return $this;
+    }
+    
+    public function getOrder() : ?int {
+        return $this->order;
+    }
+    
+    public function setOrder(int $order) : self {
+        $this->order = $order;
         
         return $this;
     }
