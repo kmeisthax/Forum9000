@@ -91,17 +91,10 @@ class AdminController extends Controller {
 
         $forum = new Forum();
         $forum->setOrder(0);
-        $user = $this->getUser();
 
-        $form = $this->createForm(ForumType::class, $forum);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $forum = $form->getData();
-
-            $em->persist($forum);
-            $em->flush();
-        }
+        $form = $this->createForm(ForumType::class, $forum, array(
+            'action' => $this->generateUrl('f9kadmin_forum_create')
+        ));
 
         $forums = $forumRepo->findAll();
 
@@ -112,6 +105,33 @@ class AdminController extends Controller {
                                     "forum_form" => $form->createView()
                                 )
                             );
+    }
+
+    /**
+     * @Route("/forums/create", name="forum_create")
+     */
+    public function forum_create(Request $request, ThemeRegistry $themeReg) {
+        $em = $this->getDoctrine()->getManager();
+        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
+        
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        
+        $forum = new Forum();
+        $forum->setOrder(0);
+        
+        $form = $this->createForm(ForumType::class, $forum);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $forum = $form->getData();
+
+            $em->persist($forum);
+            $em->flush();
+        
+            return $this->redirectToRoute("f9kadmin_forum_single", array("id" => $forum->getCompactId()));
+        }
+        
+        return $this->redirectToRoute("f9kadmin_forum_overview");
     }
     
     /**
