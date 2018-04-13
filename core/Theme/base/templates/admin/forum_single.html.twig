@@ -4,6 +4,13 @@
     <h1>Forum Admin - {{forum.title}}</h1>
 
     <a href="{{ path('f9kforum_forum', {'id': forum.compactId})}}">View forum on site</a>
+    
+    {% if forum_edit_form %}
+        <h2>General Settings</h2>
+        {{ form_start(forum_edit_form) }}
+        {{ form_widget(forum_edit_form) }}
+        {{ form_end(forum_edit_form) }}
+    {% endif %}
 
     <h2>Default permissions</h2>
     <p>Permissions encompass the default set of actions that anonymous &amp; authenticated users can automatically perform by default. You can use them to control, for example, if logged-out users are allowed to view or post on a particular forum.</p>

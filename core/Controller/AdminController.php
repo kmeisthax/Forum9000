@@ -122,6 +122,16 @@ class AdminController extends Controller {
         $forum = $forumRepo->findByCompactId($id);
         
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        
+        $forum_edit_form = $this->createForm(ForumType::class, $forum);
+        $forum_edit_form->handleRequest($request);
+        
+        if ($forum_edit_form->isSubmitted() && $forum_edit_form->isValid()) {
+            $forum = $forum_edit_form->getData();
+            
+            $em->merge($forum);
+            $em->flush();
+        }
 
         $new_perm = new Permission();
         $new_perm->setForum($forum);
@@ -145,6 +155,7 @@ class AdminController extends Controller {
             array(
                 "forum" => $forum,
                 "grants_by_user" => $grants_by_user,
+                "forum_edit_form" => $forum_edit_form->createView(),
                 "new_perm_form" => $new_perm_form->createView(),
                 "new_grant_form" => $new_grant_form->createView()
             )

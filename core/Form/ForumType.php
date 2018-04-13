@@ -13,6 +13,7 @@ class ForumType extends AbstractType {
         $builder
             ->add("title", TextType::class)
             ->add("description", TextareaType::class)
+            ->add("slug", TextType::class)
             ->add("post", SubmitType::class, array("label" => "Create Forum"));
     }
 }
