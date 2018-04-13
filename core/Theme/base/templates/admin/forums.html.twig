@@ -5,7 +5,7 @@
 
     {% for forum in forums %}
         <article>
-            <a href="/admin/forums/{{forum.compactId}}">{{forum.title}}</a>
+            <a href="{{url('f9kadmin_forum_single', {'id':forum.compactId})}}">{{forum.title}}</a>
         </article>
     {% else %}
         No forums!

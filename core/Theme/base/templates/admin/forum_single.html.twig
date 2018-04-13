@@ -3,7 +3,7 @@
 {% block body %}
     <h1>Forum Admin - {{forum.title}}</h1>
 
-    <a href="{{ path('f9kforum_forum', {'id': forum.compactId})}}">View forum on site</a>
+    <a href="{{ path('f9kforum_forum', {'id': forum.slug})}}">View forum on site</a>
     
     {% if forum_edit_form %}
         <h2>General Settings</h2>

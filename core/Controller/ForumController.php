@@ -108,9 +108,9 @@ class ForumController extends Controller {
     }
     
     /**
-     * @Route("/thread/{id}/{page}", name="thread", requirements={"page" = "\d+"})
+     * @Route("/forum/{forum_id}/{id}/{page}", name="thread", requirements={"page" = "\d+"})
      */
-    public function thread(Request $request, ThemeRegistry $themeReg, $id, $page = 1) {
+    public function thread(Request $request, ThemeRegistry $themeReg, $forum_id, $id, $page = 1) {
         $em = $this->getDoctrine()->getManager();
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
         $postRepo = $this->getDoctrine()->getRepository(Post::class);
@@ -142,7 +142,7 @@ class ForumController extends Controller {
             $em->persist($reply);
             $em->flush();
 
-            return $this->redirectToRoute("f9kforum_thread", array("id" => $thread->getCompactId()));
+            return $this->redirectToRoute("f9kforum_thread", array("forum_id" => $forum->getSlug(), "id" => $thread->getCompactId()));
         }
 
         $posts = $thread->getOrderedPosts(($page - 1) * 20, 20);
@@ -162,7 +162,7 @@ class ForumController extends Controller {
     }
     
     /**
-     * @Route("/thread/{id}/lock", name="thread_lock")
+     * @Route("/forum/{forum_id}/{id}/lock", name="thread_lock")
      */
     public function thread_lock(Request $request, ThemeRegistry $themeReg, $id) {
         $em = $this->getDoctrine()->getManager();
@@ -183,7 +183,7 @@ class ForumController extends Controller {
             $em->persist($thread);
             $em->flush();
 
-            return $this->redirectToRoute("f9kforum_thread", array("id" => $thread->getCompactId()));
+            return $this->redirectToRoute("f9kforum_thread", array("forum_id" => $forum->getSlug(), "id" => $thread->getCompactId()));
         }
 
         return $this->render(
