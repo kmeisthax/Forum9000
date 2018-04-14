@@ -3,7 +3,10 @@
 namespace Forum9000\Repository;
 
 use Forum9000\Entity\Forum;
+use Forum9000\Entity\Thread;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -27,6 +30,66 @@ class ForumRepository extends ServiceEntityRepository
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getSingleResult();
+    }
+    
+    /**
+     * Given a forum, return child subforums and threads, sorted by pin order
+     * and then newest post date.
+     * 
+     * Returns an array of forum and thread objects.
+     */
+    public function getForumChildren(Forum $f, $start = 0, $limit = 1) {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('type', 'type');
+        $rsm->addScalarResult('id', 'id');
+        
+        $nQuery = $this->_em->createNativeQuery("
+SELECT * FROM
+	((SELECT :forum_class as 'type', f.id as 'id', f.order as 'order', p.ctime as 'ctime'
+				FROM forum as f LEFT OUTER JOIN thread as t ON f.id = t.forum_id LEFT OUTER JOIN post as p ON t.id = p.thread_id
+                WHERE f.parent_id = :forum_id)
+		UNION (SELECT :thread_class as 'type', t.id as 'id', t.order, p.ctime as ctime
+				 FROM thread as t INNER JOIN post as p ON t.id = p.thread_id
+                 WHERE t.forum_id = :forum_id) ORDER BY `order` DESC, ctime DESC) as q
+	GROUP BY id ORDER BY `order` DESC, ctime DESC LIMIT :limit OFFSET :offset;", $rsm);
+        $nQuery->setParameter(":forum_class", Forum::class);
+        $nQuery->setParameter(":thread_class", Thread::class);
+        $nQuery->setParameter(":forum_id", $f->getId());
+        $nQuery->setParameter(":limit", $limit);
+        $nQuery->setParameter(":offset", $start);
+        
+        //Manually map the results to Doctrine objects by... just issuing two
+        //more queries for all the other objects we want, and then sorting them
+        //into an array according to the result set
+        $resultRows = $nQuery->getResult();
+        $keys = array(Forum::class => array(), Thread::class => array());
+        
+        foreach ($resultRows as $sqlRow) {
+            $keys[$sqlRow["type"]][] = $sqlRow["id"];
+        }
+        
+        $objectsById = array();
+        
+        foreach ($keys as $doctrineClass => $keylist) {
+            if (count($keylist) === 0) continue;
+            
+            $repository = $this->_em->getRepository($doctrineClass);
+            $dQuery = $repository->createQueryBuilder('k');
+            $dQuery->where($dQuery->expr()->in('k.id', $keylist));
+            $objects = $dQuery->getQuery()->getResult();
+            
+            foreach ($objects as $object) {
+                $objectsById[$object->getId()] = $object;
+            }
+        }
+        
+        $result = array();
+        
+        foreach ($resultRows as $sqlRow) {
+            $result[] = $objectsById[$sqlRow["id"]];
+        }
+        
+        return $result;
     }
 
 //    /**
