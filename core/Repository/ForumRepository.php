@@ -91,6 +91,38 @@ SELECT * FROM
         
         return $result;
     }
+    
+    /**
+     * Returns a count of all forum and thread objects which are children of a
+     * given parent forum.
+     */
+    public function getForumChildCount(Forum $f) {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('count', 'count');
+        
+        $nQuery = $this->_em->createNativeQuery("
+SELECT COUNT(DISTINCT id) as 'count' FROM
+	((SELECT f.id as 'id', f.order as 'order', p.ctime as 'ctime'
+				FROM forum as f LEFT OUTER JOIN thread as t ON f.id = t.forum_id LEFT OUTER JOIN post as p ON t.id = p.thread_id
+                WHERE f.parent_id = :forum_id)
+		UNION (SELECT t.id as 'id', t.order, p.ctime as ctime
+				 FROM thread as t INNER JOIN post as p ON t.id = p.thread_id
+                 WHERE t.forum_id = :forum_id)) as q;", $rsm);
+        $nQuery->setParameter(":forum_id", $f->getId());
+        
+        return $nQuery->getSingleResult()["count"];
+    }
+    
+    /**
+     * Returns a count of all subforums within a forum.
+     */
+    public function getForumSubforumCount(Forum $f) {
+        return $this->createQueryBuilder('f')
+            ->select('COUNT(f)')
+            ->where('f.parent = :forum_id')->setParameter("forum_id", $f->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
 //    /**
 //     * @return Forum[] Returns an array of Forum objects
