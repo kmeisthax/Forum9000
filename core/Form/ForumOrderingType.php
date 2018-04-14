@@ -15,7 +15,8 @@ class ForumOrderingType extends AbstractType {
             ->add("forums", CollectionType::class, array(
                 'entry_type' => HierarchyType::class,
                 'entry_options' => array(
-                    "entity_class" => Forum::class,
+                    "data_class" => Forum::class,
+                    "parent_class" => Forum::class,
                     "parent_label" => "title"
                 )
             ))

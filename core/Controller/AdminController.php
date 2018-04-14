@@ -103,6 +103,7 @@ class AdminController extends Controller {
         return $this->render(
                                 "admin/forums.html.twig",
                                 array(
+                                    "forums" => $forums,
                                     "order_form" => $order_form->createView(),
                                     "new_forum_form" => $new_forum_form->createView()
                                 )
