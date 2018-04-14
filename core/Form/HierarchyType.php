@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class HierarchyType extends AbstractType {
@@ -19,6 +20,7 @@ class HierarchyType extends AbstractType {
     }
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
+            ->add("id", HiddenType::class)
             ->add("parent", EntityType::class, array(
                 'class' => $options["parent_class"],
                 'choice_label' => $options["parent_label"],

@@ -13,7 +13,7 @@
             {% for forum_form in order_form.forums %}
                 {% set forum = forums[loop.index - 1] %}
                 <tr>
-                    <td><a href="{{url('f9kadmin_forum_single', {'id':forum.compactId})}}">{{ forum.title }}</a></td>
+                    <td><a href="{{url('f9kadmin_forum_single', {'id':forum.compactId})}}">{{ forum.title }}</a>{{ form_widget(forum_form.id) }}</td>
                     <td>
                         {{ form_errors(forum_form.parent) }}
                         {{ form_widget(forum_form.parent) }}

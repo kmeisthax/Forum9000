@@ -158,7 +158,7 @@ class Forum
         return $this->parent;
     }
 
-    public function setParent(Forum $parent): self
+    public function setParent(?Forum $parent): self
     {
         $this->parent = $parent;
 

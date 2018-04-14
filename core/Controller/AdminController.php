@@ -99,6 +99,19 @@ class AdminController extends Controller {
 
         $forums = $forumRepo->findAll();
         $order_form = $this->createForm(ForumOrderingType::class, array('forums' => $forums));
+        $order_form->handleRequest($request);
+        
+        if ($order_form->isSubmitted() && $order_form->isValid()) {
+            $form_data = $order_form->getData();
+            
+            foreach ($form_data["forums"] as $forum) {
+                $em->persist($forum);
+            }
+            
+            $em->flush();
+            
+            return $this->redirectToRoute("f9kadmin_forum_overview");
+        }
 
         return $this->render(
                                 "admin/forums.html.twig",
