@@ -5,21 +5,25 @@
     {% if forum %}
         <h1>{{forum.title}}</h1>
         {{forum.description}}
-        <p>{{thread_count}} threads - <a href="{{url('f9kforum_thread_new', {'id':forum.slug})}}">post new thread</a></p>
+        <p>{{subforum_count}} subforums, {{thread_count}} threads - <a href="{{url('f9kforum_thread_new', {'id':forum.slug})}}">post new thread</a></p>
     {% endif %}
 
-    {% for thread in threads %}
-        <article>
-            <a href="{{url('f9kforum_thread', {'forum_id': forum.slug, 'id':thread.compactId})}}">{{thread.orderedPosts[0].title}}</a>
-            {% if thread.orderedPosts[0].postedBy %}
-                <span>Posted by {{thread.orderedPosts[0].postedBy.handle}} on {{thread.orderedPosts[0].ctime | date}} UTC</span>
-            {% else %}
-                <span>Posted anonymously on {{thread.orderedPosts[0].ctime | date}} UTC</span>
-            {% endif %}
-        </article>
-    {% else %}
-        No threads!
+    {% for child in children %}
+        {% if child is instanceof('\\Forum9000\\Entity\\Forum') %}
+            <article>
+                <a href="{{url('f9kforum_forum', {'id': child.slug})}}">{{child.title}}</a>
+            </article>
+        {% else %}
+            <article>
+                <a href="{{url('f9kforum_thread', {'forum_id': forum.slug, 'id':child.compactId})}}">{{child.orderedPosts[0].title}}</a>
+                {% if child.orderedPosts[0].postedBy %}
+                    <span>Posted by {{child.orderedPosts[0].postedBy.handle}} on {{child.orderedPosts[0].ctime | date}} UTC</span>
+                {% else %}
+                    <span>Posted anonymously on {{child.orderedPosts[0].ctime | date}} UTC</span>
+                {% endif %}
+            </article>
+        {% endif %}
     {% endfor %}
 
-    {{macros.pagination(thread_count, 10, "f9kforum_forum", {"id": forum.slug}, page)}}
+    {{macros.pagination(children_count, 10, "f9kforum_forum", {"id": forum.slug}, page)}}
 {% endblock %}

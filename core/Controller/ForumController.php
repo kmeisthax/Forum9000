@@ -40,16 +40,20 @@ class ForumController extends Controller {
         $post = new Post();
         $user = $this->getUser();
         
-        $threads = $threadRepo->getLatestThreadsInForum($forum, ($page - 1) * 10, 10);
+        $children = $forumRepo->getForumChildren($forum, ($page - 1) * 10, 10);
+        $children_count = $forumRepo->getForumChildCount($forum);
         $thread_count = $threadRepo->getForumThreadCount($forum);
+        $subforum_count = $forumRepo->getForumSubforumCount($forum);
         
         return $this->render(
                                 "forum/forum.html.twig",
                                 array(
                                     "forum" => $forum,
                                     "page" => $page,
-                                    "threads" => $threads,
-                                    "thread_count" => $thread_count
+                                    "children" => $children,
+                                    "children_count" => $children_count,
+                                    "thread_count" => $thread_count,
+                                    "subforum_count" => $subforum_count,
                                 )
                             );
     }
