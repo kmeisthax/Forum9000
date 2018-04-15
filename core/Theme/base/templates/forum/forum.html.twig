@@ -12,6 +12,7 @@
         {% if child is instanceof('\\Forum9000\\Entity\\Forum') %}
             <article>
                 <a href="{{url('f9kforum_forum', {'id': child.slug})}}">{{child.title}}</a>
+                <p>{{child.description}}</p>
             </article>
         {% else %}
             <article>
