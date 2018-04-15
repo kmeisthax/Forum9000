@@ -85,6 +85,8 @@ class ForumController extends Controller {
             $post = $form->getData();
 
             $thread = new Thread();
+            $thread->setIsLocked(false);
+            $thread->setOrder(0);
             $forum->getThreads()->add($thread);
             $thread->setForum($forum);
             
@@ -99,7 +101,7 @@ class ForumController extends Controller {
             $em->persist($thread);
             $em->flush();
 
-            return $this->redirectToRoute("f9kforum_thread", array("id" => $thread->getCompactId()));
+            return $this->redirectToRoute("f9kforum_thread", array("forum_id" => $forum->getSlug(), "id" => $thread->getCompactId()));
         }
         
         return $this->render(
