@@ -50,7 +50,7 @@ SELECT * FROM
                 WHERE f.parent_id = :forum_id
 		UNION SELECT :thread_class as 'type', t.id as 'id', t.`order`, p.ctime as ctime
 				 FROM thread as t INNER JOIN post as p ON t.id = p.thread_id
-                 WHERE t.forum_id = :forum_id ORDER BY `order` DESC, ctime DESC) as q
+                 WHERE t.forum_id = :forum_id ORDER BY `order` DESC, ctime ASC) as q
 	GROUP BY id ORDER BY `order` DESC, ctime DESC LIMIT :limit OFFSET :offset;", $rsm);
         $nQuery->setParameter(":forum_class", Forum::class);
         $nQuery->setParameter(":thread_class", Thread::class);
