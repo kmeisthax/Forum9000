@@ -47,23 +47,23 @@ class MarkupLanguageManager
     /**
      * Get a service claiming to support a given markup language.
      */
-    public function getMarkupLanguageService(string $slug) : MarkupLanguageInterface {
+    public function getMarkupLanguageService(string $language) : MarkupLanguageInterface {
         if (!$this->markupLanguages) $this->discoverMarkupLanguages();
 
-        if (!isset($this->markupLanguages[$slug])) throw new \Exception("Missing markup language " . $slug);
+        if (!isset($this->markupLanguages[$language])) throw new \Exception("Missing markup language " . $language);
 
-        return $this->markupLanguages[$slug]['service'];
+        return $this->markupLanguages[$language]['service'];
     }
 
     /**
      * Get metadata about the service for a given markup language.
      */
-    public function getMarkupLanguageMetadata(string $slug) : MarkupLanguage {
+    public function getMarkupLanguageMetadata(string $language) : MarkupLanguage {
         if (!$this->markupLanguages) $this->discoverMarkupLanguages();
 
-        if (!isset($this->markupLanguages[$slug])) throw new \Exception("Missing markup language " . $slug);
+        if (!isset($this->markupLanguages[$language])) throw new \Exception("Missing markup language " . $language);
 
-        return $this->markupLanguages[$slug]['annotation'];
+        return $this->markupLanguages[$language]['annotation'];
     }
 
     /**
@@ -77,7 +77,7 @@ class MarkupLanguageManager
                 continue;
             }
 
-            $this->markupLanguages[$annotation->getSlug()] = array(
+            $this->markupLanguages[$annotation->getLanguage()] = array(
                 'class' => $class,
                 'annotation' => $annotation,
                 'service' => $service

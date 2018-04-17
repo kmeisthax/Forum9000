@@ -14,7 +14,7 @@ class MarkupLanguage {
      *
      * @var string
      */
-    public $slug;
+    public $language;
 
     /**
      * @Required
@@ -23,8 +23,8 @@ class MarkupLanguage {
      */
     public $name;
 
-    public function getSlug() : string {
-        return $this->slug;
+    public function getLanguage() : string {
+        return $this->language;
     }
 
     public function getName() : string {
