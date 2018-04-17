@@ -42,6 +42,10 @@ services:
         arguments:
             $assetVersioner: '@assets.empty_version_strategy'
             $assetCtxt: '@assets.context'
+            
+    Forum9000\MarkupLanguage\MarkupLanguageManager:
+        arguments:
+            $markupLanguageServices: !tagged forum9000.markup_language
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

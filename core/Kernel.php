@@ -9,6 +9,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
+use Forum9000\MarkupLanguage\MarkupLanguageDiscovery;
+
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
@@ -57,5 +59,9 @@ class Kernel extends BaseKernel
         $routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir.'/{routes}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
+    }
+    
+    protected function build(ContainerBuilder $cb) {
+        $cb->addCompilerPass(new MarkupLanguageDiscovery());
     }
 }
