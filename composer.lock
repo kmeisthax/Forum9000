@@ -4,8 +4,53 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d32a903b59abf431ffd98d82469d3649",
+    "content-hash": "64b1998355ce77808bf2c93d80590cfd",
     "packages": [
+        {
+            "name": "chriskonnertz/bbcode",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chriskonnertz/bbcode.git",
+                "reference": "0741b40cab5de5553cabfd49bda22d8d46a1aee4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chriskonnertz/bbcode/zipball/0741b40cab5de5553cabfd49bda22d8d46a1aee4",
+                "reference": "0741b40cab5de5553cabfd49bda22d8d46a1aee4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.7"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ChrisKonnertz\\BBCode": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kai Mallea",
+                    "email": "kmallea@gmail.com"
+                },
+                {
+                    "name": "Chris Konnertz"
+                }
+            ],
+            "description": "A naive attempt at a BBCode 'parser' written in PHP. It uses regex and thus fails at complex, nested tags.",
+            "keywords": [
+                "bbcode"
+            ],
+            "time": "2018-01-31T17:35:12+00:00"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.6.0",
