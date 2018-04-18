@@ -30,20 +30,13 @@ class PermissionsVoter extends Voter {
         return true;
     }
     
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) {
+    /**
+     * Retrieve a permission or grant allowing the given token to exercise a
+     * given permission.
+     */
+    protected function checkGrantDenyStatus($attribute, $subject, TokenInterface $token) {
         $user = $token->getUser();
-        
-        if ($subject instanceof Thread && $subject->getIsLocked() && $attribute === Permission::REPLY) {
-            //Can't reply to locked threads.
-            return false;
-        }
-        
-        if ($subject instanceof Thread) {
-            //Threads don't have permissions or grants, they inherit from the
-            //forum they belong to
-            $subject = $subject->getForum();
-        }
-        
+
         if ($user !== null) {
             //First, check if the user has an explicit Grant record.
             $criteria = Criteria::create()
@@ -65,8 +58,37 @@ class PermissionsVoter extends Voter {
             else return $perm->getIsGrantedAuth();
         }
         
-        //Neither a default permission nor a user grant exists, so access
-        //is denied.
-        return false;
+        //Neither a default permission nor a user grant exists
+        return null;
+    }
+
+    protected function checkHierarchialGrantDenyStatus($attribute, $subject, TokenInterface $token) {
+        $can_exercise = $this->checkGrantDenyStatus($attribute, $subject, $token);
+
+        while ($can_exercise === null && $subject->getParent() !== null) {
+            $subject = $subject->getParent();
+            $can_exercise = $this->checkGrantDenyStatus($attribute, $subject, $token);
+        }
+
+        return $can_exercise;
+    }
+
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) {
+        $user = $token->getUser();
+
+        if ($subject instanceof Thread && $subject->getIsLocked() && $attribute === Permission::REPLY) {
+            //Can't reply to locked threads.
+            return false;
+        }
+
+        if ($subject instanceof Thread) {
+            //Threads don't have permissions or grants, they inherit from the
+            //forum they belong to
+            $subject = $subject->getForum();
+        }
+
+        $can_exercise = $this->checkHierarchialGrantDenyStatus($attribute, $subject, $token);
+
+        if ($can_exercise === null) return false;
     }
 }
