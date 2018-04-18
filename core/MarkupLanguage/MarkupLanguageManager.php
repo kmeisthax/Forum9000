@@ -69,8 +69,8 @@ class MarkupLanguageManager
     /**
      * Take the list of markup language services we got and extract their metadata.
      */
-    private function discoverMarkupLanguages() : array {
-        foreach ($this->markupLanguageServices as $mfService) {
+    private function discoverMarkupLanguages() {
+        foreach ($this->markupLanguageServices->getIterator() as $mfService) {
             $class = get_class($mfService);
             $annotation = $this->annotationReader->getClassAnnotation(new \ReflectionClass($class), 'Forum9000\MarkupLanguage\Annotation\MarkupLanguage');
             if (!$annotation) {
@@ -80,8 +80,18 @@ class MarkupLanguageManager
             $this->markupLanguages[$annotation->getLanguage()] = array(
                 'class' => $class,
                 'annotation' => $annotation,
-                'service' => $service
+                'service' => $mfService
             );
         }
+    }
+
+    /**
+     * Given some text string in a particular markup language, return formatted
+     * markup.
+     */
+    public function formatMarkup($message, $markupLanguage) {
+        $mlImpl = $this->getMarkupLanguageService($markupLanguage);
+
+        return $mlImpl->formatMessage($message);
     }
 }

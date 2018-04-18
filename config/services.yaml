@@ -44,6 +44,8 @@ services:
             $assetCtxt: '@assets.context'
             
     Forum9000\MarkupLanguage\MarkupLanguageManager:
+        tags:
+            - { name: twig.runtime }
         arguments:
             $markupLanguageServices: !tagged forum9000.markup_language
 

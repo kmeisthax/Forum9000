@@ -8,7 +8,7 @@ use Forum9000\MarkupLanguage\MarkupLanguageInterface;
 /**
  * Extremely trivial MarkupLanguage implementation for plaintext posts.
  *
- * @MarkupLanguage(slug='plaintext', name='Plain text')
+ * @MarkupLanguage(language="plaintext", name="Plain text")
  */
 class PlaintextMarkupLanguage implements MarkupLanguageInterface {
     /**

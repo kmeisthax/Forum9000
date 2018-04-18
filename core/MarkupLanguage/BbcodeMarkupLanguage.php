@@ -9,7 +9,7 @@ use ChrisKonnertz\BBCode\BBCode;
 /**
  * BBCode implementation using chriskonnertz\bbcode (Composer package)
  *
- * @MarkupLanguage(language='bbcode', name='BBCode (pure PHP)')
+ * @MarkupLanguage(language="bbcode", name="BBCode (pure PHP)")
  */
 class BbcodeMarkupLanguage implements MarkupLanguageInterface {
     private $bbcode;

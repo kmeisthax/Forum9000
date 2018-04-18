@@ -11,7 +11,7 @@
             {% else %}
                 <p>Posted anonymously on {{post.ctime | date}} UTC</p>
             {% endif %}
-            {{post.message}}
+            {{post.message | markup(post.markupLanguage)}}
         </article>
     {% else %}
         No posts!

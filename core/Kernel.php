@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
-use Forum9000\MarkupLanguage\MarkupLanguageDiscovery;
+use Forum9000\MarkupLanguage\MarkupLanguageInterface;
 
 class Kernel extends BaseKernel
 {
@@ -62,6 +62,6 @@ class Kernel extends BaseKernel
     }
     
     protected function build(ContainerBuilder $cb) {
-        $cb->addCompilerPass(new MarkupLanguageDiscovery());
+        $cb->registerForAutoconfiguration(MarkupLanguageInterface::class)->addTag('forum9000.markup_language');
     }
 }
