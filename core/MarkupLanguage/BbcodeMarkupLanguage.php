@@ -23,7 +23,7 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
      * @inheritdoc
      */
     public function formatMessage(string $message) {
-        return \Twig_Markup($this->bbcode->render($message));
+        return new \Twig_Markup($this->bbcode->render($message), "utf8");
     }
 
     /**
