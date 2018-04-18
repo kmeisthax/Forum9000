@@ -67,6 +67,21 @@ class MarkupLanguageManager
     }
 
     /**
+     * List all markup languages in a form suitable for use in ChoiceType.
+     */
+    public function getMarkupLanguageChoices() {
+        if (!$this->markupLanguages) $this->discoverMarkupLanguages();
+
+        $kv = array();
+
+        foreach ($this->markupLanguages as $k => $v) {
+            $kv[$v["annotation"]->getName()] = $k;
+        }
+
+        return $kv;
+    }
+
+    /**
      * Take the list of markup language services we got and extract their metadata.
      */
     private function discoverMarkupLanguages() {
