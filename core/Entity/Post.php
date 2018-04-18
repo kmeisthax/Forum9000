@@ -47,6 +47,11 @@ class Post
      */
     private $ctime;
     
+    /**
+     * @ORM\Column(type="string", options={"default":"plaintext"}))
+     */
+    private $markupLanguage;
+    
     public function getId() {
         return $this->id;
     }
@@ -107,6 +112,16 @@ class Post
 
     public function setCtime(\DateTime $time): self {
         $this->ctime = $time;
+
+        return $this;
+    }
+
+    public function getMarkupLanguage(): ?string {
+        return $this->markupLanguage;
+    }
+
+    public function setMarkupLanguage(string $time): self {
+        $this->markupLanguage = $time;
 
         return $this;
     }
