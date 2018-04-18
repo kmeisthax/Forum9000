@@ -90,5 +90,6 @@ class PermissionsVoter extends Voter {
         $can_exercise = $this->checkHierarchialGrantDenyStatus($attribute, $subject, $token);
 
         if ($can_exercise === null) return false;
+        return $can_exercise;
     }
 }
