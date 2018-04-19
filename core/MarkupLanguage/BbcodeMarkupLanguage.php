@@ -24,6 +24,9 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
 
         $this->bbcode->addPreFilter('url', \Closure::fromCallable(array($this, "sanitizeUrl")));
         $this->bbcode->addPreFilter('img', \Closure::fromCallable(array($this, "sanitizeImg")));
+        $this->bbcode->addPreFilter('font', \Closure::fromCallable(array($this, "sanitizeCssSingleDecl")));
+        $this->bbcode->addPreFilter('size', \Closure::fromCallable(array($this, "sanitizeCssSingleDecl")));
+        $this->bbcode->addPreFilter('color', \Closure::fromCallable(array($this, "sanitizeCssSingleDecl")));
     }
 
     /**
@@ -85,6 +88,17 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
             if ($originalUrl !== $filteredUrl) $this->maliciousUrlCounter++;
 
             $html = mb_substr($html, 0, $openingTag->position + 10) . $filteredUrl;
+        }
+    }
+
+    public function sanitizeCssSingleDecl(&$tag, &$html, $openingTag) {
+        if ($tag->property) {
+            $originalPropVal = $tag->property;
+            $filteredPropVal = explode(";", $originalPropVal)[0];
+
+            if ($originalPropVal !== $filteredPropVal) $this->maliciousUrlCounter++;
+
+            $tag->property = $filteredPropVal;
         }
     }
 
