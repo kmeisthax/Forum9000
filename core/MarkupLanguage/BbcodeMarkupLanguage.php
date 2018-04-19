@@ -26,7 +26,7 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
         $this->bbcode->addPreFilter('img', \Closure::fromCallable(array($this, "sanitizeImg")));
         $this->bbcode->addPreFilter('font', \Closure::fromCallable(array($this, "sanitizeCssSingleDecl")));
         $this->bbcode->addPreFilter('size', \Closure::fromCallable(array($this, "sanitizeCssSingleDecl")));
-        $this->bbcode->addPreFilter('color', \Closure::fromCallable(array($this, "sanitizeCssSingleDecl")));
+        $this->bbcode->addPreFilter('color', \Closure::fromCallable(array($this, "sanitizeCssColor")));
     }
 
     /**
@@ -88,6 +88,45 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
             if ($originalUrl !== $filteredUrl) $this->maliciousUrlCounter++;
 
             $html = mb_substr($html, 0, $openingTag->position + 10) . $filteredUrl;
+        }
+    }
+
+    /**
+     * List of all valid CSS color words.
+     */
+    const CSS_COLOR_WORDS = array('black', 'silver', 'gray', 'white', 'maroon', 'red', 'purple', 'fuchsia', 'green', 'lime', 'olive', 'yellow', 'navy', 'blue', 'teal', 'aqua', 'orange', 'aliceblue', 'antiquewhite', 'aquamarine', 'azure', 'beige', 'bisque', 'blanchedalmond', 'blueviolet', 'brown', 'burlywood', 'cadetblue', 'chartreuse', 'chocolate', 'coral', 'cornflowerblue', 'cornsilk', 'crimson', 'cyan', 'darkblue', 'darkcyan', 'darkgoldenrod', 'darkgray', 'darkgreen', 'darkgrey', 'darkkhaki', 'darkmagenta', 'darkolivegreen', 'darkorange', 'darkorchid', 'darkred', 'darksalmon', 'darkseagreen', 'darkslateblue', 'darkslategray', 'darkslategrey', 'darkturquoise', 'darkviolet', 'deeppink', 'deepskyblue', 'dimgray', 'dimgrey', 'dodgerblue', 'firebrick', 'floralwhite', 'forestgreen', 'gainsboro', 'ghostwhite', 'gold', 'goldenrod', 'greenyellow', 'grey', 'honeydew', 'hotpink', 'indianred', 'indigo', 'ivory', 'khaki', 'lavender', 'lavenderblush', 'lawngreen', 'lemonchiffon', 'lightblue', 'lightcoral', 'lightcyan', 'lightgoldenrodyellow', 'lightgray', 'lightgreen', 'lightgrey', 'lightpink', 'lightsalmon', 'lightseagreen', 'lightskyblue', 'lightslategray', 'lightslategrey', 'lightsteelblue', 'lightyellow', 'limegreen', 'linen', 'magenta', 'mediumaquamarine', 'mediumblue', 'mediumorchid', 'mediumpurple', 'mediumseagreen', 'mediumslateblue', 'mediumspringgreen', 'mediumturquoise', 'mediumvioletred', 'midnightblue', 'mintcream', 'mistyrose', 'moccasin', 'navajowhite', 'oldlace', 'olivedrab', 'orangered', 'orchid', 'palegoldenrod', 'palegreen', 'paleturquoise', 'palevioletred', 'papayawhip', 'peachpuff', 'peru', 'pink', 'plum', 'powderblue', 'rosybrown', 'royalblue', 'saddlebrown', 'salmon', 'sandybrown', 'seagreen', 'seashell', 'sienna', 'skyblue', 'slateblue', 'slategray', 'slategrey', 'snow', 'springgreen', 'steelblue', 'tan', 'thistle', 'tomato', 'turquoise', 'violet', 'wheat', 'whitesmoke', 'yellowgreen', 'rebeccapurple', 'transparent');
+
+    /**
+     * Prohibit usage of invalid color declarations.
+     *
+     * Colors must be one of the following, after trimming:
+     *
+     *  # followed by 3, 4, 6, or 8 hexits, and nothing else
+     *  A recognized color word according to CSS Level 1, CSS Level 2, CSS
+     *    Color Module Level 3, or CSS Color Module Level 4.
+     *
+     * rgb(, rgba(, and hsl( are not supported until I can figure out the
+     * security implications of this.
+     */
+    public function sanitizeCssColor(&$tag, &$html, $openingTag) {
+        if ($tag->property) {
+            $originalPropVal = $tag->property;
+            $filteredPropVal = trim($originalPropVal);
+
+            $isValidated = false;
+
+            if (array_search($filteredPropVal, $this::CSS_COLOR_WORDS) !== FALSE) {
+                //Explicitly whitelisted color keyword.
+                $isValidated = true;
+            } else if ($filteredPropVal[0] === "#") {
+                $isValidated = preg_match("/^#[0-9A-F]{3}[0-9A-F]?(?:[0-9A-F]{2})?(?:[0-9A-F]{2})?$/i", $filteredPropVal) === 1;
+            }
+
+            if (!$isValidated) $filteredPropVal = "black";
+
+            if ($originalPropVal !== $filteredPropVal) $this->maliciousUrlCounter++;
+
+            $tag->property = $filteredPropVal;
         }
     }
 
