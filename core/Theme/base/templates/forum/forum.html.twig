@@ -17,6 +17,7 @@
         {% else %}
             <article>
                 <a href="{{url('f9kforum_thread', {'forum_id': forum.slug, 'id':child.compactId})}}">{{child.orderedPosts[0].title}}</a>
+                {{macros.pagination(child.posts | length, 20, "f9kforum_thread", {"id": child.compactId, 'forum_id': forum.compactId}, 0)}}
                 {% if child.orderedPosts[0].postedBy %}
                     <span>Posted by {{child.orderedPosts[0].postedBy.handle}} on {{child.orderedPosts[0].ctime | date}} UTC</span>
                 {% else %}
