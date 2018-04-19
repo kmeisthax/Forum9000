@@ -23,20 +23,68 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
         $this->bbcode = new ChrisKonnertzBbcode();
 
         $this->bbcode->addPreFilter('url', \Closure::fromCallable(array($this, "sanitizeUrl")));
+        $this->bbcode->addPreFilter('img', \Closure::fromCallable(array($this, "sanitizeImg")));
+    }
+
+    /**
+     * Implements URL filtering policy. Only http or https scheme URLs are
+     * allowed.
+     *
+     * TODO: What about relative or protocol-relative URLs?
+     */
+    public function filterUnsafeUrls($url) {
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+        if ($scheme !== "http" || $scheme !== "https") {
+            //TODO: Make a better way to censor URLs.
+            return "#";
+        }
+
+        return $url;
     }
 
     /**
      * Prohibit use of malicious URL targets.
+     */
+    public function sanitizeUrl(&$tag, &$html, $openingTag) {
+        if ($tag->property) {
+            $originalUrl = $tag->property;
+            $filteredUrl = $this->filterUnsafeUrls($originalUrl);
+
+            if ($originalUrl !== $filteredUrl) $this->maliciousUrlCounter++;
+
+            $tag->property = $filteredUrl;
+        } else if ($openingTag && !$openingTag->property) {
+            //Ok, the bbcode parser does this AMAZINGLY terrible thing, where
+            //if the tag is of the form [url]something[/url], it'll actually
+            //just transform the former to the start of an anchor, and then the
+            //latter does some mb_substr bullshit to extract the URL and call
+            //strip_tags on it. That's what you see here.
+
+            $originalUrl = mb_substr($html, $openingTag->position + 9);
+            $filteredUrl = $this->filterUnsafeUrls($originalUrl);
+
+            if ($originalUrl !== $filteredUrl) $this->maliciousUrlCounter++;
+
+            $html = mb_substr($html, 0, $openingTag->position + 9) . $filteredUrl;
+        }
+    }
+
+    /**
+     * Prohibit use of malicious IMG sources.
      *
      * URLs are restricted to http or https protocol.
      */
-    public function sanitizeUrl(&$tag, &$html, $openingTag) {
-        $scheme = parse_url($tag->property, PHP_URL_SCHEME);
-        if ($scheme !== "http" || $scheme !== "https") {
-            //TODO: Make a better way to censor URLs.
-            $tag->property = "#";
+    public function sanitizeImg(&$tag, &$html, $openingTag) {
+        if ($openingTag) {
+            //Same deal as above, but we need to pull 10 characters after the
+            //start of the tag.
 
-            $this->maliciousUrlCounter++;
+            $originalUrl = mb_substr($html, $openingTag->position + 10);
+            $filteredUrl = $this->filterUnsafeUrls($originalUrl);
+
+            if ($originalUrl !== $filteredUrl) $this->maliciousUrlCounter++;
+
+            $html = mb_substr($html, 0, $openingTag->position + 10) . $filteredUrl;
         }
     }
 
