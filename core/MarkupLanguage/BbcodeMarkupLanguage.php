@@ -94,7 +94,7 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
     public function formatMessage(string $message) {
         $this->maliciousUrlCounter = 0;
 
-        return new \Twig_Markup($this->bbcode->render($message), "utf8");
+        return new \Twig_Markup($this->bbcode->render(htmlentities($message)), "utf8");
     }
 
     /**
