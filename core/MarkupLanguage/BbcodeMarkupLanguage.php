@@ -141,10 +141,39 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
         }
     }
 
+    /**
+     * List of all 'web-safe' CSS fonts, with a font stack for each.
+     *
+     * These aren't standard but they're well known enough to be universal,
+     * and the point is mainly stricter sanitization.
+     *
+     * TODO: Add font stacks for the entire MS Core Fonts distribution.
+     */
+    const CSS_FONT_STACKS = array (
+        'Arial' => 'Arial, sans-serif',
+        'Courier New' => 'Courier New, monospace',
+        'Georgia' => 'Georgia, serif',
+        'Times New Roman' => 'Times New Roman, serif',
+
+        //Lucida Grande substituted here for macOS/iOS devices that might not
+        //have these fonts. They're both Humanist style fonts, so the
+        //substitution works mostly.
+        'Trebuchet MS' => 'Trebuchet MS, Lucida Grande, sans-serif',
+        'Verdana' => 'Verdana, Lucida Grande, sans-serif',
+
+        //lol
+        'Comic Sans' => 'Comic Sans, cursive',
+        'Papyrus' => 'Papyrus, fantasy',
+    );
+
     public function sanitizeCssFontFamily(&$tag, &$html, $openingTag) {
         if ($tag->property) {
             $originalPropVal = $tag->property;
-            $filteredPropVal = explode(";", $originalPropVal)[0];
+            $filteredPropVal = $this::CSS_FONT_STACKS["Comic Sans"];
+
+            if (array_key_exists(trim($originalPropVal), $this::CSS_FONT_STACKS)) {
+                $filteredPropVal = $this::CSS_FONT_STACKS[$originalPropVal];
+            }
 
             if ($originalPropVal !== $filteredPropVal) $this->maliciousUrlCounter++;
 
