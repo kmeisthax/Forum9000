@@ -17,7 +17,7 @@
         No posts!
     {% endfor %}
 
-    {{macros.pagination(post_count, 20, "f9kforum_thread", {"id": thread.compactId, 'forum_id': forum.compactId}, page)}}
+    {{macros.pagination(post_count, 20, "f9kforum_thread", {"id": thread.compactId, 'forum_id': forum.slug}, page)}}
 
     <h2>Reply</h2>
     {{ form_start(reply_form) }}
