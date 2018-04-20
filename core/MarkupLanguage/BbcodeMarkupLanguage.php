@@ -37,7 +37,7 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
      */
     public function filterUnsafeUrls($url) {
         $scheme = parse_url($url, PHP_URL_SCHEME);
-        if ($scheme !== "http" || $scheme !== "https") {
+        if ($scheme !== "http" && $scheme !== "https") {
             //TODO: Make a better way to censor URLs.
             return "#";
         }
