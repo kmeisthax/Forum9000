@@ -32,6 +32,14 @@ class ForumRepository extends ServiceEntityRepository
             ->getSingleResult();
     }
     
+    public function findAllRootForums() {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.parent IS NULL')
+            ->orderBy('f.order', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+    
     /**
      * Given a forum, return child subforums and threads, sorted by pin order
      * and then newest post date.

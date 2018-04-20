@@ -21,6 +21,25 @@ use Forum9000\Theme\ThemeRegistry;
  */
 class ForumController extends Controller {
     /**
+     * @Route("/", name="homepage")
+     */
+    function homepage(Request $req, ThemeRegistry $themeReg) {
+        $em = $this->getDoctrine()->getManager();
+        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
+        
+        $forums = $forumRepo->findAllRootforums();
+        
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
+        
+        return $this->render(
+            'forum/homepage.html.twig',
+            array(
+                "forums" => $forums
+            )
+        );
+    }
+    
+    /**
      * @Route("/forum/{id}/{page}", name="forum", requirements={"page" = "\d+"})
      */
     public function forum(Request $request, ThemeRegistry $themeReg, $id, $page=1) {

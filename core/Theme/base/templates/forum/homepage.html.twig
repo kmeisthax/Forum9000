@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+{% import "macros.html.twig" as macros %}
+
+{% block body %}
+    {% for forum in forums %}
+        {% if forum is instanceof('\\Forum9000\\Entity\\Forum') %}
+            <article>
+                <a href="{{url('f9kforum_forum', {'id': forum.slug})}}">{{forum.title}}</a>
+                <p>{{forum.description}}</p>
+            </article>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
