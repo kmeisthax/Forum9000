@@ -32,6 +32,25 @@ use Forum9000\Theme\ThemeRegistry;
  */
 class AdminController extends Controller {
     /**
+     * @Route("/", name="homepage")
+     */
+    function homepage(Request $req, ThemeRegistry $themeReg) {
+        $em = $this->getDoctrine()->getManager();
+        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
+        
+        $forums = $forumRepo->findAllRootforums();
+        
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        
+        return $this->render(
+            'admin/dashboard.html.twig',
+            array(
+                "forums" => $forums
+            )
+        );
+    }
+    
+    /**
      * @Route("/users", name="user_overview")
      */
     public function user_overview(Request $request, ThemeRegistry $themeReg) {
