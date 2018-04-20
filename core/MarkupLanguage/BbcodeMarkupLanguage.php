@@ -173,10 +173,8 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
 
             if (array_key_exists(trim($originalPropVal), $this::CSS_FONT_STACKS)) {
                 $filteredPropVal = $this::CSS_FONT_STACKS[$originalPropVal];
-            }
-
-            if ($originalPropVal !== $filteredPropVal) $this->maliciousUrlCounter++;
-
+            } else $this->maliciousUrlCounter++;
+            
             $tag->property = $filteredPropVal;
         }
     }
