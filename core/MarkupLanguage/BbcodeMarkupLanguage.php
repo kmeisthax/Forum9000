@@ -212,4 +212,11 @@ class BbcodeMarkupLanguage implements MarkupLanguageInterface {
     public function isMaliciousMessage(string $message) : array {
         return false;
     }
+    
+    /**
+     * Test-only interface, lets us read the malicious behavior count.
+     */
+    public function isLastMessageMalicious() {
+        return $this->maliciousUrlCounter > 0;
+    }
 }
