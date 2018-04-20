@@ -28,6 +28,15 @@ class PostRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getLatestPosts($start = 0, $limit = 1) {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.ctime', 'DESC')
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Post[] Returns an array of Post objects
 //     */

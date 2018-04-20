@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Criteria;
 
 use Forum9000\Entity\User;
 use Forum9000\Entity\Forum;
-use Forum9000\Entity\Thread;
+use Forum9000\Entity\Post;
 use Forum9000\Entity\Permission;
 use Forum9000\Entity\Grant;
 use Forum9000\Form\ForumType;
@@ -38,10 +38,10 @@ class AdminController extends Controller {
     function homepage(Request $req, ThemeRegistry $themeReg) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
-        $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
+        $postRepo = $this->getDoctrine()->getRepository(Post::class);
         
         $forums = $forumRepo->findAllRootForums();
-        $newest_threads = $threadRepo->getLatestThreads(0, 10);
+        $newest_posts = $postRepo->getLatestPosts(0, 10);
         
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
         
@@ -49,7 +49,7 @@ class AdminController extends Controller {
             'admin/dashboard.html.twig',
             array(
                 "forums" => $forums,
-                "newest_threads" => $newest_threads
+                "newest_posts" => $newest_posts
             )
         );
     }

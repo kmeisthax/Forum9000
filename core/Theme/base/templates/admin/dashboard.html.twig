@@ -5,14 +5,15 @@
     <a href="{{url('f9kadmin_user_overview')}}">Users</a>
     <a href="{{url('f9kadmin_forum_overview')}}">Forums</a>
 
-    <h2>Newest Threads</h2>
-    {% for thread in newest_threads %}
+    <h2>Newest Posts</h2>
+    {% for post in newest_posts %}
+        {% set post_page = post.order // 20 + 1 %}
         <article>
-            <a href="{{url('f9kforum_thread', {'forum_id': thread.forum.slug, 'id':thread.compactId})}}">{{thread.orderedPosts[0].title}}</a>
-            {% if thread.orderedPosts[0].postedBy %}
-                <span>Posted by {{thread.orderedPosts[0].postedBy.handle}} on {{thread.orderedPosts[0].ctime | date}} UTC in <a href="{{url('f9kforum_forum', {'id': thread.forum.slug})}}">{{thread.forum.title}}</a></span>
+            <a href="{{url('f9kforum_thread', {'forum_id': post.thread.forum.slug, 'id':post.thread.compactId, 'page':post_page})}}#p{{post.order}}">{{post.title}}</a>
+            {% if post.postedBy %}
+                <span>Posted by {{post.postedBy.handle}} on {{post.ctime | date}} UTC in <a href="{{url('f9kforum_forum', {'id': post.thread.forum.slug})}}">{{post.thread.forum.title}}</a></span>
             {% else %}
-                <span>Posted anonymously on {{thread.orderedPosts[0].ctime | date}} UTC in <a href="{{url('f9kforum_forum', {'id': thread.forum.slug})}}">{{thread.forum.title}}</a></span>
+                <span>Posted anonymously on {{post.ctime | date}} UTC in <a href="{{url('f9kforum_forum', {'id': post.thread.forum.slug})}}">{{post.thread.forum.title}}</a></span>
             {% endif %}
         </article>
     {% endfor %}
