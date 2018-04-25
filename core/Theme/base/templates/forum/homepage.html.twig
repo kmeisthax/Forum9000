@@ -2,6 +2,8 @@
 {% import "macros.html.twig" as macros %}
 
 {% block body %}
+    {{macros.breadcrumb(null)}}
+
     {% for forum in forums %}
         {% if forum is instanceof('\\Forum9000\\Entity\\Forum') %}
             {{macros.render_forum_overview(forum)}}

@@ -1,3 +1,28 @@
+{% macro breadcrumb(main_obj, recurse) %}
+    {% import _self as macros %}
+
+    {% set recurse = recurse | default(0) %}
+    {% if recurse < 1 %}
+        <ul>
+    {% endif %}
+
+    {% if main_obj is null %}
+        <li><a href="/">Home</a>
+    {% elseif main_obj is instanceof('\\Forum9000\\Entity\\Thread') %}
+        {{macros.breadcrumb(main_obj.forum, recurse+1)}}
+        <li><a href="{{macros.permalink_thread(main_obj)}}">{{main_obj.orderedPosts[0].title}}</a></li>
+    {% elseif main_obj is instanceof('\\Forum9000\\Entity\\Forum') %}
+        {{macros.breadcrumb(main_obj.parent, recurse+1)}}
+        <li><a href="{{macros.permalink_forum(main_obj)}}">{{main_obj.title}}</a></li>
+    {% else %}
+        <li><a href="/">Home</a>
+    {% endif %}
+
+    {% if recurse < 1 %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
 {% macro pagination(item_count, page_size, route, options, active_page) %}
     {% set page_limit = item_count // page_size + 1 %}
     {% set page_limit = page_limit | round(0, 'floor') %}

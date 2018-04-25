@@ -4,6 +4,7 @@
 {% block body %}
     {% if forum %}
         {{macros.render_forum_header(forum)}}
+        {{macros.breadcrumb(thread)}}
     {% endif %}
 
     {% for post in posts %}
