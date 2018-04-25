@@ -1,9 +1,9 @@
 {% extends "base.html.twig" %}
+{% import "macros.html.twig" as macros %}
 
 {% block body %}
     {% if forum %}
-        <h1>{{forum.title}}</h1>
-        {{forum.description}}
+        {{macros.render_forum_header(forum)}}
     {% endif %}
 
     <h2>New Thread</h2>

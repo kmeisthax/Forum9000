@@ -15,3 +15,64 @@
         </nav>
     {% endif %}
 {% endmacro %}
+
+{% macro render_forum_header(forum) %}
+    {% import _self as macros %}
+
+    <h1>{{forum.title}}</h1>
+    {{forum.description}}
+    <p>{{forum.subforums.count}} subforums, {{forum.threads.count}} threads - <a href="{{macros.permalink_forum_new(forum)}}">post new thread</a></p>
+{% endmacro %}
+
+{% macro render_forum_overview(forum) %}
+    {% import _self as macros %}
+
+    <article>
+        <a href="{{macros.permalink_forum(forum)}}">{{forum.title}}</a>
+        <p>{{forum.description}}</p>
+    </article>
+{% endmacro %}
+
+{% macro render_thread_overview(thread, forum) %}
+    {% import _self as macros %}
+    {% set forum = forum|default(thread.forum) %}
+
+    <article>
+        <a href="{{macros.permalink_thread(thread)}}">{{thread.orderedPosts[0].title}}</a>
+        {{macros.pagination(thread.posts | length, 20, "f9kforum_thread", {"id": thread.compactId, 'forum_id': forum.slug}, 0)}}
+        {% if thread.orderedPosts[0].postedBy %}
+            <span>Posted by {{thread.orderedPosts[0].postedBy.handle}} on {{thread.orderedPosts[0].ctime | date}} UTC</span>
+        {% else %}
+            <span>Posted anonymously on {{thread.orderedPosts[0].ctime | date}} UTC</span>
+        {% endif %}
+    </article>
+{% endmacro %}
+
+{% macro render_post(post, thread, forum) %}
+    {% import _self as macros %}
+    {% set thread = thread|default(post.thread) %}
+    {% set forum = forum|default(thread.forum) %}
+
+    <article id="p{{post.order}}">
+        <h2>{{post.title}}</h2>
+        {% if post.postedBy %}
+            <p>Posted by {{post.postedBy.handle}} on {{post.ctime | date}} UTC</p>
+        {% else %}
+            <p>Posted anonymously on {{post.ctime | date}} UTC</p>
+        {% endif %}
+        {{post.message | markup(post.markupLanguage)}}
+    </article>
+{% endmacro %}
+
+{% macro permalink_forum(forum, page) %}
+    {{url('f9kforum_forum', {'id': forum.slug, 'page':page|default(1)})}}
+{% endmacro %}
+
+{% macro permalink_forum_new(forum) %}
+    {{url('f9kforum_thread_new', {'id': forum.slug})}}
+{% endmacro %}
+
+{% macro permalink_thread(thread, forum, page) %}
+    {% set forum = forum|default(thread.forum) %}
+    {{url('f9kforum_thread', {'forum_id': forum.slug, 'id': thread.compactId, 'page':page|default(1)})}}
+{% endmacro %}

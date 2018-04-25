@@ -2,7 +2,9 @@
 {% import "macros.html.twig" as macros %}
 
 {% block body %}
-    <a href="{{url('f9kforum_forum', {'id':forum.slug})}}">Back to {{forum.title}}</a>
+    {% if forum %}
+        {{macros.render_forum_header(forum)}}
+    {% endif %}
 
     <h2>Lock</h2>
     {{ form_start(lock_form) }}

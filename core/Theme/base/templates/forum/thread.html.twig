@@ -2,17 +2,12 @@
 {% import "macros.html.twig" as macros %}
 
 {% block body %}
-    <a href="{{url('f9kforum_forum', {'id':forum.slug})}}">Back to {{forum.title}}</a>
+    {% if forum %}
+        {{macros.render_forum_header(forum)}}
+    {% endif %}
+
     {% for post in posts %}
-        <article id="p{{post.order}}">
-            <h2>{{post.title}}</h2>
-            {% if post.postedBy %}
-                <p>Posted by {{post.postedBy.handle}} on {{post.ctime | date}} UTC</p>
-            {% else %}
-                <p>Posted anonymously on {{post.ctime | date}} UTC</p>
-            {% endif %}
-            {{post.message | markup(post.markupLanguage)}}
-        </article>
+        {{macros.render_post(post)}}
     {% else %}
         No posts!
     {% endfor %}

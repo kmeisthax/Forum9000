@@ -3,27 +3,14 @@
 
 {% block body %}
     {% if forum %}
-        <h1>{{forum.title}}</h1>
-        {{forum.description}}
-        <p>{{subforum_count}} subforums, {{thread_count}} threads - <a href="{{url('f9kforum_thread_new', {'id':forum.slug})}}">post new thread</a></p>
+        {{macros.render_forum_header(forum)}}
     {% endif %}
 
     {% for child in children %}
         {% if child is instanceof('\\Forum9000\\Entity\\Forum') %}
-            <article>
-                <a href="{{url('f9kforum_forum', {'id': child.slug})}}">{{child.title}}</a>
-                <p>{{child.description}}</p>
-            </article>
+            {{macros.render_forum_overview(child)}}
         {% else %}
-            <article>
-                <a href="{{url('f9kforum_thread', {'forum_id': forum.slug, 'id':child.compactId})}}">{{child.orderedPosts[0].title}}</a>
-                {{macros.pagination(child.posts | length, 20, "f9kforum_thread", {"id": child.compactId, 'forum_id': forum.slug}, 0)}}
-                {% if child.orderedPosts[0].postedBy %}
-                    <span>Posted by {{child.orderedPosts[0].postedBy.handle}} on {{child.orderedPosts[0].ctime | date}} UTC</span>
-                {% else %}
-                    <span>Posted anonymously on {{child.orderedPosts[0].ctime | date}} UTC</span>
-                {% endif %}
-            </article>
+            {{macros.render_thread_overview(child)}}
         {% endif %}
     {% endfor %}
 
