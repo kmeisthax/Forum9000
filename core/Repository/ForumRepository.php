@@ -120,17 +120,6 @@ SELECT COUNT(DISTINCT id) as 'count' FROM
         
         return $nQuery->getSingleResult()["count"];
     }
-    
-    /**
-     * Returns a count of all subforums within a forum.
-     */
-    public function getForumSubforumCount(Forum $f) {
-        return $this->createQueryBuilder('f')
-            ->select('COUNT(f)')
-            ->where('f.parent = :forum_id')->setParameter("forum_id", $f->getId())
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
 
 //    /**
 //     * @return Forum[] Returns an array of Forum objects

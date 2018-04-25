@@ -61,8 +61,6 @@ class ForumController extends Controller {
         
         $children = $forumRepo->getForumChildren($forum, ($page - 1) * 10, 10);
         $children_count = $forumRepo->getForumChildCount($forum);
-        $thread_count = $threadRepo->getForumThreadCount($forum);
-        $subforum_count = $forumRepo->getForumSubforumCount($forum);
         
         return $this->render(
                                 "forum/forum.html.twig",
@@ -70,9 +68,7 @@ class ForumController extends Controller {
                                     "forum" => $forum,
                                     "page" => $page,
                                     "children" => $children,
-                                    "children_count" => $children_count,
-                                    "thread_count" => $thread_count,
-                                    "subforum_count" => $subforum_count,
+                                    "children_count" => $children_count
                                 )
                             );
     }

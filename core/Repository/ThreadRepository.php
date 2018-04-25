@@ -46,14 +46,6 @@ class ThreadRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getForumThreadCount(Forum $f) {
-        return $this->createQueryBuilder('t')
-            ->select('COUNT(t)')
-            ->where('t.forum = :forum_id')->setParameter("forum_id", $f->getId())
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
 //    /**
 //     * @return Thread[] Returns an array of Thread objects
 //     */
