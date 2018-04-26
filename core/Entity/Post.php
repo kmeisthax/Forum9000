@@ -51,6 +51,10 @@ class Post
      * @ORM\Column(type="string", options={"default":"plaintext"}))
      */
     private $markupLanguage;
+
+    public function __construct() {
+        $this->ctime = new DateTime();
+    }
     
     public function getId() {
         return $this->id;
