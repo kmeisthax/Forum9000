@@ -45,6 +45,11 @@ class User implements UserInterface, \Serializable
     private $grants;
     
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $ctime;
+    
+    /**
      * Get the user's current site role.
      * 
      * We have our own access control mechanisms, so roles are only necessary
@@ -70,6 +75,7 @@ class User implements UserInterface, \Serializable
 
     public function __construct() {
         $this->grants = new ArrayCollection();
+        $this->ctime = new DateTime();
     }
 
     public function getId() {
@@ -118,6 +124,16 @@ class User implements UserInterface, \Serializable
 
     public function getGrants() {
         return $this->grants;
+    }
+
+    public function getCtime(): ?\DateTime {
+        return $this->ctime;
+    }
+
+    public function setCtime(\DateTime $time): self {
+        $this->ctime = $time;
+
+        return $this;
     }
 
     //UserInterface
