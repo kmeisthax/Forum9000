@@ -13,13 +13,6 @@ use Forum9000\Entity\Permission;
 
 class PermissionType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        if ($options["data"]->getForum() === null) {
-            $builder->add("forum", EntityType::class, array(
-                'class' => Forum::class,
-                'choice_label' => 'title'
-            ));
-        }
-        
         if ($options["data"]->getAttribute() === null) {
             $builder->add("attribute", ChoiceType::class, array(
                 'choices' => array(

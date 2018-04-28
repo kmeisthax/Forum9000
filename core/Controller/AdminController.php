@@ -194,13 +194,13 @@ class AdminController extends Controller {
         }
 
         $new_perm = new Permission();
-        $new_perm->setForum($forum);
+        $new_perm->setEstate($forum->getEstate());
         $new_perm_form = $this->createForm(PermissionType::class, $new_perm, array(
             'action' => $this->generateUrl('f9kadmin_forum_perms', array("id" => $id))
         ));
         
         $new_grant = new Grant();
-        $new_grant->setForum($forum);
+        $new_grant->setEstate($forum->getEstate());
         $new_grant_form = $this->createForm(GrantType::class, $new_grant, array(
             'action' => $this->generateUrl('f9kadmin_forum_grants', array("id" => $id))
         ));
@@ -232,7 +232,7 @@ class AdminController extends Controller {
         
         //Recreate a form object to capture the request data.
         $perm = new Permission();
-        $perm->setForum($forum);
+        $perm->setEstate($forum->getEstate());
         $perm->setIsDeniedAnon(false);
         $perm->setIsDeniedAuth(false);
         
@@ -259,7 +259,7 @@ class AdminController extends Controller {
         
         //Recreate a form object to capture the request data.
         $grant = new Grant();
-        $grant->setForum($forum);
+        $grant->setEstate($forum->getEstate());
         $grant->setGrantStatus(null);
         
         $grant_form = $this->createForm(GrantType::class, $grant);

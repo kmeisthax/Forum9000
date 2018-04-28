@@ -2,6 +2,7 @@
 
 namespace Forum9000\Security;
 
+use Forum9000\Entity\Estate;
 use Forum9000\Entity\Forum;
 use Forum9000\Entity\Thread;
 use Forum9000\Entity\User;
@@ -23,7 +24,7 @@ class PermissionsVoter extends Voter {
             return false;
         }
         
-        if (!($subject instanceof Forum || $subject instanceof Thread)) {
+        if (!($subject instanceof Estate || method_exists($subject, "getEstate") || $subject instanceof Thread)) {
             return false;
         }
         
@@ -36,6 +37,10 @@ class PermissionsVoter extends Voter {
      */
     protected function checkGrantDenyStatus($attribute, $subject, TokenInterface $token) {
         $user = $token->getUser();
+        
+        if (method_exists($subject, "getEstate")) {
+            $subject = $subject->getEstate();
+        }
 
         if ($user !== null) {
             //First, check if the user has an explicit Grant record.
@@ -65,7 +70,7 @@ class PermissionsVoter extends Voter {
     protected function checkHierarchialGrantDenyStatus($attribute, $subject, TokenInterface $token) {
         $can_exercise = $this->checkGrantDenyStatus($attribute, $subject, $token);
 
-        while ($can_exercise === null && $subject->getParent() !== null) {
+        while ($can_exercise === null && method_exists($subject, "getParent") && $subject->getParent() !== null) {
             $subject = $subject->getParent();
             $can_exercise = $this->checkGrantDenyStatus($attribute, $subject, $token);
         }

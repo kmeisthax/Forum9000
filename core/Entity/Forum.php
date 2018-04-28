@@ -11,13 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Forum
 {
     use \Forum9000\CompactId\EntityTrait;
-    
-    /**
-     * @ORM\Id()
-     * @ORM\OneToOne(targetEntity="Estate")
-     * @ORM\JoinColumn(name="id", referencedColumnName="id")
-     */
-    private $estate;
+    use \Forum9000\EstateSecurity\EstateBearingEntityTrait;
     
     /**
      * @ORM\Column(type="string", length=255)
@@ -66,17 +60,12 @@ class Forum
     public function __construct() {
         $this->threads = new ArrayCollection();
         $this->subforums = new ArrayCollection();
-        $this->estate = new Estate($this);
+        $this->ensureEstateExists();
     }
 
     public function getId()
     {
         return $this->getEstate()->getId();
-    }
-
-    public function getEstate(): ?Estate
-    {
-        return $this->estate;
     }
 
     public function getTitle(): ?string
