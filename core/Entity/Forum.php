@@ -14,11 +14,11 @@ class Forum
     
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(type="guid")
+     * @ORM\OneToOne(targetEntity="Estate")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id")
      */
-    private $id;
-
+    private $estate;
+    
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -47,20 +47,6 @@ class Forum
      * @ORM\OneToMany(targetEntity="Thread", mappedBy="forum")
      */
     private $threads;
-
-    /**
-     * The list of default permissions for the board.
-     *
-     * @ORM\OneToMany(targetEntity="Permission", mappedBy="forum")
-     */
-    private $permissions;
-
-    /**
-     * The list of specific grants for particular users.
-     *
-     * @ORM\OneToMany(targetEntity="Grant", mappedBy="forum")
-     */
-    private $grants;
     
     /**
      * The list of subforums for a particular forum.
@@ -79,14 +65,18 @@ class Forum
 
     public function __construct() {
         $this->threads = new ArrayCollection();
-        $this->permissions = new ArrayCollection();
-        $this->grants = new ArrayCollection();
         $this->subforums = new ArrayCollection();
+        $this->estate = new Estate($this);
     }
 
     public function getId()
     {
-        return $this->id;
+        return $this->getEstate()->getId();
+    }
+
+    public function getEstate(): ?Estate
+    {
+        return $this->estate;
     }
 
     public function getTitle(): ?string
@@ -140,15 +130,7 @@ class Forum
     public function getThreads() {
         return $this->threads;
     }
-
-    public function getPermissions() {
-        return $this->permissions;
-    }
-
-    public function getGrants() {
-        return $this->grants;
-    }
-
+    
     public function getSubforums() {
         return $this->subforums;
     }

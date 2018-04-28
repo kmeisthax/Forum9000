@@ -5,10 +5,10 @@ namespace Forum9000\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Forum9000\Entity\User;
-use Forum9000\Entity\Forum;
+use Forum9000\Entity\Estate;
 
 /**
- * A Permission represents a specific action performed on a particular forum.
+ * A Permission represents a specific action performed on a particular estate.
  * Grants are specified for authenticated and anonymous users.
  *
  * @ORM\Entity(repositoryClass="Forum9000\Repository\PermissionRepository")
@@ -30,10 +30,10 @@ class Permission
 
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="Forum", inversedBy="permissions")
-     * @ORM\JoinColumn(name="forum_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Estate", inversedBy="permissions")
+     * @ORM\JoinColumn(name="estate_id", referencedColumnName="id")
      */
-    private $forum;
+    private $estate;
 
     /**
      * TRUE if permission is granted to logged-in users.
@@ -85,14 +85,14 @@ class Permission
         return $this;
     }
 
-    public function getForum(): ?Forum
+    public function getEstate(): ?Estate
     {
-        return $this->forum;
+        return $this->estate;
     }
 
-    public function setForum(Forum $forum): self
+    public function setEstate(Estate $estate): self
     {
-        $this->forum = $forum;
+        $this->estate = $estate;
 
         return $this;
     }

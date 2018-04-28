@@ -4,12 +4,12 @@ namespace Forum9000\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Forum9000\Entity\Forum;
+use Forum9000\Entity\Estate;
 use Forum9000\Entity\User;
 
 /**
  * Represents a specific right, or denial of a right, for a particular
- * authenticated user to perform an action on a forum.
+ * authenticated user to perform an action on an estate (e.g. forum, group, etc)
  *
  * @ORM\Entity(repositoryClass="Forum9000\Repository\GrantRepository")
  * @ORM\Table(name="`grant`")
@@ -24,10 +24,10 @@ class Grant
 
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="Forum", inversedBy="grants")
-     * @ORM\JoinColumn(name="forum_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Estate", inversedBy="grants")
+     * @ORM\JoinColumn(name="estate_id", referencedColumnName="id")
      */
-    private $forum;
+    private $estate;
 
     /**
      * @ORM\Id()
@@ -66,14 +66,14 @@ class Grant
         return $this;
     }
 
-    public function getForum(): ?Forum
+    public function getEstate(): ?Estate
     {
-        return $this->forum;
+        return $this->estate;
     }
 
-    public function setForum(Forum $forum): self
+    public function setEstate(Estate $estate): self
     {
-        $this->forum = $forum;
+        $this->estate = $estate;
 
         return $this;
     }
