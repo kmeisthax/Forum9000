@@ -3,32 +3,19 @@
 namespace Forum9000\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="Forum9000\Repository\UserRepository")
  */
-class User implements UserInterface, \Serializable
+class User extends Actor implements UserInterface, \Serializable
 {
     use \Forum9000\CompactId\EntityTrait;
 
     const USER = "ROLE_USER";
     const STAFF = "ROLE_STAFF";
     const DEVELOPER = "ROLE_DEVELOPER";
-
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(type="string")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $handle;
-
+    
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -38,16 +25,6 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string", length=255)
      */
     private $email;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Grant", mappedBy="user")
-     */
-    private $grants;
-    
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $ctime;
     
     /**
      * Get the user's current site role.
@@ -72,25 +49,6 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string", length=255, options={"default":"ROLE_USER"})
      */
     private $site_role;
-
-    public function __construct() {
-        $this->grants = new ArrayCollection();
-        $this->ctime = new \DateTime();
-    }
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getHandle(): ?string {
-        return $this->handle;
-    }
-
-    public function setHandle(string $handle): self {
-        $this->handle = $handle;
-
-        return $this;
-    }
 
     public function getPassword(): ?string {
         return $this->password;
@@ -118,20 +76,6 @@ class User implements UserInterface, \Serializable
 
     public function setSiteRole(string $site_role): self {
         $this->site_role = $site_role;
-
-        return $this;
-    }
-
-    public function getGrants() {
-        return $this->grants;
-    }
-
-    public function getCtime(): ?\DateTime {
-        return $this->ctime;
-    }
-
-    public function setCtime(\DateTime $time): self {
-        $this->ctime = $time;
 
         return $this;
     }

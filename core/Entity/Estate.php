@@ -27,7 +27,7 @@ class Estate {
     /**
      * PHP class which created this estate.
      * 
-     * @ORM\Column(type="string", options={"default":"Forum9000\\Entity\\Forum"})
+     * @ORM\Column(type="string")
      */
     private $classname;
     
