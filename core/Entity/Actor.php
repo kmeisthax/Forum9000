@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Actor {
     use \Forum9000\CompactId\EntityTrait;
+    use \Forum9000\Timestamps\TimestampedEntityTrait;
     
     /**
      * @ORM\Id()
@@ -26,17 +27,18 @@ class Actor {
     private $grants;
     
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $ctime;
-    
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $handle;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Membership", mappedBy="member")
+     */
+    private $memberships;
+    
     public function __construct() {
         $this->grants = new ArrayCollection();
+        $this->memberships = new ArrayCollection();
         $this->ctime = new \DateTime();
     }
     
@@ -47,15 +49,9 @@ class Actor {
     public function getGrants() {
         return $this->grants;
     }
-
-    public function getCtime(): ?\DateTime {
-        return $this->ctime;
-    }
-
-    public function setCtime(\DateTime $time): self {
-        $this->ctime = $time;
-
-        return $this;
+    
+    public function getMemberships() {
+        return $this->memberships;
     }
 
     public function getHandle(): ?string {

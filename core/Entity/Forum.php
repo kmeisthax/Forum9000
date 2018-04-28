@@ -14,6 +14,13 @@ class Forum
     use \Forum9000\EstateSecurity\EstateBearingEntityTrait;
     
     /**
+     * @ORM\Id()
+     * @ORM\OneToOne(targetEntity="Estate", cascade={"persist"})
+     * @ORM\JoinColumn(name="id", referencedColumnName="id")
+     */
+    private $estate;
+    
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $title;

@@ -10,8 +10,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User extends Actor implements UserInterface, \Serializable
 {
-    use \Forum9000\CompactId\EntityTrait;
-
     const USER = "ROLE_USER";
     const STAFF = "ROLE_STAFF";
     const DEVELOPER = "ROLE_DEVELOPER";

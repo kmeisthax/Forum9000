@@ -7,20 +7,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Forum9000\Entity\Estate;
 
 trait EstateBearingEntityTrait {
-    /**
-     * @ORM\Id()
-     * @ORM\OneToOne(targetEntity="Estate", cascade={"persist"})
-     * @ORM\JoinColumn(name="id", referencedColumnName="id")
-     */
-    private $id;
-    
     private function ensureEstateExists() {
-        $this->id = new Estate($this);
+        $this->estate = new Estate($this);
     }
 
     public function getEstate(): ?Estate
     {
-        return $this->id;
+        return $this->estate;
     }
     
     public function getPermissions() {
