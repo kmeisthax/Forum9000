@@ -53,7 +53,7 @@ class Post
     private $markupLanguage;
 
     public function __construct() {
-        $this->ctime = new DateTime();
+        $this->ctime = new \DateTime();
     }
     
     public function getId() {

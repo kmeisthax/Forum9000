@@ -75,7 +75,7 @@ class User implements UserInterface, \Serializable
 
     public function __construct() {
         $this->grants = new ArrayCollection();
-        $this->ctime = new DateTime();
+        $this->ctime = new \DateTime();
     }
 
     public function getId() {
