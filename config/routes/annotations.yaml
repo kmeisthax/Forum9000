@@ -1,3 +1,0 @@
-controllers:
-    resource: ../../core/Controller/
-    type: annotation
