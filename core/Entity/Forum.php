@@ -18,7 +18,7 @@ class Forum
      * @ORM\OneToOne(targetEntity="Estate", cascade={"persist"})
      * @ORM\JoinColumn(name="id", referencedColumnName="id")
      */
-    private $estate;
+    private $id;
     
     /**
      * @ORM\Column(type="string", length=255)
@@ -68,6 +68,14 @@ class Forum
         $this->threads = new ArrayCollection();
         $this->subforums = new ArrayCollection();
         $this->ensureEstateExists();
+    }
+
+    private function ensureEstateExists() {
+        $this->id = new Estate($this);
+    }
+
+    public function getEstate(): ?Estate {
+        return $this->id;
     }
 
     public function getId()

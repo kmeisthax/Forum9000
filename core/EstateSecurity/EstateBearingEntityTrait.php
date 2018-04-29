@@ -11,8 +11,7 @@ trait EstateBearingEntityTrait {
         $this->estate = new Estate($this);
     }
 
-    public function getEstate(): ?Estate
-    {
+    public function getEstate(): ?Estate {
         return $this->estate;
     }
     
