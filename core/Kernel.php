@@ -17,18 +17,19 @@ class Kernel extends BaseKernel
 
     const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
-    public function getCacheDir()
-    {
+    public function getProjectDir() {
+        return realpath(__DIR__.'/../');
+    }
+
+    public function getCacheDir() {
         return $this->getProjectDir().'/var/cache/'.$this->environment;
     }
 
-    public function getLogDir()
-    {
+    public function getLogDir() {
         return $this->getProjectDir().'/var/log';
     }
 
-    public function registerBundles()
-    {
+    public function registerBundles() {
         $contents = require $this->getProjectDir().'/config/bundles.php';
         foreach ($contents as $class => $envs) {
             if (isset($envs['all']) || isset($envs[$this->environment])) {
