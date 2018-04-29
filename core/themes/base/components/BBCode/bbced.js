@@ -26,7 +26,7 @@ var mirai_bbced_selection_end=0;
 function mirai_get_input_selection(el,editorname) {
 	var start = 0, end = 0, bypass=false, normalizedValue, range,
 		textInputRange, len, endRange;
-	
+
 	if(typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
 		start = el.selectionStart;
 		end = el.selectionEnd;
@@ -46,7 +46,7 @@ function mirai_get_input_selection(el,editorname) {
 				} else {
 					start = -textInputRange.moveStart("character", -len);
 					start += normalizedValue.slice(0, start).split("\n").length - 1;
-		
+
 					if (textInputRange.compareEndPoints("EndToEnd", endRange) > -1) {
 						end = len;
 					} else {

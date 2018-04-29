@@ -35,7 +35,7 @@ services:
     Forum9000\Theme\ThemeLocator:
         arguments:
             $paths:
-                - "core/Theme"
+                - "core/themes"
                 - "themes"
     
     Forum9000\Theme\ThemeRegistry:

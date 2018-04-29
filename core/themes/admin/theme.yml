@@ -4,7 +4,7 @@ parent: base
 description: Theme used to render admin pages.
 paths:
     templates: templates
-    assets: 
+    assets:
 pipelines:
     stylesheets.main:
         - source: "stylesheets/main.less"
