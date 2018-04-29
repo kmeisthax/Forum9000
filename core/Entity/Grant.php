@@ -5,11 +5,12 @@ namespace Forum9000\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Forum9000\Entity\Estate;
-use Forum9000\Entity\User;
+use Forum9000\Entity\Actor;
 
 /**
  * Represents a specific right, or denial of a right, for a particular
- * authenticated user to perform an action on an estate (e.g. forum, group, etc)
+ * authenticated user or group member to perform an action on an estate (e.g.
+ * forum, group, etc)
  *
  * @ORM\Entity(repositoryClass="Forum9000\Repository\GrantRepository")
  * @ORM\Table(name="`grant`")
@@ -31,13 +32,13 @@ class Grant
 
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="grants")
+     * @ORM\ManyToOne(targetEntity="Actor", inversedBy="grants")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $user;
+    private $actor;
 
     /**
-     * TRUE if and only if the user is allowed to perform this action.
+     * TRUE if and only if the actor is allowed to perform this action.
      * FALSE implies tri-state, not denied.
      *
      * @ORM\Column(type="boolean")
@@ -45,7 +46,7 @@ class Grant
     private $isGranted;
 
     /**
-     * TRUE if and only if the user is prohibited from performing this action.
+     * TRUE if and only if the actor is prohibited from performing this action.
      * Can be used to override otherwise authorized actions in complicated
      * permissions scenarios.
      * FALSE implies tri-state, not granted.
@@ -78,14 +79,14 @@ class Grant
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getActor(): ?Actor
     {
-        return $this->user;
+        return $this->actor;
     }
 
-    public function setUser(User $user): self
+    public function setActor(Actor $actor): self
     {
-        $this->user = $user;
+        $this->actor = $actor;
 
         return $this;
     }

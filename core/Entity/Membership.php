@@ -35,7 +35,7 @@ class Membership {
      */
     public $member;
     
-    public function __construct($user, $group) {
+    public function __construct() {
         $this->ctime = new \DateTime();
     }
     

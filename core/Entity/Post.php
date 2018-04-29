@@ -38,7 +38,24 @@ class Post
     private $order;
 
     /**
+     * The authenticated user who made this post.
+     * 
+     * Groups can be listed as the creator of a post, but we want to be able to
+     * determine the post's original creator for auditing purposes.
+     * 
      * @ORM\ManyToOne(targetEntity="User")
+     */
+    private $posting_user;
+    
+    /**
+     * The actor who this post is identified as having posted.
+     * 
+     * Groups can be listed as the creator of a post, and all users should see
+     * the group identity by default. A post made under group identity is also
+     * treated as owned by the group and not the user who posted it to the
+     * group.
+     * 
+     * @ORM\ManyToOne(targetEntity="Actor")
      */
     private $posted_by;
     
@@ -100,12 +117,22 @@ class Post
         return $this;
     }
 
-    public function getPostedBy(): ?User {
+    public function getPostingUser(): ?User {
+        return $this->posting_user;
+    }
+
+    public function setPostingUser(User $user): self {
+        $this->posting_user = $user;
+
+        return $this;
+    }
+
+    public function getPostedBy(): ?Actor {
         return $this->posted_by;
     }
 
-    public function setPostedBy(User $user): self {
-        $this->posted_by = $user;
+    public function setPostedBy(Actor $actor): self {
+        $this->posted_by = $actor;
 
         return $this;
     }
