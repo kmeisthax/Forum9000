@@ -1,0 +1,46 @@
+{% extends "base.html.twig" %}
+{% import "macros.html.twig" as macros %}
+
+{% block body %}
+    <h1>Database Update {{version}}</h1>
+    
+    <h2>Important Warning</h2>
+    
+    <p>
+        {% if exec_action == "up" %}
+            <em>You are about to apply database update {{version}}.</em> All database changes are potentially hazardous to your site data. <em>It is extremely important to store and retain a database backup immediately before executing updates.</em>
+        {% elseif exec_action == "down" %}
+            <em>You are about to revert database update {{version}}.</em> If you have added any information into database fields that don't exist on the old version, it will be erased by this reversion. After reverting, you must downgrade Forum9000 to an older version compatible with the older database. <em>It is extremely important to store and retain a database backup immediately before executing updates.</em>
+        {% endif %}
+    </p>
+    
+    {% if exec_action == "up" and migration_info.uplist | length > 0 %}
+        <p>The following updates will be applied:</p>
+        
+        <ul>
+            {% for interim_ver in migration_info.uplist %}
+                <a href="{{url('f9kdeveloper_migration_single', {'version':interim_ver})}}">
+                    {{interim_ver}}
+                </a>
+            {% endfor %}
+        </ul>
+        
+        {{form_start(actions_form)}}
+        {{form_end(actions_form)}}
+    {% elseif exec_action == "down" and migration_info.downlist | length > 0 %}
+        <p>The following updates will be removed:</p>
+        
+        <ul>
+            {% for interim_ver in migration_info.downlist %}
+                <a href="{{url('f9kdeveloper_migration_single', {'version':interim_ver})}}">
+                    {{interim_ver}}
+                </a>
+            {% endfor %}
+        </ul>
+        
+        {{form_start(actions_form)}}
+        {{form_end(actions_form)}}
+    {% else %}
+        <p>Nothing to be done for {{version}}.</p>
+    {% endif %}
+{% endblock %}

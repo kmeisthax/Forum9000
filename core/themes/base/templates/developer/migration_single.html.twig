@@ -5,10 +5,10 @@
     <h1>Database Update {{version}}</h1>
     
     <h2>Information</h2>
-    <pre>{{migration_comment}}</pre>
-    <p>Update created on {{migration_datetime}}</p>
+    <pre>{{migration_info.comment}}</pre>
+    <p>Update created on {{migration_info.datetime}}</p>
     
     <h2>Status</h2>
-    <p>Can be applied: {% if migration_canup %}Yes, {{versions_up | length}} updates to apply{% else %}No{% endif %}</p>
-    <p>Can be reverted: {% if migration_candown %}Yes, {{versions_down | length + 1}} updates to revert{% else %}No{% endif %}</p>
+    <p>{% if migration_info.canup %}<a href="{{url('f9kdeveloper_migration_execute', {'version':version, 'exec_action':'up'})}}">{{migration_info.uplist | length}} updates to apply.</a>{% else %}Cannot be applied.{% endif %}</p>
+    <p>{% if migration_info.candown %}<a href="{{url('f9kdeveloper_migration_execute', {'version':version, 'exec_action':'down'})}}">{{migration_info.downlist | length}} updates to revert.</a>{% else %}Cannot be reverted.{% endif %}</p>
 {% endblock %}

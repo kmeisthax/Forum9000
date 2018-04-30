@@ -8,9 +8,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
+use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\DBAL\Migrations\Version;
 
 use Forum9000\Theme\ThemeRegistry;
+use Forum9000\Form\ActionsType;
 
 /**
  * The most sensitive console exposed by Forum9000.
@@ -33,17 +35,7 @@ use Forum9000\Theme\ThemeRegistry;
  * @Route("/admin/developer", name="f9kdeveloper_")
  */
 class DeveloperController extends Controller {
-    /**
-     * Migration console
-     * 
-     * Allows developers to check the database's migration status (if
-     * applicable) and manually execute a migration if necessary.
-     * 
-     * @Route("/migrations", name="migrations")
-     */
-    public function migrations(Request $request, ThemeRegistry $themeReg) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
-        
+    private function create_migration_configuration(?\Closure $cl = null) {
         $container = $this->container;
         $connection = $this->get("doctrine")->getConnection();
         $dir = $container->getParameter('doctrine_migrations.dir_name');
@@ -57,7 +49,45 @@ class DeveloperController extends Controller {
         $configuration->registerMigrationsFromDirectory($dir);
         $configuration->setName($container->getParameter('doctrine_migrations.name'));
         $configuration->setMigrationsTableName($container->getParameter('doctrine_migrations.table_name'));
+        $configuration->setOutputWriter(new OutputWriter($cl));
         
+        return $configuration;
+    }
+    
+    private function get_migration_infos(Configuration $configuration, $version) {
+        $infos = array();
+        
+        //TODO: getVersion will fail if the migration class is missing.
+        //This isn't acceptable for developer console; we need to distinguish
+        //between an unknown update and an update that's been applied but whose
+        //migration class is missing.
+        $version_obj = $configuration->getVersion($version);
+        $migration = $version_obj->getMigration();
+        $migration_refl = new \ReflectionClass(get_class($migration));
+        
+        $infos["datetime"] = $configuration->getDateTime($version);
+        $infos["comment"] = $migration_refl->getDocComment();
+        $infos["canup"] = $migration_refl->hasMethod("up") && !$configuration->hasVersionMigrated($version_obj);
+        $infos["candown"] = $migration_refl->hasMethod("down") && $configuration->hasVersionMigrated($version_obj);
+        
+        $infos["uplist"] = $configuration->getMigrationsToExecute(Version::DIRECTION_UP, $version);
+        $infos["downlist"] = $configuration->getMigrationsToExecute(Version::DIRECTION_DOWN, $version) + [$version];
+        
+        return $infos;
+    }
+    
+    /**
+     * Migration console
+     * 
+     * Allows developers to check the database's migration status (if
+     * applicable) and manually execute a migration if necessary.
+     * 
+     * @Route("/migrations", name="migrations")
+     */
+    public function migrations(Request $request, ThemeRegistry $themeReg) {
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
+        
+        $configuration = $this->create_migration_configuration();
         $migrations = array();
         
         foreach ($configuration->getAvailableVersions() as $order => $name) {
@@ -97,44 +127,41 @@ class DeveloperController extends Controller {
     public function migration_single(Request $request, ThemeRegistry $themeReg, $version) {
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
         
-        $container = $this->container;
-        $connection = $this->get("doctrine")->getConnection();
-        $dir = $container->getParameter('doctrine_migrations.dir_name');
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
-        }
-        
-        $configuration = new Configuration($connection);
-        $configuration->setMigrationsNamespace($container->getParameter('doctrine_migrations.namespace'));
-        $configuration->setMigrationsDirectory($dir);
-        $configuration->registerMigrationsFromDirectory($dir);
-        $configuration->setName($container->getParameter('doctrine_migrations.name'));
-        $configuration->setMigrationsTableName($container->getParameter('doctrine_migrations.table_name'));
-        
-        $migration_datetime = $configuration->getDateTime($version);
-        
-        //TODO: getVersion will fail if the migration class is missing.
-        //This isn't acceptable for developer console; we need to distinguish
-        //between an unknown update and an update that's been applied but whose
-        //migration class is missing.
-        $version_obj = $configuration->getVersion($version);
-        $migration = $version_obj->getMigration();
-        $migration_refl = new \ReflectionClass(get_class($migration));
-        $migration_comment = $migration_refl->getDocComment();
-        $migration_canup = $migration_refl->hasMethod("up") && !$configuration->hasVersionMigrated($version_obj);
-        $migration_candown = $migration_refl->hasMethod("down") && $configuration->hasVersionMigrated($version_obj);
-        
-        $versions_up = $configuration->getMigrationsToExecute(Version::DIRECTION_UP, $version);
-        $versions_down = $configuration->getMigrationsToExecute(Version::DIRECTION_DOWN, $version);
+        $configuration = $this->create_migration_configuration();
+        $migration_info = $this->get_migration_infos($configuration, $version);
         
         return $this->render("developer/migration_single.html.twig", array(
             "version" => $version,
-            "migration_datetime" => $migration_datetime,
-            "migration_comment" => $migration_comment,
-            "migration_canup" => $migration_canup,
-            "migration_candown" => $migration_candown,
-            "versions_up" => $versions_up,
-            "versions_down" => $versions_down
+            "migration_info" => $migration_info
+        ));
+    }
+    
+    /**
+     * @Route("/migrations/{version}/{exec_action}", name="migration_execute")
+     */
+    public function migration_execute(Request $request, ThemeRegistry $themeReg, $version, $exec_action) {
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
+        
+        $configuration = $this->create_migration_configuration();
+        $migration_info = $this->get_migration_infos($configuration, $version);
+        
+        //Create a form with buttons to click
+        $actions_form = $this->createForm(ActionsType::class, null, array(
+            "actions" => array(
+                "confirm" => "Yes",
+                "cancel" => "No"
+            )
+        ));
+        
+        if ($actions_form->isSubmitted() && $actions_form->isValid()) {
+            
+        }
+        
+        return $this->render("developer/migration_execute.html.twig", array(
+            "version" => $version,
+            "migration_info" => $migration_info,
+            "exec_action" => $exec_action,
+            "actions_form" => $actions_form->createView(),
         ));
     }
 }
