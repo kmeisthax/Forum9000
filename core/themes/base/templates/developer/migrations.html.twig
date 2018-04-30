@@ -12,7 +12,7 @@
         <thead><tr><th>Version</th><th>Status</th></tr></thead>
         {% for migration in migrations %}
         <tr>
-            <td>{{migration.version}}</td>
+            <td><a href="{{url('f9kdeveloper_migration_single', {'version':migration.version})}}">{{migration.version}}</a></td>
             <td>
                 {% if migration.current %}
                     current

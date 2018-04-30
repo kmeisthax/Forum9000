@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
+use Doctrine\DBAL\Migrations\Version;
 
 use Forum9000\Theme\ThemeRegistry;
 
@@ -87,6 +88,53 @@ class DeveloperController extends Controller {
         
         return $this->render("developer/migrations.html.twig", array(
             "migrations" => $migrations
+        ));
+    }
+    
+    /**
+     * @Route("/migrations/{version}", name="migration_single")
+     */
+    public function migration_single(Request $request, ThemeRegistry $themeReg, $version) {
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
+        
+        $container = $this->container;
+        $connection = $this->get("doctrine")->getConnection();
+        $dir = $container->getParameter('doctrine_migrations.dir_name');
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        
+        $configuration = new Configuration($connection);
+        $configuration->setMigrationsNamespace($container->getParameter('doctrine_migrations.namespace'));
+        $configuration->setMigrationsDirectory($dir);
+        $configuration->registerMigrationsFromDirectory($dir);
+        $configuration->setName($container->getParameter('doctrine_migrations.name'));
+        $configuration->setMigrationsTableName($container->getParameter('doctrine_migrations.table_name'));
+        
+        $migration_datetime = $configuration->getDateTime($version);
+        
+        //TODO: getVersion will fail if the migration class is missing.
+        //This isn't acceptable for developer console; we need to distinguish
+        //between an unknown update and an update that's been applied but whose
+        //migration class is missing.
+        $version_obj = $configuration->getVersion($version);
+        $migration = $version_obj->getMigration();
+        $migration_refl = new \ReflectionClass(get_class($migration));
+        $migration_comment = $migration_refl->getDocComment();
+        $migration_canup = $migration_refl->hasMethod("up") && !$configuration->hasVersionMigrated($version_obj);
+        $migration_candown = $migration_refl->hasMethod("down") && $configuration->hasVersionMigrated($version_obj);
+        
+        $versions_up = $configuration->getMigrationsToExecute(Version::DIRECTION_UP, $version);
+        $versions_down = $configuration->getMigrationsToExecute(Version::DIRECTION_DOWN, $version);
+        
+        return $this->render("developer/migration_single.html.twig", array(
+            "version" => $version,
+            "migration_datetime" => $migration_datetime,
+            "migration_comment" => $migration_comment,
+            "migration_canup" => $migration_canup,
+            "migration_candown" => $migration_candown,
+            "versions_up" => $versions_up,
+            "versions_down" => $versions_down
         ));
     }
 }
