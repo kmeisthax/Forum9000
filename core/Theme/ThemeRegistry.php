@@ -136,6 +136,7 @@ class ThemeRegistry {
 
     const ROUTECLASS_USER = "user";
     const ROUTECLASS_ADMIN = "admin";
+    const ROUTECLASS_DEVELOPER = "developer";
 
     /**
      * Negotiate which theme should be used for a given request.
@@ -150,7 +151,7 @@ class ThemeRegistry {
      *   The theme to use for this request.
      */
     public function negotiate_theme($arguments, $routeclass = ThemeRegistry::ROUTECLASS_USER) : Theme {
-        if ($routeclass === ThemeRegistry::ROUTECLASS_ADMIN) {
+        if ($routeclass === ThemeRegistry::ROUTECLASS_ADMIN || $routeclass === ThemeRegistry::ROUTECLASS_DEVELOPER) {
             return $this->find_theme_by_machine_name("admin");
         }
 

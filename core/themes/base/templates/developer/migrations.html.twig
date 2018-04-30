@@ -1,0 +1,50 @@
+{% extends "base.html.twig" %}
+{% import "macros.html.twig" as macros %}
+
+{% block body %}
+    <h1>Database Updates</h1>
+    
+    <p>Migrations are different versions of Forum9000's database schema. It is important that the Forum9000 software and database have matching database versions. If they do not, you will need to run a database update to restore proper working operation of your site install.</p>
+    
+    <h2>Known Updates</h2>
+    
+    <table>
+        <thead><tr><th>Version</th><th>Status</th></tr></thead>
+        {% for migration in migrations %}
+        <tr>
+            <td>{{migration.version}}</td>
+            <td>
+                {% if migration.current %}
+                    current
+                {% elseif migration.available and migration.applied %}
+                    applied
+                {% elseif migration.applied %}
+                    missing
+                {% else %}
+                    pending
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <h3>Status key</h3>
+    <dl>
+        <dt>current</dt>
+        <dd>
+            The current version of the database schema.
+        </dd>
+        <dt>pending</dt>
+        <dd>
+            A database update required after updating to a new version of Forum9000. Updates should be applied after a database backup to ensure proper operation of your site install.
+        </dd>
+        <dt>applied</dt>
+        <dd>
+            A previously applied database update. You can revert applied updates, though doing so will degrade operation of your site install and should only be performed prior to downgrading Forum9000 to a previous version of the software compatible with the older schema.
+        </dd>
+        <dt>missing</dt>
+        <dd>
+            A previously applied database update whose migration code cannot be found, and thus cannot be removed. This indicates that your installation is running an older version of Forum9000 that needs to be updated to be compatible with the current database.
+        </dd>
+    </dl>
+{% endblock %}
