@@ -43,13 +43,12 @@ class DeveloperController extends Controller {
             mkdir($dir, 0777, true);
         }
         
-        $configuration = new Configuration($connection);
+        $configuration = new Configuration($connection, new OutputWriter($cl));
         $configuration->setMigrationsNamespace($container->getParameter('doctrine_migrations.namespace'));
         $configuration->setMigrationsDirectory($dir);
         $configuration->registerMigrationsFromDirectory($dir);
         $configuration->setName($container->getParameter('doctrine_migrations.name'));
         $configuration->setMigrationsTableName($container->getParameter('doctrine_migrations.table_name'));
-        $configuration->setOutputWriter(new OutputWriter($cl));
         
         return $configuration;
     }
@@ -144,7 +143,7 @@ class DeveloperController extends Controller {
         
         $messages = array();
 
-        $configuration = $this->create_migration_configuration(function ($msg) use ($messages) {
+        $configuration = $this->create_migration_configuration(function ($msg) use (&$messages) {
             $messages[] = $msg;
         });
         $migration_info = $this->get_migration_infos($configuration, $version);
