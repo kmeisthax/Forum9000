@@ -71,7 +71,7 @@ class DeveloperController extends Controller {
         $infos["candown"] = $migration_refl->hasMethod("down") && $configuration->hasVersionMigrated($version_obj);
         
         $infos["uplist"] = $configuration->getMigrationsToExecute(Version::DIRECTION_UP, $version);
-        $infos["downlist"] = $configuration->getMigrationsToExecute(Version::DIRECTION_DOWN, $version) + [$version];
+        $infos["downlist"] = $configuration->getMigrationsToExecute(Version::DIRECTION_DOWN, $version) + [$version_obj];
         
         return $infos;
     }
@@ -142,19 +142,43 @@ class DeveloperController extends Controller {
     public function migration_execute(Request $request, ThemeRegistry $themeReg, $version, $exec_action) {
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
         
-        $configuration = $this->create_migration_configuration();
+        $messages = array();
+
+        $configuration = $this->create_migration_configuration(function ($msg) use ($messages) {
+            $messages[] = $msg;
+        });
         $migration_info = $this->get_migration_infos($configuration, $version);
         
         //Create a form with buttons to click
         $actions_form = $this->createForm(ActionsType::class, null, array(
             "actions" => array(
-                "confirm" => "Yes",
-                "cancel" => "No"
+                "trial" => "Test migration",
+                "confirm" => "Execute migration",
+                "cancel" => "Cancel"
             )
         ));
+        $actions_form->handleRequest($request);
         
         if ($actions_form->isSubmitted() && $actions_form->isValid()) {
+            if ($actions_form->getClickedButton()->getName() == "cancel") {
+                return $this->redirectToRoute("f9kdeveloper_migration_single", array("version" => $version));
+            }
             
+            $dryrun = $actions_form->getClickedButton()->getName() == "trial";
+
+            switch ($exec_action) {
+                case "up":
+                case "down":
+                    //TODO: Actually log what happened.
+                    foreach ($migration_info[$exec_action . "list"] as $interim_ver) {
+                        $messages[] = $interim_ver->getVersion();
+
+                        $interim_ver->execute($exec_action, $dryrun, true);
+                    }
+                    return new Response(implode("<p>", $messages));
+                default:
+                    throw new Exception("Invalid action");
+            }
         }
         
         return $this->render("developer/migration_execute.html.twig", array(
