@@ -170,11 +170,15 @@ class DeveloperController extends Controller {
                 case "down":
                     //TODO: Actually log what happened.
                     foreach ($migration_info[$exec_action . "list"] as $interim_ver) {
-                        $messages[] = $interim_ver->getVersion();
-
                         $interim_ver->execute($exec_action, $dryrun, true);
                     }
-                    return new Response(implode("<p>", $messages));
+
+                    return $this->render("developer/migration_log.html.twig", array(
+                        "version" => $version,
+                        "migration_info" => $migration_info,
+                        "exec_action" => $exec_action,
+                        "messages" => implode(",", $messages),
+                    ));
                 default:
                     throw new Exception("Invalid action");
             }

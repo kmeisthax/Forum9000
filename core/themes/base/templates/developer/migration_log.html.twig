@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+{% import "macros.html.twig" as macros %}
+
+{% block body %}
+    <h1>Update Log {{version}}</h1>
+
+    <pre>{{messages}}</pre>
+
+    <p>If no errors are shown then you may <a href="{{url('f9kdeveloper_migrations')}}">continue to the migration list.</a></p>
+{% endblock %}
