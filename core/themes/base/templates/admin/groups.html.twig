@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>Groups</h1>
+
+    {% for group in groups %}
+        <article>
+            <a href="{{url('f9kadmin_group_single', {'id':group.compactId})}}">{{group.handle}}</a>
+        </article>
+    {% else %}
+        No groups registered!
+    {% endfor %}
+{% endblock %}

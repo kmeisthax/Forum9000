@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\Criteria;
 
 use Forum9000\Entity\User;
+use Forum9000\Entity\Group;
 use Forum9000\Entity\Forum;
 use Forum9000\Entity\Post;
 use Forum9000\Entity\Permission;
@@ -273,5 +274,24 @@ class AdminController extends Controller {
         }
         
         return $this->redirectToRoute("f9kadmin_forum_single", array("id" => $id));
+    }
+
+    /**
+     * @Route("/groups", name="group_overview")
+     */
+    public function group_overview(Request $request, ThemeRegistry $themeReg) {
+        $em = $this->getDoctrine()->getManager();
+        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
+
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+
+        $groups = $groupRepo->findAll();
+
+        return $this->render(
+            "admin/groups.html.twig",
+            array(
+                "groups" => $groups
+            )
+        );
     }
 }
