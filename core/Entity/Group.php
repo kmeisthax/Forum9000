@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity()
+ * @ORM\Table(name="`group`")
  */
 class Group extends Actor {
     use \Forum9000\EstateSecurity\EstateBearingEntityTrait;
