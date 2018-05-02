@@ -5,7 +5,7 @@
 
     {% for user in users %}
         <article>
-            <a href="/admin/users/{{user.compactId}}">{{user.handle}}</a> (logs in with {{user.email}})
+            <a href="{{url('f9kadmin_user_single', {'id':user.compactId})}}">{{user.handle}}</a> (logs in with {{user.email}})
         </article>
     {% else %}
         No users registered!
