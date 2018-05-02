@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+{% import "macros.html.twig" as macros %}
+
+{% block body %}
+    <a href="{{url('f9kdeveloper_migrations')}}">Migrations</a>
+
+    {% if pending_migration_count > 0 %}
+        <p>{{pending_migration_count}} migration is ready to apply.</p>
+    {% endif %}
+{% endblock %}

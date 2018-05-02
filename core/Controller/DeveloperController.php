@@ -76,6 +76,23 @@ class DeveloperController extends Controller {
     }
     
     /**
+     * @Route("/", name="dashboard")
+     */
+    public function dashboard(Request $request, ThemeRegistry $themeReg) {
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
+
+        $configuration = $this->create_migration_configuration();
+
+        $available_migration_count = $configuration->getNumberOfAvailableMigrations();
+        $executed_migration_count = $configuration->getNumberOfExecutedMigrations();
+        $pending_migration_count = $available_migration_count - $executed_migration_count;
+
+        return $this->render("developer/dashboard.html.twig", array(
+            "pending_migration_count" => $pending_migration_count
+        ));
+    }
+
+    /**
      * Migration console
      * 
      * Allows developers to check the database's migration status (if
