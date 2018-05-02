@@ -10,4 +10,9 @@
     {% else %}
         No groups registered!
     {% endfor %}
+
+    <h2>New Group</h2>
+    {{ form_start(new_group_form) }}
+    {{ form_widget(new_group_form) }}
+    {{ form_end(new_group_form) }}
 {% endblock %}

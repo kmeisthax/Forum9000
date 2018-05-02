@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Forum9000\Repository\GroupRepository")
  * @ORM\Table(name="`group`")
  */
 class Group extends Actor {
@@ -27,7 +27,7 @@ class Group extends Actor {
         parent::__construct();
         
         $this->ensureEstateExists();
-        $this->ctime = new DateTime();
+        $this->ctime = new \DateTime();
         $this->memberships = new ArrayCollection();
     }
     

@@ -19,6 +19,7 @@ use Forum9000\Form\ForumOrderingType;
 use Forum9000\Form\PermissionType;
 use Forum9000\Form\GrantType;
 use Forum9000\Form\UserType;
+use Forum9000\Form\GroupType;
 use Forum9000\Theme\ThemeRegistry;
 
 /** Backdoor access for ROLE_ADMIN users.
@@ -207,7 +208,7 @@ class AdminController extends Controller {
         ));
         
         $grant_user_sort = Criteria::create()
-            ->orderBy(array("user" => Criteria::ASC));
+            ->orderBy(array("actor" => Criteria::ASC));
         
         $grants_by_user = $forum->getGrants()->matching($grant_user_sort);
         
@@ -285,13 +286,148 @@ class AdminController extends Controller {
 
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
 
+        $group = new Group();
+        $new_group_form = $this->createForm(GroupType::class, $group, array(
+            'action' => $this->generateUrl('f9kadmin_group_create')
+        ));
+
         $groups = $groupRepo->findAll();
 
         return $this->render(
             "admin/groups.html.twig",
             array(
-                "groups" => $groups
+                "groups" => $groups,
+                "new_group_form" => $new_group_form->createView()
             )
         );
+    }
+
+    /**
+     * @Route("/groups/create", name="group_create")
+     */
+    public function group_create(Request $request, ThemeRegistry $themeReg) {
+        $em = $this->getDoctrine()->getManager();
+        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
+
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+
+        $group = new Group();
+        $form = $this->createForm(GroupType::class, $group);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $group = $form->getData();
+
+            $em->persist($group);
+            $em->flush();
+
+            return $this->redirectToRoute("f9kadmin_group_single", array("id" => $group->getCompactId()));
+        }
+
+        return $this->redirectToRoute("f9kadmin_group_overview");
+    }
+
+    /**
+     * @Route("/groups/{id}", name="group_single")
+     */
+    public function group_single(Request $request, ThemeRegistry $themeReg, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
+        $group = $groupRepo->findByCompactId($id);
+
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+
+        $form = $this->createForm(GroupType::class, $group);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $group = $form->getData();
+
+            $em->persist($group);
+            $em->flush();
+
+            return $this->redirectToRoute("f9kadmin_group_single", array("id" => $group->getCompactId()));
+        }
+
+        $new_perm = new Permission();
+        $new_perm->setEstate($group->getEstate());
+        $new_perm_form = $this->createForm(PermissionType::class, $new_perm, array(
+            'action' => $this->generateUrl('f9kadmin_group_perms', array("id" => $id))
+        ));
+
+        $new_grant = new Grant();
+        $new_grant->setEstate($group->getEstate());
+        $new_grant_form = $this->createForm(GrantType::class, $new_grant, array(
+            'action' => $this->generateUrl('f9kadmin_group_grants', array("id" => $id))
+        ));
+
+        $grant_user_sort = Criteria::create()
+            ->orderBy(array("actor" => Criteria::ASC));
+
+        $grants_by_user = $group->getGrants()->matching($grant_user_sort);
+
+        return $this->render(
+            "admin/group_single.html.twig",
+            array(
+                "group" => $group,
+                "grants_by_user" => $grants_by_user,
+                "group_edit_form" => $form->createView(),
+                "new_perm_form" => $new_perm_form->createView(),
+                "new_grant_form" => $new_grant_form->createView(),
+            )
+        );
+    }
+
+    /**
+     * @Route("/groups/{id}/perms", name="group_perms")
+     */
+    public function group_perms(Request $request, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
+        $group = $groupRepo->findByCompactId($id);
+
+        //Recreate a form object to capture the request data.
+        $perm = new Permission();
+        $perm->setEstate($group->getEstate());
+        $perm->setIsDeniedAnon(false);
+        $perm->setIsDeniedAuth(false);
+
+        $perm_form = $this->createForm(PermissionType::class, $perm);
+        $perm_form->handleRequest($request);
+
+        if ($perm_form->isSubmitted() && $perm_form->isValid()) {
+            $perm = $perm_form->getData();
+
+            $em->merge($perm);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute("f9kadmin_group_single", array("id" => $id));
+    }
+
+    /**
+     * @Route("/groups/{id}/grants", name="group_grants")
+     */
+    public function group_grants(Request $request, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
+        $group = $groupRepo->findByCompactId($id);
+
+        //Recreate a form object to capture the request data.
+        $grant = new Grant();
+        $grant->setEstate($group->getEstate());
+        $grant->setGrantStatus(null);
+
+        $grant_form = $this->createForm(GrantType::class, $grant);
+        $grant_form->handleRequest($request);
+
+        if ($grant_form->isSubmitted() && $grant_form->isValid()) {
+            $grant = $grant_form->getData();
+
+            $em->merge($grant);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute("f9kadmin_group_single", array("id" => $id));
     }
 }

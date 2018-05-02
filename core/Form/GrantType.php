@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Forum9000\Entity\Forum;
-use Forum9000\Entity\User;
+use Forum9000\Entity\Actor;
 use Forum9000\Entity\Permission;
 
 class GrantType extends AbstractType {
@@ -26,9 +26,9 @@ class GrantType extends AbstractType {
             ));
         }
         
-        if ($options["data"]->getUser() === null) {
-            $builder->add("user", EntityType::class, array(
-                'class' => User::class,
+        if ($options["data"]->getActor() === null) {
+            $builder->add("actor", EntityType::class, array(
+                'class' => Actor::class,
                 'choice_label' => 'handle'
             ));
         }
