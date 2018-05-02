@@ -21,17 +21,17 @@ class Group extends Actor {
     /**
      * @ORM\OneToMany(targetEntity="Membership", mappedBy="group")
      */
-    private $memberships;
+    private $members;
     
     public function __construct() {
         parent::__construct();
         
         $this->ensureEstateExists();
         $this->ctime = new \DateTime();
-        $this->memberships = new ArrayCollection();
+        $this->members = new ArrayCollection();
     }
     
-    public function getMemberships() {
-        return $this->memberships;
+    public function getMembers() {
+        return $this->members;
     }
 }

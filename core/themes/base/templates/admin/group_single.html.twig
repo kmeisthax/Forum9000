@@ -12,6 +12,19 @@
 
     <h2>Membership</h2>
 
+    <ul>
+        {% for membership in group.members %}
+            <li>{{membership.member.handle}} joined on {{membership.ctime | date}}</li>
+        {% endfor %}
+    </ul>
+
+    {% if new_member_form %}
+        <h3>New Membership</h3>
+        {{ form_start(new_member_form) }}
+        {{ form_widget(new_member_form) }}
+        {{ form_end(new_member_form) }}
+    {% endif %}
+
     <h2>Default permissions</h2>
     <p>Permissions encompass the default set of actions that anonymous &amp; authenticated users can automatically perform by default. You can use them to control, for example, if logged-out users are allowed to view or post on a particular group.</p>
 

@@ -14,7 +14,7 @@ class Membership {
     
     /**
      * @ORM\Id();
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="memberships")
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="members")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
      */
     public $group;
@@ -39,7 +39,7 @@ class Membership {
         $this->ctime = new \DateTime();
     }
     
-    public function getMember() : Actor {
+    public function getMember() : ?Actor {
         return $this->member;
     }
     

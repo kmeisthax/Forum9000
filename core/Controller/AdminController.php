@@ -14,12 +14,14 @@ use Forum9000\Entity\Forum;
 use Forum9000\Entity\Post;
 use Forum9000\Entity\Permission;
 use Forum9000\Entity\Grant;
+use Forum9000\Entity\Membership;
 use Forum9000\Form\ForumType;
 use Forum9000\Form\ForumOrderingType;
 use Forum9000\Form\PermissionType;
 use Forum9000\Form\GrantType;
 use Forum9000\Form\UserType;
 use Forum9000\Form\GroupType;
+use Forum9000\Form\MembershipType;
 use Forum9000\Theme\ThemeRegistry;
 
 /** Backdoor access for ROLE_ADMIN users.
@@ -361,6 +363,12 @@ class AdminController extends Controller {
             'action' => $this->generateUrl('f9kadmin_group_grants', array("id" => $id))
         ));
 
+        $new_member = new Membership();
+        $new_member->setGroup($group);
+        $new_member_form = $this->createForm(MembershipType::class, $new_member, array(
+            'action' => $this->generateUrl('f9kadmin_group_memberships', array("id" => $id))
+        ));
+
         $grant_user_sort = Criteria::create()
             ->orderBy(array("actor" => Criteria::ASC));
 
@@ -374,6 +382,7 @@ class AdminController extends Controller {
                 "group_edit_form" => $form->createView(),
                 "new_perm_form" => $new_perm_form->createView(),
                 "new_grant_form" => $new_grant_form->createView(),
+                "new_member_form" => $new_member_form->createView(),
             )
         );
     }
@@ -425,6 +434,33 @@ class AdminController extends Controller {
             $grant = $grant_form->getData();
 
             $em->merge($grant);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute("f9kadmin_group_single", array("id" => $id));
+    }
+
+    /**
+     * @Route("/groups/{id}/memberships", name="group_memberships")
+     */
+    public function group_memberships(Request $request, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
+        $group = $groupRepo->findByCompactId($id);
+
+        //Recreate a form object to capture the request data.
+        $new_member = new Membership();
+        $new_member->setGroup($group);
+        $new_member_form = $this->createForm(MembershipType::class, $new_member);
+        $new_member_form->handleRequest($request);
+
+        if ($new_member_form->isSubmitted() && $new_member_form->isValid()) {
+            $new_member = $new_member_form->getData();
+
+            $group->getMemberships()->add($new_member);
+
+            $em->persist($new_member);
+            $em->persist($group);
             $em->flush();
         }
 

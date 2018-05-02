@@ -22,7 +22,7 @@ class Actor {
     protected $id;
     
     /**
-     * @ORM\OneToMany(targetEntity="Grant", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Grant", mappedBy="actor")
      */
     private $grants;
     
