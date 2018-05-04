@@ -1,0 +1,7 @@
+{% extends "base.html.twig" %}
+{% import "macros.html.twig" as macros %}
+
+{% block body %}
+    <h1>{{user.handle}}</h1>
+    <p>User for {{macros.interval(user.ctime, date('now'))}}</p>
+{% endblock %}
