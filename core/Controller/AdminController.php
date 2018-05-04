@@ -37,7 +37,7 @@ use Forum9000\Theme\ThemeRegistry;
  */
 class AdminController extends Controller {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/", name="dashboard")
      */
     function homepage(Request $req, ThemeRegistry $themeReg) {
         $em = $this->getDoctrine()->getManager();
