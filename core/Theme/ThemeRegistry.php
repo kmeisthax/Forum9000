@@ -123,15 +123,19 @@ class ThemeRegistry {
      * Given a theme, construct a \Twig_Loader_Filesystem for it's templates.
      */
     public function extend_twig_loader(Theme $theme, \Twig_Loader_Filesystem $tlfs) {
-        $tlfs->setPaths($this->calculate_theme_paths($theme, "templates"));
+        //Symfony defines it's own main-namespace templates, so we need to
+        //ensure they remain in all theme namespaces, too.
+        $legacyPaths = $tlfs->getPaths();
+
+        foreach ($this->calculate_theme_paths($theme, "templates") as $path) $tlfs->addPath($path);
 
         //Create a separate namespace for each theme in the chain
         $current_theme = $theme;
-        $tlfs->setPaths($this->calculate_theme_paths($current_theme, "templates"), $current_theme->getMachineName());
+        $tlfs->setPaths($this->calculate_theme_paths($current_theme, "templates") + $legacyPaths, $current_theme->getMachineName());
 
         while ($current_theme->getParentMachineName() !== null) {
             $current_theme = $this->find_theme_by_machine_name($current_theme->getParentMachineName());
-            $tlfs->setPaths($this->calculate_theme_paths($current_theme, "templates"), $current_theme->getMachineName());
+            $tlfs->setPaths($this->calculate_theme_paths($current_theme, "templates") + $legacyPaths, $current_theme->getMachineName());
         };
 
         return $tlfs;
