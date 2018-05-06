@@ -169,7 +169,7 @@ class ThemeRegistry {
      * @return Theme
      *   The theme to use for this request.
      */
-    public function negotiate_theme($controller) : Theme {
+    public function negotiate_theme($controller) : ?Theme {
         if (is_array($controller) && count($controller) > 1) {
             $class = $controller[0];
             $method = $controller[1];
@@ -188,11 +188,11 @@ class ThemeRegistry {
             } else if ($theme_class_annotation) {
                 $routeclass = $theme_class_annotation->getRouteClass();
             } else {
-                $routeclass = "user";
+                return null;
             }
         } else {
             //Doctrine can't read annotations on loose functions, so...
-            $routeclass = "user";
+            return null;
         }
         
         $default_theme = $this->default_themes[$routeclass];
@@ -220,6 +220,8 @@ class ThemeRegistry {
         $controller = $evt->getController();
         
         $theme = $this->negotiate_theme($controller);
+        if (!$theme) return;
+        
         $this->apply_theme($this->twig, $theme);
     }
 }
