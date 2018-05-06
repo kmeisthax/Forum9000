@@ -5,22 +5,38 @@
 
     {% set recurse = recurse | default(0) %}
     {% if recurse < 1 %}
-        <ul>
+        <ol itemscope itemtype="http://schema.org/BreadcrumbList">
     {% endif %}
 
     {% if main_obj is null %}
-        <li><a href="/">Home</a>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a itemprop="item" href="/" rel="index">
+                <span itemprop="name">Home</span>
+            </a>
+        </li>
     {% elseif main_obj is instanceof('\\Forum9000\\Entity\\Thread') %}
         {{macros.breadcrumb(main_obj.forum, recurse+1)}}
-        <li><a href="{{permalink_thread(main_obj)}}">{{main_obj.orderedPosts[0].title}}</a></li>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a itemprop="item" href="{{permalink_thread(main_obj)}}">
+                <span itemprop="name">{{main_obj.orderedPosts[0].title}}</span>
+            </a>
+        </li>
     {% elseif main_obj is instanceof('\\Forum9000\\Entity\\Forum') %}
         {{macros.breadcrumb(main_obj.parent, recurse+1)}}
-        <li><a href="{{permalink_forum(main_obj)}}">{{main_obj.title}}</a></li>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a itemprop="item" href="{{permalink_forum(main_obj)}}">
+                <span itemprop="name">{{main_obj.title}}</span>
+            </a>
+        </li>
     {% else %}
-        <li><a href="/">Home</a>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a itemprop="item" href="/" rel="index">
+                <span itemprop="name">Home</span>
+            </a>
+        </li>
     {% endif %}
 
     {% if recurse < 1 %}
-        </ul>
+        </ol>
     {% endif %}
 {% endmacro %}
