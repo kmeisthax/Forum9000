@@ -12,12 +12,13 @@ use Forum9000\Entity\Thread;
 use Forum9000\Entity\Post;
 use Forum9000\Form\PostType;
 use Forum9000\Form\LockType;
-use Forum9000\Theme\ThemeRegistry;
+use Forum9000\Theme\Annotation\Theme;
 
 /**
  * All routes having to do with a forum.
  *
  * @Route(name="f9kforum_")
+ * @Theme(routeClass="user")
  */
 class ForumController extends Controller {
     /**

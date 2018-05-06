@@ -11,12 +11,13 @@ use Forum9000\Entity\User;
 use Forum9000\Entity\Group;
 use Forum9000\Entity\Actor;
 
-use Forum9000\Theme\ThemeRegistry;
+use Forum9000\Theme\Annotation\Theme;
 
 /**
  * Controller which renders user and group pages.
  *
  * @Route(name="f9kprofile_")
+ * @Theme(routeClass="user")
  */
 class ProfileController extends Controller {
     /**

@@ -22,7 +22,6 @@ use Forum9000\Form\GrantType;
 use Forum9000\Form\UserType;
 use Forum9000\Form\GroupType;
 use Forum9000\Form\MembershipType;
-use Forum9000\Theme\ThemeRegistry;
 use Forum9000\Theme\Annotation\Theme;
 
 /** Backdoor access for ROLE_ADMIN users.

@@ -11,7 +11,6 @@ use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\DBAL\Migrations\Version;
 
-use Forum9000\Theme\ThemeRegistry;
 use Forum9000\Theme\Annotation\Theme;
 use Forum9000\Form\ActionsType;
 

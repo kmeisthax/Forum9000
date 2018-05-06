@@ -10,8 +10,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 use Forum9000\Entity\User;
 use Forum9000\Form\RegistrationType;
-use Forum9000\Theme\ThemeRegistry;
+use Forum9000\Theme\Annotation\Theme;
 
+/**
+ * @Theme(routeClass="user")
+ */
 class SecurityController extends Controller {
     /**
      * @Route("/login", name="login")
