@@ -12,6 +12,7 @@ use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\DBAL\Migrations\Version;
 
 use Forum9000\Theme\ThemeRegistry;
+use Forum9000\Theme\Annotation\Theme;
 use Forum9000\Form\ActionsType;
 
 /**
@@ -33,6 +34,7 @@ use Forum9000\Form\ActionsType;
  * their normal staff duties.
  * 
  * @Route("/admin/developer", name="f9kdeveloper_")
+ * @Theme(routeClass="developer")
  */
 class DeveloperController extends Controller {
     private function create_migration_configuration(?\Closure $cl = null) {
@@ -79,7 +81,7 @@ class DeveloperController extends Controller {
      * @Route("/", name="dashboard")
      */
     public function dashboard(Request $request, ThemeRegistry $themeReg) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $configuration = $this->create_migration_configuration();
 
@@ -101,7 +103,7 @@ class DeveloperController extends Controller {
      * @Route("/migrations", name="migrations")
      */
     public function migrations(Request $request, ThemeRegistry $themeReg) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         $configuration = $this->create_migration_configuration();
         $migrations = array();
@@ -141,7 +143,7 @@ class DeveloperController extends Controller {
      * @Route("/migrations/{version}", name="migration_single")
      */
     public function migration_single(Request $request, ThemeRegistry $themeReg, $version) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         $configuration = $this->create_migration_configuration();
         $migration_info = $this->get_migration_infos($configuration, $version);
@@ -156,7 +158,7 @@ class DeveloperController extends Controller {
      * @Route("/migrations/{version}/{exec_action}", name="migration_execute")
      */
     public function migration_execute(Request $request, ThemeRegistry $themeReg, $version, $exec_action) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_DEVELOPER));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         $messages = array();
 

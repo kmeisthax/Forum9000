@@ -42,6 +42,7 @@ services:
         arguments:
             $assetVersioner: '@assets.empty_version_strategy'
             $assetCtxt: '@assets.context'
+            $controllerResolver: '@controller_resolver'
             $default_themes:
                 user: 'base'
                 admin: 'admin'

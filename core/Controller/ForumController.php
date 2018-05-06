@@ -29,7 +29,7 @@ class ForumController extends Controller {
         
         $children = $forumRepo->findAllRootforums();
         
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         return $this->render(
             'forum/homepage.html.twig',
@@ -54,7 +54,7 @@ class ForumController extends Controller {
         
         $this->denyAccessUnlessGranted('view', $forum);
         
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $post = new Post();
         $user = $this->getUser();
@@ -88,7 +88,7 @@ class ForumController extends Controller {
         
         $this->denyAccessUnlessGranted('post', $forum);
         
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $post = new Post();
         $user = $this->getUser();
@@ -140,7 +140,7 @@ class ForumController extends Controller {
         $forum = $thread->getForum();
         $this->denyAccessUnlessGranted('view', $thread);
 
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $reply = new Post();
         $user = $this->getUser();
@@ -193,7 +193,7 @@ class ForumController extends Controller {
         $forum = $thread->getForum();
         $this->denyAccessUnlessGranted('lock', $thread);
 
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $form = $this->createForm(LockType::class, $thread);
         $form->handleRequest($request);

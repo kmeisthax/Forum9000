@@ -7,6 +7,9 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\Asset\PackageInterface;
 use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
 use Symfony\Component\Asset\Context\ContextInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Doctrine\Common\Annotations\Reader;
 
 /**
  * Storage for loaded theme configuration & such.
@@ -31,6 +34,10 @@ class ThemeRegistry {
     private $assetPackages;
     private $assetCtxt;
     private $assetVersioner;
+    
+    private $requestStack;
+    private $controllerResolver;
+    private $annotationReader;
 
     /**
      * All known themes, indexed by machine name.
@@ -41,12 +48,15 @@ class ThemeRegistry {
     
     private $default_themes;
 
-    public function __construct(ThemeLocator $themeLocator, ThemeLoader $themeLoader, Packages $assetPackages, VersionStrategyInterface $assetVersioner, ContextInterface $assetCtxt, array $default_themes) {
+    public function __construct(ThemeLocator $themeLocator, ThemeLoader $themeLoader, Packages $assetPackages, VersionStrategyInterface $assetVersioner, ContextInterface $assetCtxt, RequestStack $requestStack, ControllerResolverInterface $controllerResolver, Reader $annotationReader, array $default_themes) {
         $this->themeLocator = $themeLocator;
         $this->themeLoader = $themeLoader;
         $this->assetPackages = $assetPackages;
         $this->assetVersioner = $assetVersioner;
         $this->assetCtxt = $assetCtxt;
+        $this->requestStack = $requestStack;
+        $this->controllerResolver = $controllerResolver;
+        $this->annotationReader = $annotationReader;
         $this->default_themes = $default_themes;
     }
 
@@ -158,17 +168,38 @@ class ThemeRegistry {
 
     /**
      * Negotiate which theme should be used for a given request.
-     *
-     * @param array $arguments
-     *   List of parameters that the route controller wants to be taken into
-     *   account when selecting a theme.
-     * @param string $routeclass
-     *   Which section of the site is in use. Used to ensure admin pages have a
-     *   separate theme from the rest of the site.
+     * 
      * @return Theme
      *   The theme to use for this request.
      */
-    public function negotiate_theme($arguments, $routeclass = ThemeRegistry::ROUTECLASS_USER) : Theme {
+    public function negotiate_theme() : Theme {
+        $request = $this->requestStack->getCurrentRequest();
+        $controller = $this->controllerResolver->getController($request);
+        if (is_array($controller) && count($controller) > 1) {
+            $class = $controller[0];
+            $method = $controller[1];
+        } else if (is_array($controller)) {
+            $method = $controller[0];
+        } else {
+            $method = $controller;
+        }
+        
+        if (isset($class)) {
+            $theme_class_annotation = $this->annotationReader->getClassAnnotation(new \ReflectionClass($class), 'Forum9000\Theme\Annotation\Theme');
+            $theme_method_annotation = $this->annotationReader->getMethodAnnotation(new \ReflectionMethod($class, $method), 'Forum9000\Theme\Annotation\Theme');
+            
+            if ($theme_method_annotation) {
+                $routeclass = $theme_method_annotation->getRouteClass();
+            } else if ($theme_class_annotation) {
+                $routeclass = $theme_class_annotation->getRouteClass();
+            } else {
+                $routeclass = "user";
+            }
+        } else {
+            //Doctrine can't read annotations on loose functions, so...
+            $routeclass = "user";
+        }
+        
         $default_theme = $this->default_themes[$routeclass];
         
         return $this->find_theme_by_machine_name($default_theme);

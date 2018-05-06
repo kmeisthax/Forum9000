@@ -23,6 +23,7 @@ use Forum9000\Form\UserType;
 use Forum9000\Form\GroupType;
 use Forum9000\Form\MembershipType;
 use Forum9000\Theme\ThemeRegistry;
+use Forum9000\Theme\Annotation\Theme;
 
 /** Backdoor access for ROLE_ADMIN users.
  *
@@ -34,6 +35,7 @@ use Forum9000\Theme\ThemeRegistry;
  * through Grants.
  * 
  * @Route("/admin", name="f9kadmin_")
+ * @Theme(routeClass="admin")
  */
 class AdminController extends Controller {
     /**
@@ -47,7 +49,7 @@ class AdminController extends Controller {
         $forums = $forumRepo->findAllRootForums();
         $newest_posts = $postRepo->getLatestPosts(0, 10);
         
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         return $this->render(
             'admin/dashboard.html.twig',
@@ -65,7 +67,7 @@ class AdminController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $userRepo = $this->getDoctrine()->getRepository(User::class);
 
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $users = $userRepo->findAll();
 
@@ -85,7 +87,7 @@ class AdminController extends Controller {
         $userRepo = $this->getDoctrine()->getRepository(User::class);
         $user = $userRepo->findByCompactId($id);
 
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -115,7 +117,7 @@ class AdminController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
 
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $forum = new Forum();
         $forum->setOrder(0);
@@ -157,7 +159,7 @@ class AdminController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         $forum = new Forum();
         $forum->setOrder(0);
@@ -185,7 +187,7 @@ class AdminController extends Controller {
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         $forum = $forumRepo->findByCompactId($id);
         
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         $forum_edit_form = $this->createForm(ForumType::class, $forum);
         $forum_edit_form->handleRequest($request);
@@ -286,7 +288,7 @@ class AdminController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $groupRepo = $this->getDoctrine()->getRepository(Group::class);
 
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $group = new Group();
         $new_group_form = $this->createForm(GroupType::class, $group, array(
@@ -311,7 +313,7 @@ class AdminController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $groupRepo = $this->getDoctrine()->getRepository(Group::class);
 
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $group = new Group();
         $form = $this->createForm(GroupType::class, $group);
@@ -337,7 +339,7 @@ class AdminController extends Controller {
         $groupRepo = $this->getDoctrine()->getRepository(Group::class);
         $group = $groupRepo->findByCompactId($id);
 
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_ADMIN));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);

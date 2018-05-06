@@ -27,7 +27,7 @@ class ProfileController extends Controller {
         $userRepo = $this->getDoctrine()->getRepository(User::class);
         $user = $userRepo->findOneByHandle($handle);
 
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
+        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         return $this->render("profile/user_single.html.twig", array("user" => $user));
     }
