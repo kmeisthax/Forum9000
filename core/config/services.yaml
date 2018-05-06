@@ -39,10 +39,13 @@ services:
                 - "themes"
 
     Forum9000\Theme\ThemeRegistry:
+        tags:
+            - name: kernel.event_listener
+              event: kernel.controller
+              priority: 255
         arguments:
             $assetVersioner: '@assets.empty_version_strategy'
             $assetCtxt: '@assets.context'
-            $controllerResolver: '@controller_resolver'
             $default_themes:
                 user: 'base'
                 admin: 'admin'

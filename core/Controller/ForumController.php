@@ -23,13 +23,11 @@ class ForumController extends Controller {
     /**
      * @Route("/", name="homepage")
      */
-    function homepage(Request $req, ThemeRegistry $themeReg) {
+    function homepage(Request $req) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         
         $children = $forumRepo->findAllRootforums();
-        
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         return $this->render(
             'forum/homepage.html.twig',
@@ -42,7 +40,7 @@ class ForumController extends Controller {
     /**
      * @Route("/forum/{id}/{page}", name="forum", requirements={"page" = "\d+"})
      */
-    public function forum(Request $request, ThemeRegistry $themeReg, $id, $page=1) {
+    public function forum(Request $request, $id, $page=1) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
@@ -53,8 +51,6 @@ class ForumController extends Controller {
         }
         
         $this->denyAccessUnlessGranted('view', $forum);
-        
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $post = new Post();
         $user = $this->getUser();
@@ -76,7 +72,7 @@ class ForumController extends Controller {
     /**
      * @Route("/forum/{id}/post", name="forum_post")
      */
-    public function forum_post(Request $request, ThemeRegistry $themeReg, $id) {
+    public function forum_post(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
@@ -87,8 +83,6 @@ class ForumController extends Controller {
         }
         
         $this->denyAccessUnlessGranted('post', $forum);
-        
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $post = new Post();
         $user = $this->getUser();
@@ -131,7 +125,7 @@ class ForumController extends Controller {
     /**
      * @Route("/forum/{forum_id}/{id}/{page}", name="thread", requirements={"page" = "\d+"})
      */
-    public function thread(Request $request, ThemeRegistry $themeReg, $forum_id, $id, $page = 1) {
+    public function thread(Request $request, $forum_id, $id, $page = 1) {
         $em = $this->getDoctrine()->getManager();
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
         $postRepo = $this->getDoctrine()->getRepository(Post::class);
@@ -139,8 +133,6 @@ class ForumController extends Controller {
         $thread = $threadRepo->findByCompactId($id);
         $forum = $thread->getForum();
         $this->denyAccessUnlessGranted('view', $thread);
-
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $reply = new Post();
         $user = $this->getUser();
@@ -185,15 +177,13 @@ class ForumController extends Controller {
     /**
      * @Route("/forum/{forum_id}/{id}/lock", name="thread_lock")
      */
-    public function thread_lock(Request $request, ThemeRegistry $themeReg, $id) {
+    public function thread_lock(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
 
         $thread = $threadRepo->findByCompactId($id);
         $forum = $thread->getForum();
         $this->denyAccessUnlessGranted('lock', $thread);
-
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         $form = $this->createForm(LockType::class, $thread);
         $form->handleRequest($request);

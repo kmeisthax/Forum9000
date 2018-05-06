@@ -80,9 +80,7 @@ class DeveloperController extends Controller {
     /**
      * @Route("/", name="dashboard")
      */
-    public function dashboard(Request $request, ThemeRegistry $themeReg) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
-
+    public function dashboard(Request $request) {
         $configuration = $this->create_migration_configuration();
 
         $available_migration_count = $configuration->getNumberOfAvailableMigrations();
@@ -102,9 +100,7 @@ class DeveloperController extends Controller {
      * 
      * @Route("/migrations", name="migrations")
      */
-    public function migrations(Request $request, ThemeRegistry $themeReg) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
-        
+    public function migrations(Request $request) {
         $configuration = $this->create_migration_configuration();
         $migrations = array();
         
@@ -142,9 +138,7 @@ class DeveloperController extends Controller {
     /**
      * @Route("/migrations/{version}", name="migration_single")
      */
-    public function migration_single(Request $request, ThemeRegistry $themeReg, $version) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
-        
+    public function migration_single(Request $request, $version) {
         $configuration = $this->create_migration_configuration();
         $migration_info = $this->get_migration_infos($configuration, $version);
         
@@ -157,9 +151,7 @@ class DeveloperController extends Controller {
     /**
      * @Route("/migrations/{version}/{exec_action}", name="migration_execute")
      */
-    public function migration_execute(Request $request, ThemeRegistry $themeReg, $version, $exec_action) {
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
-        
+    public function migration_execute(Request $request, $version, $exec_action) {
         $messages = array();
 
         $configuration = $this->create_migration_configuration(function ($msg) use (&$messages) {

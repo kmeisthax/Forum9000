@@ -7,8 +7,7 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\Asset\PackageInterface;
 use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
 use Symfony\Component\Asset\Context\ContextInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Doctrine\Common\Annotations\Reader;
 
 /**
@@ -34,9 +33,8 @@ class ThemeRegistry {
     private $assetPackages;
     private $assetCtxt;
     private $assetVersioner;
+    private $twigEnvironment;
     
-    private $requestStack;
-    private $controllerResolver;
     private $annotationReader;
 
     /**
@@ -48,15 +46,14 @@ class ThemeRegistry {
     
     private $default_themes;
 
-    public function __construct(ThemeLocator $themeLocator, ThemeLoader $themeLoader, Packages $assetPackages, VersionStrategyInterface $assetVersioner, ContextInterface $assetCtxt, RequestStack $requestStack, ControllerResolverInterface $controllerResolver, Reader $annotationReader, array $default_themes) {
+    public function __construct(ThemeLocator $themeLocator, ThemeLoader $themeLoader, Packages $assetPackages, VersionStrategyInterface $assetVersioner, ContextInterface $assetCtxt, Reader $annotationReader, \Twig_Environment $twig, array $default_themes) {
         $this->themeLocator = $themeLocator;
         $this->themeLoader = $themeLoader;
         $this->assetPackages = $assetPackages;
         $this->assetVersioner = $assetVersioner;
         $this->assetCtxt = $assetCtxt;
-        $this->requestStack = $requestStack;
-        $this->controllerResolver = $controllerResolver;
         $this->annotationReader = $annotationReader;
+        $this->twig = $twig;
         $this->default_themes = $default_themes;
     }
 
@@ -172,9 +169,7 @@ class ThemeRegistry {
      * @return Theme
      *   The theme to use for this request.
      */
-    public function negotiate_theme() : Theme {
-        $request = $this->requestStack->getCurrentRequest();
-        $controller = $this->controllerResolver->getController($request);
+    public function negotiate_theme($controller) : Theme {
         if (is_array($controller) && count($controller) > 1) {
             $class = $controller[0];
             $method = $controller[1];
@@ -219,5 +214,12 @@ class ThemeRegistry {
         
         $themeAssetPkg = $this->construct_asset_package($theme);
         $this->assetPackages->setDefaultPackage($themeAssetPkg);
+    }
+    
+    public function onKernelController(FilterControllerEvent $evt) {
+        $controller = $evt->getController();
+        
+        $theme = $this->negotiate_theme($controller);
+        $this->apply_theme($this->twig, $theme);
     }
 }

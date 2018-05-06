@@ -22,12 +22,10 @@ class ProfileController extends Controller {
     /**
      * @Route("/user/{handle}", name="user")
      */
-    function user_single(Request $request, ThemeRegistry $themeReg, $handle) {
+    function user_single(Request $request, $handle) {
         $em = $this->getDoctrine()->getManager();
         $userRepo = $this->getDoctrine()->getRepository(User::class);
         $user = $userRepo->findOneByHandle($handle);
-
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
 
         return $this->render("profile/user_single.html.twig", array("user" => $user));
     }

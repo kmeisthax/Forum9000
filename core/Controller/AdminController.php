@@ -41,15 +41,13 @@ class AdminController extends Controller {
     /**
      * @Route("/", name="dashboard")
      */
-    function homepage(Request $req, ThemeRegistry $themeReg) {
+    function homepage(Request $req) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         $postRepo = $this->getDoctrine()->getRepository(Post::class);
         
         $forums = $forumRepo->findAllRootForums();
         $newest_posts = $postRepo->getLatestPosts(0, 10);
-        
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         return $this->render(
             'admin/dashboard.html.twig',
@@ -63,12 +61,10 @@ class AdminController extends Controller {
     /**
      * @Route("/users", name="user_overview")
      */
-    public function user_overview(Request $request, ThemeRegistry $themeReg) {
+    public function user_overview(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $userRepo = $this->getDoctrine()->getRepository(User::class);
-
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
-
+        
         $users = $userRepo->findAll();
 
         return $this->render(
@@ -82,13 +78,11 @@ class AdminController extends Controller {
     /**
      * @Route("/users/{id}", name="user_single")
      */
-    public function user_single(Request $request, ThemeRegistry $themeReg, $id) {
+    public function user_single(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
         $userRepo = $this->getDoctrine()->getRepository(User::class);
         $user = $userRepo->findByCompactId($id);
-
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
-
+        
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -113,12 +107,10 @@ class AdminController extends Controller {
     /**
      * @Route("/forums", name="forum_overview")
      */
-    public function forum_overview(Request $request, ThemeRegistry $themeReg) {
+    public function forum_overview(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
-
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
-
+        
         $forum = new Forum();
         $forum->setOrder(0);
 
@@ -155,11 +147,9 @@ class AdminController extends Controller {
     /**
      * @Route("/forums/create", name="forum_create")
      */
-    public function forum_create(Request $request, ThemeRegistry $themeReg) {
+    public function forum_create(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
-        
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         $forum = new Forum();
         $forum->setOrder(0);
@@ -182,12 +172,10 @@ class AdminController extends Controller {
     /**
      * @Route("/forums/{id}", name="forum_single")
      */
-    public function forum_single(Request $request, ThemeRegistry $themeReg, $id) {
+    public function forum_single(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         $forum = $forumRepo->findByCompactId($id);
-        
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
         
         $forum_edit_form = $this->createForm(ForumType::class, $forum);
         $forum_edit_form->handleRequest($request);
@@ -284,12 +272,10 @@ class AdminController extends Controller {
     /**
      * @Route("/groups", name="group_overview")
      */
-    public function group_overview(Request $request, ThemeRegistry $themeReg) {
+    public function group_overview(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $groupRepo = $this->getDoctrine()->getRepository(Group::class);
-
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
-
+        
         $group = new Group();
         $new_group_form = $this->createForm(GroupType::class, $group, array(
             'action' => $this->generateUrl('f9kadmin_group_create')
@@ -309,12 +295,10 @@ class AdminController extends Controller {
     /**
      * @Route("/groups/create", name="group_create")
      */
-    public function group_create(Request $request, ThemeRegistry $themeReg) {
+    public function group_create(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $groupRepo = $this->getDoctrine()->getRepository(Group::class);
-
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
-
+        
         $group = new Group();
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
@@ -334,13 +318,11 @@ class AdminController extends Controller {
     /**
      * @Route("/groups/{id}", name="group_single")
      */
-    public function group_single(Request $request, ThemeRegistry $themeReg, $id) {
+    public function group_single(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
         $groupRepo = $this->getDoctrine()->getRepository(Group::class);
         $group = $groupRepo->findByCompactId($id);
-
-        $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme());
-
+        
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
 
