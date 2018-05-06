@@ -38,13 +38,16 @@ class ThemeRegistry {
      * @var array
      */
     private $themes;
+    
+    private $default_themes;
 
-    public function __construct(ThemeLocator $themeLocator, ThemeLoader $themeLoader, Packages $assetPackages, VersionStrategyInterface $assetVersioner, ContextInterface $assetCtxt) {
+    public function __construct(ThemeLocator $themeLocator, ThemeLoader $themeLoader, Packages $assetPackages, VersionStrategyInterface $assetVersioner, ContextInterface $assetCtxt, array $default_themes) {
         $this->themeLocator = $themeLocator;
         $this->themeLoader = $themeLoader;
         $this->assetPackages = $assetPackages;
         $this->assetVersioner = $assetVersioner;
         $this->assetCtxt = $assetCtxt;
+        $this->default_themes = $default_themes;
     }
 
     private function ensure_theme_yamls() {
@@ -166,11 +169,9 @@ class ThemeRegistry {
      *   The theme to use for this request.
      */
     public function negotiate_theme($arguments, $routeclass = ThemeRegistry::ROUTECLASS_USER) : Theme {
-        if ($routeclass === ThemeRegistry::ROUTECLASS_ADMIN || $routeclass === ThemeRegistry::ROUTECLASS_DEVELOPER) {
-            return $this->find_theme_by_machine_name("admin");
-        }
-
-        return $this->find_theme_by_machine_name("base");
+        $default_theme = $this->default_themes[$routeclass];
+        
+        return $this->find_theme_by_machine_name($default_theme);
     }
 
     /**
