@@ -31,7 +31,7 @@
     {% set last_user = "" %}
     {% for grant in grants_by_user %}
         {% if grant.isGranted or grant.isDenied %}
-            {% if last_user != grant.user.id %}<p>{{grant.user.handle}} {% else %}, {% endif %}{% if grant.isGranted %}can{% elseif grant.isDenied %}cannot{% endif %} {{grant.attribute}}{% set last_user = grant.user.id %}
+            {% if last_user != grant.actor.id %}<p>{{grant.actor.handle}} {% else %}, {% endif %}{% if grant.isGranted %}can{% elseif grant.isDenied %}cannot{% endif %} {{grant.attribute}}{% set last_user = grant.actor.id %}
         {% endif %}
     {% else %}
         <p>No privilege grants exist for this forum.</p>
