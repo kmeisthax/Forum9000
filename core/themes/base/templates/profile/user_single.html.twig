@@ -3,5 +3,9 @@
 
 {% block body %}
     <h1>{{user.handle}}</h1>
-    <p>User for {{macros.interval(user.ctime, date('now'))}}</p>
+    {% if user.ctime %}
+        <p>User for {{macros.interval(user.ctime, date('now'))}}</p>
+    {% else %}
+        <p>User for time immemorial</p>
+    {% endif %}
 {% endblock %}
