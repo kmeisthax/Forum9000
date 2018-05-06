@@ -122,8 +122,19 @@ class ThemeRegistry {
     /**
      * Given a theme, construct a \Twig_Loader_Filesystem for it's templates.
      */
-    public function construct_twig_loader(Theme $theme) {
-        return new \Twig_Loader_Filesystem($this->calculate_theme_paths($theme, "templates"));
+    public function extend_twig_loader(Theme $theme, \Twig_Loader_Filesystem $tlfs) {
+        $tlfs->setPaths($this->calculate_theme_paths($theme, "templates"));
+
+        //Create a separate namespace for each theme in the chain
+        $current_theme = $theme;
+        $tlfs->setPaths($this->calculate_theme_paths($current_theme, "templates"), $current_theme->getMachineName());
+
+        while ($current_theme->getParentMachineName() !== null) {
+            $current_theme = $this->find_theme_by_machine_name($current_theme->getParentMachineName());
+            $tlfs->setPaths($this->calculate_theme_paths($current_theme, "templates"), $current_theme->getMachineName());
+        };
+
+        return $tlfs;
     }
     
     /**
@@ -167,12 +178,7 @@ class ThemeRegistry {
      */
     public function apply_theme(\Twig_Environment $twig, Theme $theme) {
         $theme_ldr = $twig->getLoader();
-        $theme_paths = $this->calculate_theme_paths($theme, "templates");
-
-        foreach (array_reverse($theme_paths) as $templatesPath) {
-            $theme_ldr->prependPath($templatesPath);
-        }
-
+        $this->extend_twig_loader($theme, $theme_ldr);
         $twig->setLoader($theme_ldr);
         
         $themeAssetPkg = $this->construct_asset_package($theme);
