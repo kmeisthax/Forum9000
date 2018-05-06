@@ -9,7 +9,7 @@
     </head>
     <body>
         {% block header %}
-            <a href="{{macros.permalink_user(app.user)}}">{{app.user.handle}}</a>
+            <a href="{{macros.permalink_actor(app.user)}}">{{app.user.handle}}</a>
             {% if "ROLE_STAFF" in app.user.roles or "ROLE_DEVELOPER" in app.user.roles %}<a href='{{url("f9kadmin_dashboard")}}'>Admin</a>{% endif %}
             {% if "ROLE_DEVELOPER" in app.user.roles %}<a href='{{url("f9kdeveloper_dashboard")}}'>Developer</a>{% endif %}
         {% endblock %}
