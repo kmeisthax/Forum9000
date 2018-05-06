@@ -23,10 +23,8 @@ class ProfileController extends Controller {
     /**
      * @Route("/user/{handle}", name="user")
      */
-    function user_single(Request $request, $handle) {
+    function user_single(Request $request, User $user) {
         $em = $this->getDoctrine()->getManager();
-        $userRepo = $this->getDoctrine()->getRepository(User::class);
-        $user = $userRepo->findOneByHandle($handle);
 
         return $this->render("profile/user_single.html.twig", array("user" => $user));
     }
