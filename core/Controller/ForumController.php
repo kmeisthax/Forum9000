@@ -27,14 +27,14 @@ class ForumController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         
-        $forums = $forumRepo->findAllRootforums();
+        $children = $forumRepo->findAllRootforums();
         
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
         
         return $this->render(
             'forum/homepage.html.twig',
             array(
-                "forums" => $forums
+                "children" => $children
             )
         );
     }
@@ -74,9 +74,9 @@ class ForumController extends Controller {
     }
     
     /**
-     * @Route("/forum/{id}/thread", name="thread_new")
+     * @Route("/forum/{id}/post", name="forum_post")
      */
-    public function thread_new(Request $request, ThemeRegistry $themeReg, $id) {
+    public function forum_post(Request $request, ThemeRegistry $themeReg, $id) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
@@ -120,7 +120,7 @@ class ForumController extends Controller {
         }
         
         return $this->render(
-                                "forum/thread_new.html.twig",
+                                "forum/forum_post.html.twig",
                                 array(
                                     "forum" => $forum,
                                     "thread_form" => $form->createView()
