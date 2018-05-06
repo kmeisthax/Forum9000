@@ -1,0 +1,19 @@
+{% macro interval(from, to) %}
+    {# TODO: Everything. User-facing dates need to be internationalized. Time zones need to be supported. Interval text needs to be translatable. Etc. #}
+    {% set date_interval = from.diff(to) %}
+    <time datetime="{{from | date('c')}}" title="{{from | date}}">
+        {% if date_interval.y > 0 %}
+            {{date_interval.format("%y years")}}
+        {% elseif date_interval.m > 0 %}
+            {{date_interval.format("%m months")}}
+        {% elseif date_interval.d > 0 %}
+            {{date_interval.format("%d days")}}
+        {% elseif date_interval.h > 0 %}
+            {{date_interval.format("%h hours")}}
+        {% elseif date_interval.i > 0 %}
+            {{date_interval.format("%i minutes")}}
+        {% elseif date_interval.s > 0 %}
+            {{date_interval.format("%s seconds")}}
+        {% endif %}
+    </time>
+{% endmacro %}

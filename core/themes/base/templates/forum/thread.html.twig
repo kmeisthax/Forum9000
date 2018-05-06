@@ -1,19 +1,32 @@
-{% extends "base.html.twig" %}
-{% import "macros.html.twig" as macros %}
+{% extends "forum/forum.html.twig" %}
+{% from "macros/breadcrumb.html.twig" import breadcrumb %}
+{% from "macros/pagination.html.twig" import pagination %}
+{% from "macros/permalink_actor.html.twig" import permalink_actor %}
+
+{% block breadcrumb %}
+    {{breadcrumb(thread)}}
+{% endblock %}
 
 {% block body %}
-    {% if forum %}
-        {{macros.render_forum_header(forum)}}
-        {{macros.breadcrumb(thread)}}
-    {% endif %}
+    {% block children %}
+        {% for post in posts %}
+            <article id="p{{post.order}}">
+                <h2>{{post.title}}</h2>
+                {% if post.postedBy %}
+                    <p>Posted by <a href="{{permalink_actor(post.postedBy)}}">{{post.postedBy.handle}}</a> on {{post.ctime | date}} UTC</p>
+                {% else %}
+                    <p>Posted anonymously on {{post.ctime | date}} UTC</p>
+                {% endif %}
+                {{post.message | markup(post.markupLanguage)}}
+            </article>
+        {% else %}
+            No posts!
+        {% endfor %}
+    {% endblock %}
 
-    {% for post in posts %}
-        {{macros.render_post(post)}}
-    {% else %}
-        No posts!
-    {% endfor %}
-
-    {{macros.pagination(post_count, 20, "f9kforum_thread", {"id": thread.compactId, 'forum_id': forum.slug}, page)}}
+    {% block pagination %}
+        {{pagination(post_count, 20, "f9kforum_thread", {"id": thread.compactId, 'forum_id': forum.slug}, page)}}
+    {% endblock %}
 
     <h2>Reply</h2>
     {{ form_start(reply_form) }}

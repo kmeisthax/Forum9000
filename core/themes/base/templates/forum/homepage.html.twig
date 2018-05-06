@@ -1,12 +1,9 @@
-{% extends "base.html.twig" %}
-{% import "macros.html.twig" as macros %}
+{% extends "forum/forum.html.twig" %}
+{% from "macros/breadcrumb.html.twig" import breadcrumb %}
 
-{% block body %}
-    {{macros.breadcrumb(null)}}
+{% block breadcrumb %}
+    {{breadcrumb(null)}}
+{% endblock %}
 
-    {% for forum in forums %}
-        {% if forum is instanceof('\\Forum9000\\Entity\\Forum') %}
-            {{macros.render_forum_overview(forum)}}
-        {% endif %}
-    {% endfor %}
+{% block pagination %}
 {% endblock %}

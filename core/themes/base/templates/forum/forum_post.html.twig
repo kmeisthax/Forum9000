@@ -1,0 +1,11 @@
+{% extends "forum/forum.html.twig" %}
+
+{% block body %}
+    <h2>New Thread</h2>
+    {{ form_start(thread_form) }}
+    {{ form_widget(thread_form) }}
+    {{ form_end(thread_form) }}
+{% endblock %}
+
+{% block pagination %}
+{% endblock %}

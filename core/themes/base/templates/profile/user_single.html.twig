@@ -1,10 +1,10 @@
 {% extends "base.html.twig" %}
-{% import "macros.html.twig" as macros %}
+{% from "macros/interval.html.twig" import interval %}
 
 {% block body %}
     <h1>{{user.handle}}</h1>
     {% if user.ctime %}
-        <p>User for {{macros.interval(user.ctime, date('now'))}}</p>
+        <p>User for {{interval(user.ctime, date('now'))}}</p>
     {% else %}
         <p>User for time immemorial</p>
     {% endif %}

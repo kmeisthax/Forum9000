@@ -1,0 +1,5 @@
+{% macro permalink_actor(user) %}
+    {% if user is instanceof('\\Forum9000\\Entity\\User') %}
+        {{url('f9kprofile_user', {'handle': user.handle})}}
+    {% endif %}
+{% endmacro %}

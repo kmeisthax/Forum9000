@@ -1,0 +1,26 @@
+{% macro breadcrumb(main_obj, recurse) %}
+    {% import _self as macros %}
+    {% from "macros/permalink_thread.html.twig" import permalink_thread %}
+    {% from "macros/permalink_forum.html.twig" import permalink_forum %}
+
+    {% set recurse = recurse | default(0) %}
+    {% if recurse < 1 %}
+        <ul>
+    {% endif %}
+
+    {% if main_obj is null %}
+        <li><a href="/">Home</a>
+    {% elseif main_obj is instanceof('\\Forum9000\\Entity\\Thread') %}
+        {{macros.breadcrumb(main_obj.forum, recurse+1)}}
+        <li><a href="{{permalink_thread(main_obj)}}">{{main_obj.orderedPosts[0].title}}</a></li>
+    {% elseif main_obj is instanceof('\\Forum9000\\Entity\\Forum') %}
+        {{macros.breadcrumb(main_obj.parent, recurse+1)}}
+        <li><a href="{{permalink_forum(main_obj)}}">{{main_obj.title}}</a></li>
+    {% else %}
+        <li><a href="/">Home</a>
+    {% endif %}
+
+    {% if recurse < 1 %}
+        </ul>
+    {% endif %}
+{% endmacro %}

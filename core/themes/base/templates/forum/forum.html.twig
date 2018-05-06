@@ -1,19 +1,51 @@
 {% extends "base.html.twig" %}
-{% import "macros.html.twig" as macros %}
+{% from "macros/breadcrumb.html.twig" import breadcrumb %}
+{% from "macros/pagination.html.twig" import pagination %}
+{% from "macros/permalink_actor.html.twig" import permalink_actor %}
+{% from "macros/permalink_forum.html.twig" import permalink_forum, permalink_forum_action %}
+{% from "macros/permalink_thread.html.twig" import permalink_thread %}
+
+{% set forum = forum|default(null) %}
+
+{% block header %}
+    {{parent()}}
+
+    {% if forum %}
+        {% block forum_header %}
+            <h1>{{forum.title}}</h1>
+            {{forum.description}}
+            <p>{{forum.subforums.count}} subforums, {{forum.threads.count}} threads - <a href="{{permalink_forum_action(forum, 'post')}}">post new thread</a></p>
+        {% endblock %}
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{breadcrumb(forum)}}
+{% endblock %}
 
 {% block body %}
-    {% if forum %}
-        {{macros.render_forum_header(forum)}}
-        {{macros.breadcrumb(forum)}}
-    {% endif %}
+    {% block children %}
+        {% for child in children %}
+                {% if child is instanceof('\\Forum9000\\Entity\\Forum') %}
+                    <article>
+                        <a href="{{permalink_forum(child)}}">{{child.title}}</a>
+                        <p>{{child.description}}</p>
+                    </article>
+                {% else %}
+                    <article>
+                        <a href="{{permalink_thread(child)}}">{{child.orderedPosts[0].title}}</a>
+                        {{pagination(child.posts | length, 20, "f9kforum_thread", {"id": child.compactId, 'forum_id': forum.slug}, 0)}}
+                        {% if child.orderedPosts[0].postedBy %}
+                            Posted by <a href="{{permalink_actor(child.orderedPosts[0].postedBy)}}">{{child.orderedPosts[0].postedBy.handle}}</a> on {{child.orderedPosts[0].ctime | date}} UTC
+                        {% else %}
+                            Posted anonymously on {{child.orderedPosts[0].ctime | date}} UTC
+                        {% endif %}
+                    </article>
+                {% endif %}
+        {% endfor %}
+    {% endblock %}
 
-    {% for child in children %}
-        {% if child is instanceof('\\Forum9000\\Entity\\Forum') %}
-            {{macros.render_forum_overview(child)}}
-        {% else %}
-            {{macros.render_thread_overview(child)}}
-        {% endif %}
-    {% endfor %}
-
-    {{macros.pagination(children_count, 10, "f9kforum_forum", {"id": forum.slug}, page)}}
+    {% block pagination %}
+        {{pagination(children_count, 10, "f9kforum_forum", {"id": forum.slug}, page)}}
+    {% endblock %}
 {% endblock %}

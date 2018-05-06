@@ -1,4 +1,4 @@
-{% import "macros.html.twig" as macros %}
+{% from "macros/permalink_actor.html.twig" import permalink_actor %}
 
 <!DOCTYPE html>
 <html>
@@ -9,11 +9,13 @@
     </head>
     <body>
         {% block header %}
-            <a href="{{macros.permalink_actor(app.user)}}">{{app.user.handle}}</a>
+            <a href="{{permalink_actor(app.user)}}">{{app.user.handle}}</a>
             {% if "ROLE_STAFF" in app.user.roles or "ROLE_DEVELOPER" in app.user.roles %}<a href='{{url("f9kadmin_dashboard")}}'>Admin</a>{% endif %}
             {% if "ROLE_DEVELOPER" in app.user.roles %}<a href='{{url("f9kdeveloper_dashboard")}}'>Developer</a>{% endif %}
         {% endblock %}
+        {% block breadcrumb %}{% endblock %}
         {% block body %}{% endblock %}
+
         {% block javascripts %}{% endblock %}
     </body>
 </html>
