@@ -1,6 +1,5 @@
-{% macro permalink_forum(forum, page, route) %}
-    {% set route = route|default('f9kforum_forum') %}
-    {{url(route, {'slug': forum.slug, 'page':page|default(1)})}}
+{% macro permalink_forum(forum, page) %}
+    {{url('f9kforum_forum', {'slug': forum.slug, 'page':page|default(1)})}}
 {% endmacro %}
 
 {% macro permalink_forum_action(forum, action) %}

@@ -1,9 +1,10 @@
 {% extends "base.html.twig" %}
+{% from "macros/permalink_forum.html.twig" import permalink_forum %}
 
 {% block body %}
     <h1>Forum Admin - {{forum.title}}</h1>
 
-    <a href="{{ path('f9kforum_forum', {'id': forum.slug})}}">View forum on site</a>
+    <a href="{{ permalink_forum(forum) }}">View forum on site</a>
 
     {% if forum_edit_form %}
         <h2>General Settings</h2>

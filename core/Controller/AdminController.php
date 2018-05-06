@@ -3,6 +3,8 @@
 namespace Forum9000\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,11 +78,10 @@ class AdminController extends Controller {
 
     /**
      * @Route("/users/{id}", name="user_single")
+     * @Entity("user", expr="repository.findByCompactId(id)")
      */
-    public function user_single(Request $request, $id) {
+    public function user_single(Request $request, User $user) {
         $em = $this->getDoctrine()->getManager();
-        $userRepo = $this->getDoctrine()->getRepository(User::class);
-        $user = $userRepo->findByCompactId($id);
         
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -148,7 +149,6 @@ class AdminController extends Controller {
      */
     public function forum_create(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
         
         $forum = new Forum();
         $forum->setOrder(0);
@@ -170,11 +170,10 @@ class AdminController extends Controller {
     
     /**
      * @Route("/forums/{id}", name="forum_single")
+     * @Entity("forum", expr="repository.findByCompactId(id)")
      */
-    public function forum_single(Request $request, $id) {
+    public function forum_single(Request $request, Forum $forum) {
         $em = $this->getDoctrine()->getManager();
-        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
-        $forum = $forumRepo->findByCompactId($id);
         
         $forum_edit_form = $this->createForm(ForumType::class, $forum);
         $forum_edit_form->handleRequest($request);
@@ -189,13 +188,13 @@ class AdminController extends Controller {
         $new_perm = new Permission();
         $new_perm->setEstate($forum->getEstate());
         $new_perm_form = $this->createForm(PermissionType::class, $new_perm, array(
-            'action' => $this->generateUrl('f9kadmin_forum_perms', array("id" => $id))
+            'action' => $this->generateUrl('f9kadmin_forum_perms', array("id" => $forum->getCompactId()))
         ));
         
         $new_grant = new Grant();
         $new_grant->setEstate($forum->getEstate());
         $new_grant_form = $this->createForm(GrantType::class, $new_grant, array(
-            'action' => $this->generateUrl('f9kadmin_forum_grants', array("id" => $id))
+            'action' => $this->generateUrl('f9kadmin_forum_grants', array("id" => $forum->getCompactId()))
         ));
         
         $grant_user_sort = Criteria::create()
@@ -217,11 +216,10 @@ class AdminController extends Controller {
     
     /**
      * @Route("/forums/{id}/perms", name="forum_perms")
+     * @Entity("forum", expr="repository.findByCompactId(id)")
      */
-    public function forum_perms(Request $request, $id) {
+    public function forum_perms(Request $request, Forum $forum) {
         $em = $this->getDoctrine()->getManager();
-        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
-        $forum = $forumRepo->findByCompactId($id);
         
         //Recreate a form object to capture the request data.
         $perm = new Permission();
@@ -239,16 +237,15 @@ class AdminController extends Controller {
             $em->flush();
         }
         
-        return $this->redirectToRoute("f9kadmin_forum_single", array("id" => $id));
+        return $this->redirectToRoute("f9kadmin_forum_single", array("id" => $forum->getCompactId()));
     }
     
     /**
      * @Route("/forums/{id}/grants", name="forum_grants")
+     * @Entity("forum", expr="repository.findByCompactId(id)")
      */
-    public function forum_grants(Request $request, $id) {
+    public function forum_grants(Request $request, Forum $forum) {
         $em = $this->getDoctrine()->getManager();
-        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
-        $forum = $forumRepo->findByCompactId($id);
         
         //Recreate a form object to capture the request data.
         $grant = new Grant();
@@ -265,7 +262,7 @@ class AdminController extends Controller {
             $em->flush();
         }
         
-        return $this->redirectToRoute("f9kadmin_forum_single", array("id" => $id));
+        return $this->redirectToRoute("f9kadmin_forum_single", array("id" => $forum->getCompactId()));
     }
 
     /**
@@ -296,7 +293,6 @@ class AdminController extends Controller {
      */
     public function group_create(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
         
         $group = new Group();
         $form = $this->createForm(GroupType::class, $group);
@@ -316,11 +312,10 @@ class AdminController extends Controller {
 
     /**
      * @Route("/groups/{id}", name="group_single")
+     * @Entity("group", expr="repository.findByCompactId(id)")
      */
-    public function group_single(Request $request, $id) {
+    public function group_single(Request $request, Group $group) {
         $em = $this->getDoctrine()->getManager();
-        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
-        $group = $groupRepo->findByCompactId($id);
         
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
@@ -337,19 +332,19 @@ class AdminController extends Controller {
         $new_perm = new Permission();
         $new_perm->setEstate($group->getEstate());
         $new_perm_form = $this->createForm(PermissionType::class, $new_perm, array(
-            'action' => $this->generateUrl('f9kadmin_group_perms', array("id" => $id))
+            'action' => $this->generateUrl('f9kadmin_group_perms', array("id" => $group->getCompactId()))
         ));
 
         $new_grant = new Grant();
         $new_grant->setEstate($group->getEstate());
         $new_grant_form = $this->createForm(GrantType::class, $new_grant, array(
-            'action' => $this->generateUrl('f9kadmin_group_grants', array("id" => $id))
+            'action' => $this->generateUrl('f9kadmin_group_grants', array("id" => $group->getCompactId()))
         ));
 
         $new_member = new Membership();
         $new_member->setGroup($group);
         $new_member_form = $this->createForm(MembershipType::class, $new_member, array(
-            'action' => $this->generateUrl('f9kadmin_group_memberships', array("id" => $id))
+            'action' => $this->generateUrl('f9kadmin_group_memberships', array("id" => $group->getCompactId()))
         ));
 
         $grant_user_sort = Criteria::create()
@@ -372,12 +367,11 @@ class AdminController extends Controller {
 
     /**
      * @Route("/groups/{id}/perms", name="group_perms")
+     * @Entity("group", expr="repository.findByCompactId(id)")
      */
-    public function group_perms(Request $request, $id) {
+    public function group_perms(Request $request, Group $group) {
         $em = $this->getDoctrine()->getManager();
-        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
-        $group = $groupRepo->findByCompactId($id);
-
+        
         //Recreate a form object to capture the request data.
         $perm = new Permission();
         $perm->setEstate($group->getEstate());
@@ -394,16 +388,15 @@ class AdminController extends Controller {
             $em->flush();
         }
 
-        return $this->redirectToRoute("f9kadmin_group_single", array("id" => $id));
+        return $this->redirectToRoute("f9kadmin_group_single", array("id" => $group->getCompactId()));
     }
 
     /**
      * @Route("/groups/{id}/grants", name="group_grants")
+     * @Entity("group", expr="repository.findByCompactId(id)")
      */
-    public function group_grants(Request $request, $id) {
+    public function group_grants(Request $request, Group $group) {
         $em = $this->getDoctrine()->getManager();
-        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
-        $group = $groupRepo->findByCompactId($id);
 
         //Recreate a form object to capture the request data.
         $grant = new Grant();
@@ -420,17 +413,16 @@ class AdminController extends Controller {
             $em->flush();
         }
 
-        return $this->redirectToRoute("f9kadmin_group_single", array("id" => $id));
+        return $this->redirectToRoute("f9kadmin_group_single", array("id" => $group->getCompactId()));
     }
 
     /**
      * @Route("/groups/{id}/memberships", name="group_memberships")
+     * @Entity("group", expr="repository.findByCompactId(id)")
      */
-    public function group_memberships(Request $request, $id) {
+    public function group_memberships(Request $request, Group $group) {
         $em = $this->getDoctrine()->getManager();
-        $groupRepo = $this->getDoctrine()->getRepository(Group::class);
-        $group = $groupRepo->findByCompactId($id);
-
+        
         //Recreate a form object to capture the request data.
         $new_member = new Membership();
         $new_member->setGroup($group);
@@ -447,6 +439,6 @@ class AdminController extends Controller {
             $em->flush();
         }
 
-        return $this->redirectToRoute("f9kadmin_group_single", array("id" => $id));
+        return $this->redirectToRoute("f9kadmin_group_single", array("id" => $group->getCompactId()));
     }
 }

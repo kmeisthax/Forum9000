@@ -1,4 +1,6 @@
 {% extends "base.html.twig" %}
+{% from "macros/permalink_thread.html.twig" import permalink_thread %}
+{% from "macros/permalink_forum.html.twig" import permalink_forum %}
 
 {% block body %}
     <a href="{{url('f9kadmin_user_overview')}}">Users</a>
@@ -8,11 +10,11 @@
     {% for post in newest_posts %}
         {% set post_page = post.order // 20 + 1 %}
         <article>
-            <a href="{{url('f9kforum_thread', {'forum_id': post.thread.forum.slug, 'id':post.thread.compactId, 'page':post_page})}}#p{{post.order}}">{{post.title}}</a>
+            <a href="{{permalink_thread(post.thread, post_page)}}#p{{post.order}}">{{post.title}}</a>
             {% if post.postedBy %}
-                <span>Posted by {{post.postedBy.handle}} on {{post.ctime | date}} UTC in <a href="{{url('f9kforum_forum', {'id': post.thread.forum.slug})}}">{{post.thread.forum.title}}</a></span>
+                <span>Posted by {{post.postedBy.handle}} on {{post.ctime | date}} UTC in <a href="{{permalink_forum(post.thread.forum)}}">{{post.thread.forum.title}}</a></span>
             {% else %}
-                <span>Posted anonymously on {{post.ctime | date}} UTC in <a href="{{url('f9kforum_forum', {'id': post.thread.forum.slug})}}">{{post.thread.forum.title}}</a></span>
+                <span>Posted anonymously on {{post.ctime | date}} UTC in <a href="{{permalink_forum(post.thread.forum)}}">{{post.thread.forum.title}}</a></span>
             {% endif %}
         </article>
     {% endfor %}
