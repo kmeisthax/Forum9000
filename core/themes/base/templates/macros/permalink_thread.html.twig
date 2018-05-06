@@ -1,4 +1,4 @@
 {% macro permalink_thread(thread, forum, page) %}
     {% set forum = forum|default(thread.forum) %}
-    {{url('f9kforum_thread', {'forum_id': forum.slug, 'id': thread.compactId, 'page':page|default(1)})}}
+    {{url('f9kforum_thread', {'forum_slug': forum.slug, 'id': thread.compactId, 'page':page|default(1)})}}
 {% endmacro %}

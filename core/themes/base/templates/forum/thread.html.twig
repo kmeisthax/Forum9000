@@ -25,7 +25,7 @@
     {% endblock %}
 
     {% block pagination %}
-        {{pagination(post_count, 20, "f9kforum_thread", {"id": thread.compactId, 'forum_id': forum.slug}, page)}}
+        {{pagination(post_count, 20, "f9kforum_thread", {"id": thread.compactId, 'forum_slug': forum.slug}, page)}}
     {% endblock %}
 
     <h2>Reply</h2>

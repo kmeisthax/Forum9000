@@ -3,6 +3,8 @@
 namespace Forum9000\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\Criteria;
@@ -39,17 +41,11 @@ class ForumController extends Controller {
     }
     
     /**
-     * @Route("/forum/{id}/{page}", name="forum", requirements={"page" = "\d+"})
+     * @Route("/forum/{slug}/{page}", name="forum", requirements={"page" = "\d+"})
      */
-    public function forum(Request $request, $id, $page=1) {
+    public function forum(Request $request, Forum $forum, $page=1) {
         $em = $this->getDoctrine()->getManager();
         $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
-        $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
-        
-        $forum = $forumRepo->findByCompactId($id);
-        if ($forum === null) {
-            $forum = $forumRepo->findBySlug($id);
-        }
         
         $this->denyAccessUnlessGranted('view', $forum);
 
@@ -71,17 +67,10 @@ class ForumController extends Controller {
     }
     
     /**
-     * @Route("/forum/{id}/post", name="forum_post")
+     * @Route("/forum/{slug}/post", name="forum_post")
      */
-    public function forum_post(Request $request, $id) {
+    public function forum_post(Request $request, Forum $forum) {
         $em = $this->getDoctrine()->getManager();
-        $forumRepo = $this->getDoctrine()->getRepository(Forum::class);
-        $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
-        
-        $forum = $forumRepo->findByCompactId($id);
-        if ($forum === null) {
-            $forum = $forumRepo->findBySlug($id);
-        }
         
         $this->denyAccessUnlessGranted('post', $forum);
 
@@ -111,7 +100,7 @@ class ForumController extends Controller {
             $em->persist($thread);
             $em->flush();
 
-            return $this->redirectToRoute("f9kforum_thread", array("forum_id" => $forum->getSlug(), "id" => $thread->getCompactId()));
+            return $this->redirectToRoute("f9kforum_thread", array("forum_slug" => $forum->getSlug(), "id" => $thread->getCompactId()));
         }
         
         return $this->render(
@@ -124,15 +113,14 @@ class ForumController extends Controller {
     }
     
     /**
-     * @Route("/forum/{forum_id}/{id}/{page}", name="thread", requirements={"page" = "\d+"})
+     * @Route("/forum/{forum_slug}/{id}/{page}", name="thread", requirements={"page" = "\d+"})
+     * @ParamConverter("forum", options={"mapping" = {"forum_slug": "slug"}})
+     * @Entity("thread", expr="repository.findByCompactId(id)")
      */
-    public function thread(Request $request, $forum_id, $id, $page = 1) {
+    public function thread(Request $request, Forum $forum, Thread $thread, $page = 1) {
         $em = $this->getDoctrine()->getManager();
-        $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
         $postRepo = $this->getDoctrine()->getRepository(Post::class);
-
-        $thread = $threadRepo->findByCompactId($id);
-        $forum = $thread->getForum();
+        
         $this->denyAccessUnlessGranted('view', $thread);
 
         $reply = new Post();
@@ -156,7 +144,7 @@ class ForumController extends Controller {
             $em->persist($reply);
             $em->flush();
 
-            return $this->redirectToRoute("f9kforum_thread", array("forum_id" => $forum->getSlug(), "id" => $thread->getCompactId()));
+            return $this->redirectToRoute("f9kforum_thread", array("forum_slug" => $forum->getSlug(), "id" => $thread->getCompactId()));
         }
 
         $posts = $thread->getOrderedPosts(($page - 1) * 20, 20);
@@ -176,14 +164,13 @@ class ForumController extends Controller {
     }
     
     /**
-     * @Route("/forum/{forum_id}/{id}/lock", name="thread_lock")
+     * @Route("/forum/{forum_slug}/{id}/lock", name="thread_lock")
+     * @ParamConverter("forum", options={"mapping" = {"forum_slug": "slug"}})
+     * @Entity("thread", expr="repository.findByCompactId(id)")
      */
-    public function thread_lock(Request $request, $id) {
+    public function thread_lock(Request $request, Forum $forum, Thread $thread) {
         $em = $this->getDoctrine()->getManager();
-        $threadRepo = $this->getDoctrine()->getRepository(Thread::class);
-
-        $thread = $threadRepo->findByCompactId($id);
-        $forum = $thread->getForum();
+        
         $this->denyAccessUnlessGranted('lock', $thread);
 
         $form = $this->createForm(LockType::class, $thread);

@@ -46,6 +46,6 @@
     {% endblock %}
 
     {% block pagination %}
-        {{pagination(children_count, 10, "f9kforum_forum", {"id": forum.slug}, page)}}
+        {{pagination(children_count, 10, "f9kforum_forum", {"slug": forum.slug}, page)}}
     {% endblock %}
 {% endblock %}
