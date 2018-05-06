@@ -201,11 +201,9 @@ class ThemeRegistry {
     }
 
     /**
-     * Apply a theme to an existing Twig environment
+     * Apply a theme to an existing Twig environment.
      * 
-     * TODO: Can we have this done *before* the route executes? What happens if
-     * we recursively include other route fragments? Is there a routing event
-     * that can be subscribed to?
+     * TODO: What happens if we recursively include other route fragments?
      */
     public function apply_theme(\Twig_Environment $twig, Theme $theme) {
         $theme_ldr = $twig->getLoader();
