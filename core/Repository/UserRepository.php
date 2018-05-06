@@ -28,6 +28,14 @@ class UserRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function findOneByHandle($handle): ?User {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.handle = :handle')
+            ->setParameter('handle', $handle)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

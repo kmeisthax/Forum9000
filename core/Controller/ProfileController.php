@@ -20,12 +20,12 @@ use Forum9000\Theme\ThemeRegistry;
  */
 class ProfileController extends Controller {
     /**
-     * @Route("/user/{user_id}", name="user")
+     * @Route("/user/{handle}", name="user")
      */
-    function user_single(Request $request, ThemeRegistry $themeReg, $user_id) {
+    function user_single(Request $request, ThemeRegistry $themeReg, $handle) {
         $em = $this->getDoctrine()->getManager();
         $userRepo = $this->getDoctrine()->getRepository(User::class);
-        $user = $userRepo->findByCompactId($user_id);
+        $user = $userRepo->findOneByHandle($handle);
 
         $themeReg->apply_theme($this->get("twig"), $themeReg->negotiate_theme(array(), ThemeRegistry::ROUTECLASS_USER));
 

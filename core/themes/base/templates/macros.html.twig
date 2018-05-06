@@ -85,11 +85,7 @@
     <article>
         <a href="{{macros.permalink_thread(thread)}}">{{thread.orderedPosts[0].title}}</a>
         {{macros.pagination(thread.posts | length, 20, "f9kforum_thread", {"id": thread.compactId, 'forum_id': forum.slug}, 0)}}
-        {% if thread.orderedPosts[0].postedBy %}
-            <span>Posted by {{thread.orderedPosts[0].postedBy.handle}} on {{thread.orderedPosts[0].ctime | date}} UTC</span>
-        {% else %}
-            <span>Posted anonymously on {{thread.orderedPosts[0].ctime | date}} UTC</span>
-        {% endif %}
+        {{macros.render_post_meta(thread.orderedPosts[0], thread, forum)}}
     </article>
 {% endmacro %}
 
@@ -100,17 +96,23 @@
 
     <article id="p{{post.order}}">
         <h2>{{post.title}}</h2>
-        {% if post.postedBy %}
-            <p>Posted by {{post.postedBy.handle}} on {{post.ctime | date}} UTC</p>
-        {% else %}
-            <p>Posted anonymously on {{post.ctime | date}} UTC</p>
-        {% endif %}
+        {{macros.render_post_meta(post, thread, forum)}}
         {{post.message | markup(post.markupLanguage)}}
     </article>
 {% endmacro %}
 
+{% macro render_post_meta(post, thread, forum) %}
+    {% import _self as macros %}
+
+    {% if post.postedBy %}
+        <p>Posted by <a href="{{macros.permalink_user(post.postedBy)}}">{{post.postedBy.handle}}</a> on {{post.ctime | date}} UTC</p>
+    {% else %}
+        <p>Posted anonymously on {{post.ctime | date}} UTC</p>
+    {% endif %}
+{% endmacro %}
+
 {% macro permalink_user(user) %}
-    {{url('f9kprofile_user', {'user_id': user.compactId})}}
+    {{url('f9kprofile_user', {'handle': user.handle})}}
 {% endmacro %}
 
 {% macro permalink_forum(forum, page) %}
