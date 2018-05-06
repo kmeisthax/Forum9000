@@ -4,9 +4,6 @@
     {% from "macros/permalink_forum.html.twig" import permalink_forum %}
 
     {% set recurse = recurse | default(0) %}
-    {% if recurse < 1 %}
-        <ol itemscope itemtype="http://schema.org/BreadcrumbList">
-    {% endif %}
 
     {% if main_obj is null %}
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
@@ -34,9 +31,5 @@
                 <span itemprop="name">Home</span>
             </a>
         </li>
-    {% endif %}
-
-    {% if recurse < 1 %}
-        </ol>
     {% endif %}
 {% endmacro %}

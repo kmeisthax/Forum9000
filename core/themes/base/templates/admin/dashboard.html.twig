@@ -1,11 +1,8 @@
-{% extends "base.html.twig" %}
+{% extends "admin/base.html.twig" %}
 {% from "macros/permalink_thread.html.twig" import permalink_thread %}
 {% from "macros/permalink_forum.html.twig" import permalink_forum %}
 
 {% block body %}
-    <a href="{{url('f9kadmin_user_overview')}}">Users</a>
-    <a href="{{url('f9kadmin_forum_overview')}}">Forums</a>
-
     <h2>Newest Posts</h2>
     {% for post in newest_posts %}
         {% set post_page = post.order // 20 + 1 %}

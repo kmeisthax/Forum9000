@@ -1,21 +1,34 @@
 {% from "macros/permalink_actor.html.twig" import permalink_actor %}
+{% from "macros/breadcrumb.html.twig" import breadcrumb %}
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block header %}
-            <a href="{{permalink_actor(app.user)}}">{{app.user.handle}}</a>
-            {% if "ROLE_STAFF" in app.user.roles or "ROLE_DEVELOPER" in app.user.roles %}<a href='{{url("f9kadmin_dashboard")}}'>Admin</a>{% endif %}
-            {% if "ROLE_DEVELOPER" in app.user.roles %}<a href='{{url("f9kdeveloper_dashboard")}}'>Developer</a>{% endif %}
-        {% endblock %}
-        {% block breadcrumb %}{% endblock %}
-        {% block body %}{% endblock %}
+{% block html %}
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>{% block title %}Welcome!{% endblock %}</title>
+            {% block stylesheets %}{% endblock %}
+        </head>
+        <body>
+            <header>
+                {% block header %}
+                    Welcome <a href="{{permalink_actor(app.user)}}">{{app.user.handle}}</a>
+                    {% if "ROLE_STAFF" in app.user.roles or "ROLE_DEVELOPER" in app.user.roles %}<a href='{{url("f9kadmin_dashboard")}}'>Admin</a>{% endif %}
+                    {% if "ROLE_DEVELOPER" in app.user.roles %}<a href='{{url("f9kdeveloper_dashboard")}}'>Developer</a>{% endif %}
+                    
+                    <nav>{% block navigation %}{% endblock %}</nav>
+                {% endblock %}
+            </header>
+            
+            <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+                {% block breadcrumb %}
+                    {{breadcrumb(null)}}
+                {% endblock %}
+            </ol>
+            
+            <main>{% block body %}{% endblock %}</main>
 
-        {% block javascripts %}{% endblock %}
-    </body>
-</html>
+            {% block javascripts %}{% endblock %}
+        </body>
+    </html>
+{% endblock %}
