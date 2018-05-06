@@ -105,14 +105,16 @@
     {% import _self as macros %}
 
     {% if post.postedBy %}
-        <p>Posted by <a href="{{macros.permalink_user(post.postedBy)}}">{{post.postedBy.handle}}</a> on {{post.ctime | date}} UTC</p>
+        <p>Posted by <a href="{{macros.permalink_actor(post.postedBy)}}">{{post.postedBy.handle}}</a> on {{post.ctime | date}} UTC</p>
     {% else %}
         <p>Posted anonymously on {{post.ctime | date}} UTC</p>
     {% endif %}
 {% endmacro %}
 
-{% macro permalink_user(user) %}
-    {{url('f9kprofile_user', {'handle': user.handle})}}
+{% macro permalink_actor(user) %}
+    {% if user is instanceof('\\Forum9000\\Entity\\User') %}
+        {{url('f9kprofile_user', {'handle': user.handle})}}
+    {% endif %}
 {% endmacro %}
 
 {% macro permalink_forum(forum, page) %}
