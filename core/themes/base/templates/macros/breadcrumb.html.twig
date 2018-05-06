@@ -4,30 +4,31 @@
     {% from "macros/permalink_forum.html.twig" import permalink_forum %}
 
     {% set recurse = recurse | default(0) %}
+    {% set current = recurse == 0 %}
 
     {% if main_obj is null %}
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            <a itemprop="item" href="/" rel="index">
+            <a itemprop="item" href="/" rel="index"{% if current %} aria-current="page"{% endif %}>
                 <span itemprop="name">Home</span>
             </a>
         </li>
     {% elseif main_obj is instanceof('\\Forum9000\\Entity\\Thread') %}
         {{macros.breadcrumb(main_obj.forum, recurse+1)}}
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            <a itemprop="item" href="{{permalink_thread(main_obj)}}">
+            <a itemprop="item" href="{{permalink_thread(main_obj)}}"{% if current %} aria-current="page"{% endif %}>
                 <span itemprop="name">{{main_obj.orderedPosts[0].title}}</span>
             </a>
         </li>
     {% elseif main_obj is instanceof('\\Forum9000\\Entity\\Forum') %}
         {{macros.breadcrumb(main_obj.parent, recurse+1)}}
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            <a itemprop="item" href="{{permalink_forum(main_obj)}}">
+            <a itemprop="item" href="{{permalink_forum(main_obj)}}"{% if current %} aria-current="page"{% endif %}>
                 <span itemprop="name">{{main_obj.title}}</span>
             </a>
         </li>
     {% else %}
         <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            <a itemprop="item" href="/" rel="index">
+            <a itemprop="item" href="/" rel="index"{% if current %} aria-current="page"{% endif %}>
                 <span itemprop="name">Home</span>
             </a>
         </li>
