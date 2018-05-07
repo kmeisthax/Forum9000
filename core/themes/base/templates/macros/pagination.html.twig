@@ -6,8 +6,16 @@
             Page
             {% for page_count in 1..page_limit %}
                 {% if active_page != page_count %}
+                    {% set is_previous = page_count == active_page - 1 %}
+                    {% set is_next = page_count == active_page + 1 %}
+                    
+                    {% set rel = [] %}
+                    {% if is_previous %}{% set rel = rel | merge(["prev"]) %}{% endif %}
+                    {% if is_next %}{% set rel = rel | merge(["next"]) %}{% endif %}
+                    {% set rel = rel | join(" ") %}
+                    
                     {% set page_options = options | merge({'page':page_count}) %}
-                    <a href="{{url(route, page_options)}}" title="Page {{page_count}}">{{page_count}}</a>
+                    <a href="{{url(route, page_options)}}" title="Page {{page_count}}"{% if rel %} rel="{{rel}}"{% endif %}>{{page_count}}</a>
                 {% else %}
                     {{page_count}}
                 {% endif %}
