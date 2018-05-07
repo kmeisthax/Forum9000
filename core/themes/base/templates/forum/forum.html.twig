@@ -7,41 +7,33 @@
 
 {% set forum = forum|default(null) %}
 
-{% block header %}
-    {{parent()}}
-
-    {% if forum %}
-        {% block forum_header %}
-            <h1>{{forum.title}}</h1>
-            {{forum.description}}
-            <p>{{forum.subforums.count}} subforums, {{forum.threads.count}} threads - <a href="{{permalink_forum_action(forum, 'post')}}">post new thread</a></p>
-        {% endblock %}
-    {% endif %}
-{% endblock %}
-
 {% block breadcrumb %}
     {{breadcrumb(forum)}}
 {% endblock %}
 
+{% block actions %}<p>{{forum.subforums.count}} subforums, {{forum.threads.count}} threads - <a href="{{permalink_forum_action(forum, 'post')}}">post new thread</a></p>{% endblock %}
+
 {% block body %}
     {% block children %}
         {% for child in children %}
-                {% if child is instanceof('\\Forum9000\\Entity\\Forum') %}
-                    <article>
-                        <a href="{{permalink_forum(child)}}">{{child.title}}</a>
-                        <p>{{child.description}}</p>
-                    </article>
-                {% else %}
-                    <article>
-                        <a href="{{permalink_thread(child)}}">{{child.orderedPosts[0].title}}</a>
-                        {{pagination(child.posts | length, 20, "f9kforum_thread", {"id": child.compactId, 'forum_id': forum.slug}, 0)}}
-                        {% if child.orderedPosts[0].postedBy %}
-                            Posted by <a href="{{permalink_actor(child.orderedPosts[0].postedBy)}}">{{child.orderedPosts[0].postedBy.handle}}</a> on {{child.orderedPosts[0].ctime | date}} UTC
-                        {% else %}
-                            Posted anonymously on {{child.orderedPosts[0].ctime | date}} UTC
-                        {% endif %}
-                    </article>
-                {% endif %}
+            {% if child is instanceof('\\Forum9000\\Entity\\Forum') %}
+                <article>
+                    <a href="{{permalink_forum(child)}}">{{child.title}}</a>
+                    <p>{{child.description}}</p>
+                </article>
+            {% else %}
+                <article>
+                    <a href="{{permalink_thread(child)}}">{{child.orderedPosts[0].title}}</a>
+                    {{pagination(child.posts | length, 20, "f9kforum_thread", {"id": child.compactId, 'forum_id': forum.slug}, 0)}}
+                    {% if child.orderedPosts[0].postedBy %}
+                        Posted by <a href="{{permalink_actor(child.orderedPosts[0].postedBy)}}">{{child.orderedPosts[0].postedBy.handle}}</a> on {{child.orderedPosts[0].ctime | date}} UTC
+                    {% else %}
+                        Posted anonymously on {{child.orderedPosts[0].ctime | date}} UTC
+                    {% endif %}
+                </article>
+            {% endif %}
+        {% else %}
+            No threads!
         {% endfor %}
     {% endblock %}
 

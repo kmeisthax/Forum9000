@@ -28,7 +28,9 @@
                 </ol>
             </nav>
             
-            <main>{% block body %}{% endblock %}</main>
+            {% block actions %}{% endblock %}
+            
+            {% block main %}<main>{% block body %}{% endblock %}</main>{% endblock %}
 
             {% block javascripts %}{% endblock %}
         </body>

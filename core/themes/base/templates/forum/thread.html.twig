@@ -1,4 +1,4 @@
-{% extends "forum/forum.html.twig" %}
+{% extends "base.html.twig" %}
 {% from "macros/breadcrumb.html.twig" import breadcrumb %}
 {% from "macros/pagination.html.twig" import pagination %}
 {% from "macros/permalink_actor.html.twig" import permalink_actor %}
@@ -23,11 +23,11 @@
             No posts!
         {% endfor %}
     {% endblock %}
-
+    
     {% block pagination %}
         {{pagination(post_count, 20, "f9kforum_thread", {"id": thread.compactId, 'forum_slug': forum.slug}, page)}}
     {% endblock %}
-
+    
     <h2>Reply</h2>
     {{ form_start(reply_form) }}
     {{ form_widget(reply_form) }}
