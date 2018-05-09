@@ -11,6 +11,7 @@ use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\DBAL\Migrations\Version;
 
+use Forum9000\Form\SiteEnvType;
 use Forum9000\Theme\Annotation\Theme;
 
 /**
@@ -45,6 +46,11 @@ class InstallController extends Controller {
             throw new \Exception('Forum configuration is already installed.');
         }
 
-        return $this->render("install/database_stage.html.twig");
+        $form = $this->createForm(SiteEnvType::class);
+        $form->handleRequest($req);
+
+        return $this->render("install/database_stage.html.twig", array(
+            "environment_form" => $form->createView(),
+        ));
     }
 }

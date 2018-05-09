@@ -3,5 +3,21 @@
 {% block body %}
     <h1>Forum9000 Installer</h1>
 
-    <h2>Database configuration</h2>
+    {{ form_start(environment_form) }}
+    <h2>Application environment</h2>
+    {{ form_errors(environment_form.APP_ENV) }}
+    {{ form_widget(environment_form.APP_ENV) }}
+
+    <h2>Database</h2>
+    <p>Database must already exist and user must have permissions to alter database schema.</p>
+    {{ form_errors(environment_form.DATABASE_URL) }}
+    {{ form_label(environment_form.DATABASE_URL) }}
+    {{ form_widget(environment_form.DATABASE_URL) }}
+
+    <h2>Admin User</h2>
+    <p>Your user login will be created with full site permissions. After installation, you will be able to change site settings, nominate new administrators, and so on.</p>
+    {{ form_errors(environment_form.owner_registration) }}
+    {{ form_widget(environment_form.owner_registration) }}
+
+    {{ form_end(environment_form) }}
 {% endblock %}
