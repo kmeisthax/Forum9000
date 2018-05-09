@@ -17,6 +17,17 @@ class Kernel extends BaseKernel
 
     const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
+    /**
+     * Determine if the application has been installed.
+     *
+     * If the application is not installed, then any user will be allowed to
+     * hit /install to configure .env and create the owner account for the
+     * forum.
+     */
+    public function isInstalled() {
+        return file_exists($this->getProjectDir().'/.env');
+    }
+
     public function getProjectDir() {
         return realpath(__DIR__.'/../');
     }
