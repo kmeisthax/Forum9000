@@ -37,9 +37,9 @@ use Forum9000\Theme\Annotation\Theme;
  */
 class InstallController extends Controller {
     /**
-     * @Route("/")
+     * @Route("/", name="environment")
      */
-    function install(Request $req) {
+    function environment(Request $req) {
         $kernel = $this->get('kernel');
 
         if ($kernel->isInstalled()) {
@@ -48,7 +48,62 @@ class InstallController extends Controller {
 
         $form = $this->createForm(SiteEnvType::class);
         $form->handleRequest($req);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $env_vars = $form->getData();
+            
+            //This is how the Symfony template app env generator does it
+            if (function_exists('openssl_random_pseudo_bytes')) {
+                $env_vars["APP_SECRET"] = hash('sha1', openssl_random_pseudo_bytes(23));
+            }
+            $env_vars["APP_SECRET"] = hash('sha1', uniqid(mt_rand(), true));
+            
+            $env_lines = [];
+            
+            foreach ($env_vars as $k => $v) {
+                $has_quote_single = strpos($v, "'");
+                $has_quote_double = strpos($v, '"');
+                
+                if ($has_quote_single && $has_quote_double) {
+                    $esc_v = '"' . str_replace("'", "\\'", $v) . '"';
+                } else if ($has_quote_single) {
+                    $esc_v = '"' . $v . '"';
+                } else if ($has_quote_double) {
+                    $esc_v = "'" . $v . "'";
+                } else {
+                    $esc_v = $v;
+                }
+                
+                $env_lines[] = $k . "=" . $esc_v;
+            }
+            
+            $env_lines[] = "";
+            $env_lines[] = "#Please remove once install has completed.";
+            $env_lines[] = "F9K_NOT_INSTALLED=true";
+            
+            $env = implode("\n", $env_lines);
+            $kernel->writeDotEnv($env);
+            
+            return $this->redirectToRoute("f9kinstall_database");
+        }
 
+        return $this->render("install/environment_stage.html.twig", array(
+            "environment_form" => $form->createView(),
+        ));
+    }
+    
+    /**
+     * @Route("/database", name="database")
+     */
+    function database(Request $req) {
+        $kernel = $this->get('kernel');
+
+        if ($kernel->isInstalled()) {
+            throw new \Exception('Forum configuration is already installed.');
+        }
+        
+        //Determine if database exists or not
+        
         return $this->render("install/database_stage.html.twig", array(
             "environment_form" => $form->createView(),
         ));

@@ -25,7 +25,14 @@ class Kernel extends BaseKernel
      * forum.
      */
     public function isInstalled() {
-        return file_exists($this->getProjectDir().'/.env');
+        return file_exists($this->getProjectDir().'/.env') && $_SERVER["F9K_NOT_INSTALLED"] != "true";
+    }
+    
+    /**
+     * Write a .env file to disk.
+     */
+    public function writeDotEnv($env_contents) {
+        file_put_contents($this->getProjectDir() . '/.env', $env_contents);
     }
 
     public function getProjectDir() {

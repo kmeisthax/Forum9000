@@ -21,6 +21,6 @@ class SiteEnvType extends AbstractType {
             'expanded' => true
         ))->add("DATABASE_URL", TextType::class, array(
             'label' => "Database connection"
-        ))->add("owner_registration", RegistrationType::class);
+        ))->add("next", SubmitType::class, array("label" => "Next Step"));
     }
 }
