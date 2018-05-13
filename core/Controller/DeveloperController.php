@@ -7,10 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use Doctrine\DBAL\Migrations\Configuration\Configuration;
-use Doctrine\DBAL\Migrations\OutputWriter;
-use Doctrine\DBAL\Migrations\Version;
-
 use Forum9000\Theme\Annotation\Theme;
 use Forum9000\Form\ActionsType;
 
@@ -36,45 +32,7 @@ use Forum9000\Form\ActionsType;
  * @Theme(routeClass="developer")
  */
 class DeveloperController extends Controller {
-    private function create_migration_configuration(?\Closure $cl = null) {
-        $container = $this->container;
-        $connection = $this->get("doctrine")->getConnection();
-        $dir = $container->getParameter('doctrine_migrations.dir_name');
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
-        }
-        
-        $configuration = new Configuration($connection, new OutputWriter($cl));
-        $configuration->setMigrationsNamespace($container->getParameter('doctrine_migrations.namespace'));
-        $configuration->setMigrationsDirectory($dir);
-        $configuration->registerMigrationsFromDirectory($dir);
-        $configuration->setName($container->getParameter('doctrine_migrations.name'));
-        $configuration->setMigrationsTableName($container->getParameter('doctrine_migrations.table_name'));
-        
-        return $configuration;
-    }
-    
-    private function get_migration_infos(Configuration $configuration, $version) {
-        $infos = array();
-        
-        //TODO: getVersion will fail if the migration class is missing.
-        //This isn't acceptable for developer console; we need to distinguish
-        //between an unknown update and an update that's been applied but whose
-        //migration class is missing.
-        $version_obj = $configuration->getVersion($version);
-        $migration = $version_obj->getMigration();
-        $migration_refl = new \ReflectionClass(get_class($migration));
-        
-        $infos["datetime"] = $configuration->getDateTime($version);
-        $infos["comment"] = $migration_refl->getDocComment();
-        $infos["canup"] = $migration_refl->hasMethod("up") && !$configuration->hasVersionMigrated($version_obj);
-        $infos["candown"] = $migration_refl->hasMethod("down") && $configuration->hasVersionMigrated($version_obj);
-        
-        $infos["uplist"] = $configuration->getMigrationsToExecute(Version::DIRECTION_UP, $version);
-        $infos["downlist"] = $configuration->getMigrationsToExecute(Version::DIRECTION_DOWN, $version) + [$version_obj];
-        
-        return $infos;
-    }
+    use \Forum9000\OnsiteDatabaseAdmin\DBAControllerTrait;
     
     /**
      * @Route("/", name="dashboard")

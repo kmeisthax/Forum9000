@@ -12,6 +12,7 @@ use Doctrine\DBAL\Migrations\OutputWriter;
 use Doctrine\DBAL\Migrations\Version;
 
 use Forum9000\Form\SiteEnvType;
+use Forum9000\Form\ActionsType;
 use Forum9000\Theme\Annotation\Theme;
 
 /**
@@ -36,6 +37,8 @@ use Forum9000\Theme\Annotation\Theme;
  * @Theme(routeClass="developer")
  */
 class InstallController extends Controller {
+    use \Forum9000\OnsiteDatabaseAdmin\DBAControllerTrait;
+
     /**
      * @Route("/", name="environment")
      */
@@ -102,9 +105,73 @@ class InstallController extends Controller {
             throw new \Exception('Forum configuration is already installed.');
         }
         
-        //Determine if database exists or not
+        $database_exists = $this->check_database_exists();
+        $database_migration_needed = true;
+        $migration_count = 0;
+        $actions = array();
+        if (!$database_exists) $actions["create"] = "Create database";
+
+        $migration_conf = $this->create_migration_configuration();
+
+        $pending_migrations = array();
+
+        foreach ($migration_conf->getAvailableVersions() as $order => $name) {
+            $pending_migrations[$name] = true;
+        }
+
+        if ($database_exists) {
+            foreach ($migration_conf->getMigratedVersions() as $order => $name) {
+                unset($pending_migrations[$name]);
+            }
+        }
+
+        $migration_count = count($pending_migrations);
+        $database_migration_needed = $migration_count > 0;
+        if ($database_exists && $database_migration_needed) $actions["upgrade"] = "Run upgrades";
+
+        $actions_form = $this->createForm(ActionsType::class, null, array("actions" => $actions));
+        $actions_form->handleRequest($req);
+        if ($actions_form->isSubmitted() && $actions_form->isValid()) {
+            switch ($actions_form->getClickedButton()->getName()) {
+                case "create":
+                    $this->create_empty_database();
+                    return $this->redirectToRoute("f9kinstall_database");
+                case "upgrade":
+                    if (!$database_exists) throw new \Exception("Cannot upgrade database until database exists");
+
+                    $migration_info = $this->get_migration_infos($migration_conf, array_keys($pending_migrations)[$migration_count - 1]);
+                    foreach ($migration_info["uplist"] as $interim_ver) {
+                        $interim_ver->execute("up", false, true);
+                    }
+
+                    return $this->redirectToRoute("f9kinstall_database");
+                default:
+                    throw new \Exception("Action " . $actions_form->getClickedButton()->getName() . " does not exist.");
+            }
+        }
         
         return $this->render("install/database_stage.html.twig", array(
+            "database_exists" => $database_exists,
+            "database_migration_needed" => $database_migration_needed,
+            "migration_count" => $migration_count,
+            "actions_form" => $actions_form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/owner_registration", name="owner_registration")
+     */
+    function owner_registration(Request $req) {
+        $kernel = $this->get('kernel');
+
+        if ($kernel->isInstalled()) {
+            throw new \Exception('Forum configuration is already installed.');
+        }
+
+        $form = $this->createForm(SiteEnvType::class);
+        $form->handleRequest($req);
+
+        return $this->render("install/owneracct_stage.html.twig", array(
             "environment_form" => $form->createView(),
         ));
     }

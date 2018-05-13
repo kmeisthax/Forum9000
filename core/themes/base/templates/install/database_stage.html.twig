@@ -3,21 +3,17 @@
 {% block body %}
     <h1>Forum9000 Installer</h1>
 
-    {{ form_start(environment_form) }}
-    <h2>Application environment</h2>
-    {{ form_errors(environment_form.APP_ENV) }}
-    {{ form_widget(environment_form.APP_ENV) }}
+    {{form_start(actions_form)}}
 
-    <h2>Database</h2>
-    <p>Database must already exist and user must have permissions to alter database schema.</p>
-    {{ form_errors(environment_form.DATABASE_URL) }}
-    {{ form_label(environment_form.DATABASE_URL) }}
-    {{ form_widget(environment_form.DATABASE_URL) }}
+    {% if database_exists %}
+        {% if database_migration_needed %}
+            <p>The database you configured already exists, but {{migration_count}} updates need to be run. {{form_widget(actions_form.upgrade)}}</p>
+        {% else %}
+            <p>The database you configured already exists and it's schema has been updated to the latest version. <a href="{{url('f9kinstall_owner_registration')}}">Continue to user setup</a>.</p>
+        {% endif %}
+    {% else %}
+        <p>The database you configured needs to be created. {{form_widget(actions_form.create)}}</p>
+    {% endif %}
 
-    <h2>Admin User</h2>
-    <p>Your user login will be created with full site permissions. After installation, you will be able to change site settings, nominate new administrators, and so on.</p>
-    {{ form_errors(environment_form.owner_registration) }}
-    {{ form_widget(environment_form.owner_registration) }}
-
-    {{ form_end(environment_form) }}
+    {{form_end(actions_form)}}
 {% endblock %}
