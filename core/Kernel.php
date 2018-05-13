@@ -25,7 +25,7 @@ class Kernel extends BaseKernel
      * forum.
      */
     public function isInstalled() {
-        return file_exists($this->getProjectDir().'/.env') && $_SERVER["F9K_NOT_INSTALLED"] != "true";
+        return file_exists($this->getProjectDir().'/.env') && !(isset($_SERVER["F9K_NOT_INSTALLED"]) && $_SERVER["F9K_NOT_INSTALLED"] == "true");
     }
     
     /**
