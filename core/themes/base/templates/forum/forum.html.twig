@@ -11,7 +11,7 @@
     {{breadcrumb(forum)}}
 {% endblock %}
 
-{% block actions %}<p>{{forum.subforums.count}} subforums, {{forum.threads.count}} threads - <a href="{{permalink_forum_action(forum, 'post')}}">post new thread</a></p>{% endblock %}
+{% block actions %}{% if forum %}<p>{{forum.subforums.count}} subforums, {{forum.threads.count}} threads - <a href="{{permalink_forum_action(forum, 'post')}}">post new thread</a></p>{% endif %}{% endblock %}
 
 {% block body %}
     {% block children %}
