@@ -1,0 +1,13 @@
+{% extends 'install/base.html.twig' %}
+
+{% block body %}
+    <h1>Forum9000 Installer</h1>
+
+    {{ form_start(environment_form) }}
+    <h2>Admin User</h2>
+    <p>Your user login will be created with full site permissions. After installation, you will be able to change site settings, nominate new administrators, and so on.</p>
+    {{ form_errors(environment_form) }}
+    {{ form_widget(environment_form) }}
+
+    {{ form_end(environment_form) }}
+{% endblock %}

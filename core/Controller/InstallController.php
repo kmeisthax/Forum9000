@@ -6,6 +6,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\OutputWriter;
@@ -13,7 +14,9 @@ use Doctrine\DBAL\Migrations\Version;
 
 use Forum9000\Form\SiteEnvType;
 use Forum9000\Form\ActionsType;
+use Forum9000\Form\RegistrationType;
 use Forum9000\Theme\Annotation\Theme;
+use Forum9000\Entity\User;
 
 /**
  * The most sensitive console exposed by Forum9000.
@@ -169,18 +172,35 @@ class InstallController extends Controller {
     /**
      * @Route("/owner_registration", name="owner_registration")
      */
-    function owner_registration(Request $req) {
+    function owner_registration(Request $req, UserPasswordEncoderInterface $encoder) {
         $kernel = $this->get('kernel');
 
         if ($kernel->isInstalled()) {
             throw new \Exception('Forum configuration is already installed.');
         }
-
-        $form = $this->createForm(SiteEnvType::class);
+        
+        $em = $this->getDoctrine()->getManager();
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        
+        if ($userRepo->getUserRoleCount(User::DEVELOPER) > 0) {
+            return $this->redirectToRoute("f9kinstall_finalize");
+        }
+        
+        $user = new User();
+        $user->setSiteRole(User::DEVELOPER);
+        
+        $form = $this->createForm(RegistrationType::class);
         $form->handleRequest($req);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
 
-        return $this->render("install/owneracct_stage.html.twig", array(
-            "environment_form" => $form->createView(),
+            $em->persist($user);
+            $em->flush();
+        }
+        
+        return $this->render("install/owner_registration_stage.html.twig", array(
+            "registration_form" => $form->createView(),
         ));
     }
 }

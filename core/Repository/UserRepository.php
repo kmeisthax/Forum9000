@@ -28,6 +28,14 @@ class UserRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getUserRoleCount(string $role) {
+        return $this->createQueryBuilder('u')
+            ->select('COUNT(u)')
+            ->where('u.siterole = :role')->setParameter(':role', $role)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function findOneByHandle($handle): ?User {
         return $this->createQueryBuilder('u')
             ->andWhere('u.handle = :handle')
