@@ -1,11 +1,69 @@
 {% extends "@base/base.html.twig" %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{asset('main.css')}}">
-{% endblock %}
+{% from "macros/permalink_actor.html.twig" import permalink_actor %}
+{% from "macros/breadcrumb.html.twig" import breadcrumb %}
 
-{% block header %}
-    <p>Admin site! Use caution!</p>
-    {{ parent() }}
+{% block html %}
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>{% block title %}Welcome!{% endblock %}</title>
+            {% block stylesheets %}
+                {{ parent() }}
+                <link rel="stylesheet" type="text/css" href="{{asset('main.css')}}">
+            {% endblock %}
+        </head>
+        <body class="Page">
+            <header class="Page-header">
+                {% block header %}
+                    <p class="Page-header_caption">Admin dashboard in use - exercise caution.</p>
+                    <nav aria-label="User Menu" class="Page-user_menu">
+                        <ul>
+                            {% if app.user %}
+                                <li>Welcome <a href="{{permalink_actor(app.user)}}">{{app.user.handle}}</a></li>
+                            {% endif %}
+                            
+                            {% if app.user %}
+                                {% if "ROLE_STAFF" in app.user.roles or "ROLE_DEVELOPER" in app.user.roles %}
+                                    <li><a href='{{url("f9kadmin_dashboard")}}'>Admin</a></li>
+                                {% endif %}
+                                {% if "ROLE_DEVELOPER" in app.user.roles %}
+                                    <li><a href='{{url("f9kdeveloper_dashboard")}}'>Developer</a></li>
+                                {% endif %}
+                                <li><a href='{{url("f9kuser_logout")}}'>Logout</a></li>
+                            {% else %}
+                                <li><a href='{{url("f9kuser_login")}}'>Login</a></li>
+                                <li><a href='{{url("f9kuser_register")}}'>Register</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endblock %}
+            </header>
+            
+            <div class="Page-main">
+                <aside class="Page-sidebar">
+                    <nav aria-label="User Menu">
+                        <ul>{% block navigation %}{% endblock %}</ul>
+                    </nav>
+                </aside>
+
+                <div class="Page-contents">
+                    <nav aria-label="Breadcrumb" class="Page-breadcrumb">
+                        <ol itemscope itemtype="http://schema.org/BreadcrumbList">
+                            {% block breadcrumb %}
+                                {{breadcrumb(null)}}
+                            {% endblock %}
+                        </ol>
+                    </nav>
+
+                    {% block actions %}{% endblock %}
+
+                    {% block main %}<main>{% block body %}{% endblock %}</main>{% endblock %}
+                </div>
+            </div>
+
+            {% block javascripts %}{% endblock %}
+        </body>
+    </html>
 {% endblock %}

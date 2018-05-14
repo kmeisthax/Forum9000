@@ -1,4 +1,81 @@
-body {
+html {
+    background-color: #eeeeee;
+}
+
+.Page {
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    
+    background-color: white;
+    color: #222222;
+    min-height: 100vh;
+    
+    padding: 15px;
+}
+
+.Page-header {
+    display: table;
+    width: 100%;
+}
+
+.Page-header_caption {
+    display: table-cell;
+    margin: 0;
+}
+
+.Page-main {
+    display: table;
+    width: 100%;
+}
+
+.Page-user_menu {
+    display: table-cell;
+    text-align: right;
+}
+
+.Page-user_menu ul {
+    list-style: none inside none;
+    margin: 0;
+    padding: 0;
+}
+
+.Page-user_menu ul li {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.Page-sidebar {
+    display: table-cell;
+    width: 20%;
+}
+
+.Page-sidebar ul {
+    list-style: none inside none;
+    margin: 0;
+    padding: 0;
+}
+
+.Page-sidebar ul li {
+    display: block;
+    vertical-align: middle;
+}
+
+.Page-contents {
+    display: table-cell;
+}
+
+.Page-breadcrumb {
+    
+}
+
+.Page-breadcrumb ol {
+    list-style: none inside none;
+    margin: 0;
+    padding: 0;
+}
+
+.Page-breadcrumb ol li {
+    display: inline-block;
+    vertical-align: middle;
 }
