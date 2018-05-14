@@ -10,9 +10,21 @@ a:visited {
     color: #6ae687;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: Segoe UI, Arial, Helvetica, sans-serif;
+}
+
+th {
+    font-family: Segoe UI, Arial, Helvetica, sans-serif;
+}
+
 html {
+    font-family: Segoe UI, Arial, Helvetica, sans-serif;
+    
     background-color: #eeeeee;
     color: #222222;
+    
+    font-size: 14px;
 }
 
 .Page {
