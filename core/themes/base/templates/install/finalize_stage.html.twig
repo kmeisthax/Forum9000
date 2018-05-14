@@ -1,0 +1,19 @@
+{% extends 'install/base.html.twig' %}
+
+{% block body %}
+    <h1>Forum9000 Installer</h1>
+
+    {{form_start(actions_form)}}
+    
+    <h2>Finalize installation</h2>
+    <p>It is time to finish the Forum9000 installation. Once you have finalized this installation, the installer will be locked, and you will need to use the Admin and Developer consoles by logging in with your username and password.</p>
+    
+    {% if install_blocker_removable %}
+        {{form_widget(actions_form.lock)}}
+    {% else %}
+        <p>For some reason, we couldn't find the indicator used to allow access during the install process in the generated .env (environment file). Your site is not secure until installation has been finished and locked!</p>
+        <p>If you have manually added the environment variable F9K_NOT_INSTALLED, now is the time to remove it. After you do so, reload the page to confirm that the installation has completed. You will be redirected to the homepage.</p>
+    {% endif %}
+
+    {{form_end(actions_form)}}
+{% endblock %}

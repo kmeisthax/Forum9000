@@ -203,4 +203,47 @@ class InstallController extends Controller {
             "registration_form" => $form->createView(),
         ));
     }
+
+    /**
+     * @Route("/finalize", name="finalize")
+     */
+    function finalize(Request $req) {
+        $kernel = $this->get('kernel');
+
+        if ($kernel->isInstalled()) {
+            return $this->redirectToRoute('f9kforum_homepage');
+        }
+        
+        $lines = [];
+        $install_blocker_removable = false;
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $kernel->readDotEnv()) as $line) {
+            if (strpos($line, "F9K_NOT_INSTALLED=") === 0) {
+                $lines[] = "#F9K_NOT_INSTALLED line removed";
+                $install_blocker_removable = true;
+            } else {
+                $lines[] = $line;
+            }
+        }
+        
+        $actions = array();
+        if ($install_blocker_removable) $actions["lock"] = "Finish installation";
+        
+        $form = $this->createForm(ActionsType::class, null, array("actions" => $actions));
+        $form->handleRequest($req);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($install_blocker_removable) {
+                $env = implode("\n", $lines);
+                $kernel->writeDotEnv($env);
+
+                return $this->redirectToRoute('f9kinstall_finalize');
+            } else {
+                throw new \Exception("Install blocker environment variable not removable but request was sent to remove it.");
+            }
+        }
+        
+        return $this->render("install/finalize_stage.html.twig", array(
+            "install_blocker_removable" => $install_blocker_removable,
+            "actions_form" => $form->createView()
+        ));
+    }
 }

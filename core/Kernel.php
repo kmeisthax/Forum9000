@@ -37,6 +37,10 @@ class Kernel extends BaseKernel
         return file_exists($this->getProjectDir().'/.env') && !(isset($_SERVER["F9K_NOT_INSTALLED"]) && $_SERVER["F9K_NOT_INSTALLED"] == "true");
     }
     
+    public function readDotEnv() : string {
+        return file_get_contents($this->getProjectDir() . '/.env');
+    }
+    
     /**
      * Write a .env file to disk.
      */
