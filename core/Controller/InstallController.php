@@ -48,7 +48,11 @@ class InstallController extends Controller {
         if ($kernel->isInstalled()) {
             throw new \Exception('Forum configuration is already installed.');
         }
-
+        
+        if ($kernel->isEnvironmentConfigured()) {
+            return $this->redirectToRoute("f9kinstall_database");
+        }
+        
         $form = $this->createForm(SiteEnvType::class);
         $form->handleRequest($req);
         
@@ -128,6 +132,10 @@ class InstallController extends Controller {
         $migration_count = count($pending_migrations);
         $database_migration_needed = $migration_count > 0;
         if ($database_exists && $database_migration_needed) $actions["upgrade"] = "Run upgrades";
+        
+        if ($database_exists && !$database_migration_needed) {
+            return $this->redirectToRoute("f9kinstall_owner_registration");
+        }
 
         $actions_form = $this->createForm(ActionsType::class, null, array("actions" => $actions));
         $actions_form->handleRequest($req);

@@ -16,6 +16,15 @@ class Kernel extends BaseKernel
     use MicroKernelTrait;
 
     const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+    
+    /**
+     * Determine if environment has been configured.
+     * 
+     * This does not necessarily equivocate to having a .env file.
+     */
+    public function isEnvironmentConfigured() {
+        return isset($_SERVER["APP_SECRET"]);
+    }
 
     /**
      * Determine if the application has been installed.
