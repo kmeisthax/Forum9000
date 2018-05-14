@@ -2,6 +2,9 @@
 #    path: /
 #    controller: Forum9000\Controller\DefaultController::index
 
+f9kuser_logout:
+    path: /logout
+
 default:
     path: /{path_alias}
     controller: Forum9000\Controller\DefaultController::handle_alias

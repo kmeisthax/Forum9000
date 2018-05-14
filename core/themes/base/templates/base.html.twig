@@ -22,6 +22,7 @@
                                 {% if "ROLE_DEVELOPER" in app.user.roles %}
                                     <li><a href='{{url("f9kdeveloper_dashboard")}}'>Developer</a></li>
                                 {% endif %}
+                                <li><a href='{{url("f9kuser_logout")}}'>Logout</a></li>
                             {% else %}
                                 <li><a href='{{url("f9kuser_login")}}'>Login</a></li>
                                 <li><a href='{{url("f9kuser_register")}}'>Register</a></li>
