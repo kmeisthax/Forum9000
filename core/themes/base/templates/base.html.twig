@@ -12,13 +12,23 @@
         <body>
             <header>
                 {% block header %}
-                    {% if app.user %}
-                        Welcome <a href="{{permalink_actor(app.user)}}">{{app.user.handle}}</a>
-                        {% if "ROLE_STAFF" in app.user.roles or "ROLE_DEVELOPER" in app.user.roles %}<a href='{{url("f9kadmin_dashboard")}}'>Admin</a>{% endif %}
-                        {% if "ROLE_DEVELOPER" in app.user.roles %}<a href='{{url("f9kdeveloper_dashboard")}}'>Developer</a>{% endif %}
-                    {% endif %}
-                    
-                    <nav>{% block navigation %}{% endblock %}</nav>
+                    <nav aria-label="Navigation">
+                        <ul>
+                            {% if app.user %}
+                                <li>Welcome <a href="{{permalink_actor(app.user)}}">{{app.user.handle}}</a></li>
+                                {% if "ROLE_STAFF" in app.user.roles or "ROLE_DEVELOPER" in app.user.roles %}
+                                    <li><a href='{{url("f9kadmin_dashboard")}}'>Admin</a></li>
+                                {% endif %}
+                                {% if "ROLE_DEVELOPER" in app.user.roles %}
+                                    <li><a href='{{url("f9kdeveloper_dashboard")}}'>Developer</a></li>
+                                {% endif %}
+                            {% else %}
+                                <li><a href='{{url("f9kuser_login")}}'>Login</a></li>
+                                <li><a href='{{url("f9kuser_register")}}'>Register</a></li>
+                            {% endif %}
+                            {% block navigation %}{% endblock %}
+                        </ul>
+                    </nav>
                 {% endblock %}
             </header>
             

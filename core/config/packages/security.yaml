@@ -15,8 +15,8 @@ security:
         main:
             anonymous: true
             form_login:
-                login_path: login
-                check_path: login
+                login_path: f9kuser_login
+                check_path: f9kuser_login
 
             # activate different ways to authenticate
 

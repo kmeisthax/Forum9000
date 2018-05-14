@@ -13,6 +13,7 @@ use Forum9000\Form\RegistrationType;
 use Forum9000\Theme\Annotation\Theme;
 
 /**
+ * @Route(name="f9kuser_")
  * @Theme(routeClass="user")
  */
 class SecurityController extends Controller {
@@ -56,7 +57,7 @@ class SecurityController extends Controller {
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('f9kuser_login');
         }
 
         return $this->render('security/register.html.twig', array(
