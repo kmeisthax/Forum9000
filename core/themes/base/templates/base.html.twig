@@ -16,6 +16,11 @@
                         <ul>
                             {% if app.user %}
                                 <li>Welcome <a href="{{permalink_actor(app.user)}}">{{app.user.handle}}</a></li>
+                            {% endif %}
+                            
+                            {% block navigation %}{% endblock %}
+                            
+                            {% if app.user %}
                                 {% if "ROLE_STAFF" in app.user.roles or "ROLE_DEVELOPER" in app.user.roles %}
                                     <li><a href='{{url("f9kadmin_dashboard")}}'>Admin</a></li>
                                 {% endif %}
@@ -27,7 +32,6 @@
                                 <li><a href='{{url("f9kuser_login")}}'>Login</a></li>
                                 <li><a href='{{url("f9kuser_register")}}'>Register</a></li>
                             {% endif %}
-                            {% block navigation %}{% endblock %}
                         </ul>
                     </nav>
                 {% endblock %}
