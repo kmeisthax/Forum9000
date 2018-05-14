@@ -17,6 +17,7 @@ security:
             form_login:
                 login_path: f9kuser_login
                 check_path: f9kuser_login
+                csrf_token_generator: security.csrf.token_manager
 
             # activate different ways to authenticate
 
