@@ -21,6 +21,10 @@ class SecurityController extends Controller {
      * @Route("/login", name="login")
      */
     public function login(Request $request, AuthenticationUtils $auth) {
+        if ($this->getUser() !== null) {
+            return $this->redirectToRoute("f9kforum_homepage");
+        }
+        
         // get the login error if there is one
         $error = $auth->getLastAuthenticationError();
 
@@ -37,6 +41,10 @@ class SecurityController extends Controller {
      * @Route("/register", name="register")
      */
     public function register(Request $request, UserPasswordEncoderInterface $encoder) {
+        if ($this->getUser() !== null) {
+            return $this->redirectToRoute("f9kforum_homepage");
+        }
+        
         $em = $this->getDoctrine()->getManager();
         $userRepo = $this->getDoctrine()->getRepository(User::class);
         $user = new User();
