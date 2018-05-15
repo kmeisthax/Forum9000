@@ -7,6 +7,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 use Forum9000\Entity\User;
 use Forum9000\Form\RegistrationType;
@@ -40,7 +43,7 @@ class SecurityController extends Controller {
     /**
      * @Route("/register", name="register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $encoder) {
+    public function register(Request $request, UserPasswordEncoderInterface $encoder, TokenStorageInterface $token_storage, SessionInterface $session) {
         if ($this->getUser() !== null) {
             return $this->redirectToRoute("f9kforum_homepage");
         }
@@ -49,11 +52,6 @@ class SecurityController extends Controller {
         $userRepo = $this->getDoctrine()->getRepository(User::class);
         $user = new User();
         $user->setSiteRole(User::USER);
-
-        //First user registration gets developer role
-        //TODO: This fails if === is in use. Can we fix the count methods to
-        //return integers?
-        if ($userRepo->getUserCount() == 0) $user->setSiteRole(User::DEVELOPER);
 
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
@@ -64,6 +62,10 @@ class SecurityController extends Controller {
 
             $em->persist($user);
             $em->flush();
+
+            $token = new UsernamePasswordToken($user, null, "main", $user->getRoles());
+            $token_storage->setToken($token);
+            $session->set('_security_main', serialize($token));
 
             return $this->redirectToRoute('f9kuser_login');
         }
