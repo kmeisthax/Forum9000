@@ -3,6 +3,10 @@
 {% from "macros/permalink_forum.html.twig" import permalink_forum %}
 
 {% block body %}
+    {% if developer.pendingMigrationCount > 0 %}
+        <h2>Pending updates</h2>
+        <p>{{developer.pendingMigrationCount}} updates need to be installed.</p>
+    {% endif %}
     <h2>Newest Posts</h2>
     {% for post in newest_posts %}
         {% set post_page = post.order // 20 + 1 %}
