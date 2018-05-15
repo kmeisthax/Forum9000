@@ -57,5 +57,12 @@ services:
         arguments:
             $markupLanguageServices: !tagged forum9000.markup_language
 
+    Forum9000\OnsiteDatabaseAdmin\DeveloperGlobal:
+        arguments:
+            $migrations_directory: '%doctrine_migrations.dir_name%'
+            $migrations_namespace: '%doctrine_migrations.namespace%'
+            $migrations_name: '%doctrine_migrations.name%'
+            $migrations_tablename: '%doctrine_migrations.table_name%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

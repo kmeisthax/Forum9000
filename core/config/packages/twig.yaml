@@ -2,3 +2,5 @@ twig:
     paths: []
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        developer: '@Forum9000\OnsiteDatabaseAdmin\DeveloperGlobal'

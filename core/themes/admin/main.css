@@ -107,6 +107,7 @@ html {
 }
 
 .Page-sidebar ul li a {
+    position: relative;
     display: block;
     width: 100%;
     padding: 7px 15px;
@@ -117,6 +118,15 @@ html {
     color: white;
     
     border-bottom: 1px solid #444444;
+}
+
+.Page-sidebar_indicator {
+    position: absolute;
+    right: 15px;
+    background-color: red;
+
+    border-radius: 8px;
+    padding: 0px 10px;
 }
 
 .Page-contents {
