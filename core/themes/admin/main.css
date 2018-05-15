@@ -3,11 +3,11 @@
 }
 
 a {
-    color: #6aa4e6;
+    color: #0f3d72;
 }
 
 a:visited {
-    color: #6ae687;
+    color: #718dad;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -62,6 +62,14 @@ html {
 .Page-user_menu {
     display: table-cell;
     text-align: right;
+}
+
+.Page-user_menu a {
+    color: #5da7fc;
+}
+
+.Page-user_menu a:visited {
+    color: #90b1d6;
 }
 
 .Page-user_menu ul {
